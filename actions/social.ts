@@ -65,7 +65,7 @@ export async function isFollowing(followingId: string) {
 }
 export async function toggleFavorite(itemId: string, itemType: string) {
     const session = await getSession();
-    const userId = session?.id as string | undefined;
+    const userId = session?.userId as string | undefined;
 
     if (!userId) return { error: 'Not authenticated' };
 
@@ -105,7 +105,7 @@ export async function toggleFavorite(itemId: string, itemType: string) {
 
 export async function isFavorited(itemId: string, itemType: string) {
     const session = await getSession();
-    const userId = session?.id as string | undefined;
+    const userId = session?.userId as string | undefined;
 
     if (!userId) return false;
 
