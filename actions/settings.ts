@@ -3,7 +3,7 @@
 import { getSession } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
-import { writeFile } from "fs/promises"
+import { writeFile, mkdir } from "fs/promises"
 import { join } from "path"
 import path from "path"
 
@@ -86,7 +86,7 @@ async function saveSystemFile(file: File, prefix: string) {
     const buffer = Buffer.from(bytes);
     const rawFilename = `${prefix}-${Date.now()}${path.extname(file.name)}`;
     const uploadDir = join(process.cwd(), "public", "uploads", "system");
-
+    await mkdir(uploadDir, { recursive: true });
     await writeFile(join(uploadDir, rawFilename), buffer);
 
     const url = `/uploads/system/${rawFilename}`;
