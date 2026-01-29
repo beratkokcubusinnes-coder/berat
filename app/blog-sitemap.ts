@@ -1,0 +1,31 @@
+import { MetadataRoute } from 'next';
+import { prisma } from '@/lib/prisma';
+import { languages } from '@/lib/i18n';
+import { getSitemapUrl, getSitemapAlternates } from '@/lib/sitemap-utils';
+
+export default async function blog(): Promise<MetadataRoute.Sitemap> {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+    const posts = await prisma.blogPost.findMany({
+        where: { published: true },
+        select: { slug: true, updatedAt: true }
+    });
+
+    const routes: MetadataRoute.Sitemap = [];
+
+    posts.forEach(post => {
+        const path = `/blog/${post.slug}`;
+        languages.forEach(lang => {
+            routes.push({
+                url: getSitemapUrl(path, lang.code, baseUrl),
+                lastModified: post.updatedAt,
+                changeFrequency: 'weekly',
+                priority: 0.7,
+                alternates: {
+                    languages: getSitemapAlternates(path, baseUrl),
+                },
+            });
+        });
+    });
+
+    return routes;
+}

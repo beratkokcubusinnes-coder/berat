@@ -1,0 +1,286 @@
+{
+    "Sidebar": {
+        "discover": "Discover",
+        "favorites": "Favorites",
+        "blog": "Blog",
+        "prompts": "Prompts",
+        "scripts": "Scripts",
+        "hooks": "Hooks",
+        "members": "Members",
+        "tools": "Tools",
+        "community": "Community",
+        "about": "About Us",
+        "contact": "Contact",
+        "privacy": "Privacy Policy",
+        "terms": "Terms",
+        "beta": "Beta",
+        "admin": "Admin Panel"
+    },
+    "Navbar": {
+        "searchPlaceholder": "Search prompts...",
+        "upload": "Upload Prompt",
+        "tools": "Tools",
+        "login": "Log In",
+        "notifications": {
+            "title": "Notifications",
+            "markAllRead": "Mark all read",
+            "welcomeTitle": "Welcome to Promptda!",
+            "welcomeText": "Start exploring thousand of AI prompts.",
+            "updateTitle": "New Features Available",
+            "updateText": "Check out the new profile customization options."
+        }
+    },
+    "Home": {
+        "verifiedLibrary": "Verified AI Prompt Library",
+        "heroTitlePart1": "AI Prompt Library:",
+        "heroTitlePart2": "High-Quality",
+        "heroTitlePart3": "ChatGPT & AI Prompts",
+        "metaTitle": "Promptda - Premium AI Prompt Library & ChatGPT Prompts",
+        "metaDescription": "Discover the best ChatGPT, Midjourney, and Claude prompts. Boost your productivity with our verified AI prompt library.",
+        "heroSubtitle": "Discover thousands of proven AI prompts for real-world use. Boost your productivity with professional engineering for ChatGPT, Midjourney, and more.",
+        "explorePrompts": "Explore Prompts",
+        "submitPrompt": "Submit a Prompt",
+        "featuredPrompts": "Featured Trending Prompts",
+        "contentH2": "Discover Thousands of Proven AI Prompts for Real-World Use",
+        "contentText1": "Welcome to the world's most advanced AI Prompt Library. Our mission is to provide developers, marketers, and creators with high-quality ChatGPT prompts and AI image prompts that actually deliver results. Every interaction in our database is a tested prompt, ensuring that you don't waste time with hallucinations or low-quality outputs.",
+        "contentText2": "Our library is updated regularly, bringing you the latest advancements in prompt engineering for 2026. Whether you are scaling a business, optimizing SEO, or generating viral social media content, our AI prompts are designed to bridge the gap between human creativity and machine intelligence. From marketing workflows to strategic sales scripts, we provide the foundational elements for elite AI interaction.",
+        "popularCategories": "Popular ChatGPT & AI Prompt Categories",
+        "popularCategoriesList": [
+            {
+                "title": "ChatGPT Prompts for Marketing",
+                "iconName": "Sparkles"
+            },
+            {
+                "title": "ChatGPT Prompts for Sales",
+                "iconName": "Wrench"
+            },
+            {
+                "title": "ChatGPT Prompts for Recruiters",
+                "iconName": "Users"
+            },
+            {
+                "title": "AI Image & Art Prompts",
+                "iconName": "ImageIcon"
+            },
+            {
+                "title": "SEO & Content Writing Prompts",
+                "iconName": "FileCode2"
+            },
+            {
+                "title": "Business & Strategy Prompts",
+                "iconName": "Anchor"
+            }
+        ],
+        "popularSub": "Click any category to explore specialized prompt engineering sets for your niche.",
+        "whyProfessionals": "Why Professionals Use Our AI Prompt Library",
+        "reasons": {
+            "tested": "Prompts are tested",
+            "testedDesc": "Every single prompt is verified for accuracy and efficiency across multiple models.",
+            "updated": "Updated weekly",
+            "updatedDesc": "We stay ahead of the curve by updating our repository with the latest AI trends.",
+            "useCase": "Use-case focused",
+            "useCaseDesc": "No generic filler. Only practical prompts designed for real business tasks.",
+            "friendly": "Beginner & advanced friendly",
+            "friendlyDesc": "Simple one-liners or complex multi-step logical chains."
+        },
+        "howItWorks": "How to Use Our AI Prompts Effectively",
+        "steps": {
+            "step1": "Select your Goal",
+            "step1Desc": "Choose a prompt category based on the task you need to complete.",
+            "step2": "Copy & Adapt",
+            "step2Desc": "Use our one-click copy and replace bracketed info with your data.",
+            "step3": "Execute & Refine",
+            "step3Desc": "Paste into your AI of choice and watch the magic happen."
+        },
+        "latestScripts": "Latest AI Scripts",
+        "exploreByUseCaseLinks": [
+            "ChatGPT prompts for marketing",
+            "ChatGPT prompts for sales",
+            "AI prompts for video creation",
+            "AI prompts for image generation",
+            "Business Strategy Prompts",
+            "Academic Writing AI Tools",
+            "Customer Support Scripts",
+            "Coding Assistant Hooks"
+        ],
+        "exploreByUseCase": "Explore AI Prompts by Use Case",
+        "faqTitle": "Frequently Asked Questions About AI Prompts",
+        "faqs": [
+            {
+                "question": "What is an AI prompt library?",
+                "answer": "An AI prompt library is a centralized ecosystem where prompt engineers share proven recipes for AI interaction. It helps users get better results from models like ChatGPT and Midjourney."
+            },
+            {
+                "question": "Are these prompts free to use?",
+                "answer": "Most of our community prompts are absolutely free to copy and use. We also offer premium, verified scripts for enterprise-level tasks."
+            },
+            {
+                "question": "Do these prompts work with ChatGPT?",
+                "answer": "Yes, our prompts are explicitly tested with ChatGPT (GPT-4o, o1), Claude, and other leading LLM models to ensure consistent performance."
+            },
+            {
+                "question": "How often is the library updated?",
+                "answer": "Our team and community release new tested prompts weekly, reflecting the latest changes in AI model behavior and capabilities."
+            }
+        ],
+        "viewAll": "View All",
+        "trending": "Trending Now",
+        "allModels": "All Models",
+        "sortBy": "Sort by: Newest",
+        "official": "Official",
+        "community": "Community"
+    },
+    "Common": {
+        "verified": "Verified",
+        "official": "Official",
+        "script": "Script",
+        "hook": "Hook",
+        "tool": "Tool",
+        "blog": "Blog",
+        "article": "Article",
+        "readTime": "{min} min read",
+        "views": "Views",
+        "likes": "Likes",
+        "follow": "Follow",
+        "viewPost": "View Post",
+        "followers": "Followers",
+        "prompts": "Prompts",
+        "following": "Following"
+    },
+    "Categories": {
+        "All Models": "All Models",
+        "Photography": "Photography",
+        "Portrait": "Portrait",
+        "Anime & Manga": "Anime & Manga",
+        "3D Render": "3D Render",
+        "Architecture": "Architecture",
+        "Interior Design": "Interior Design",
+        "Logo & Icon": "Logo & Icon",
+        "UI/UX Design": "UI/UX Design",
+        "Game Assets": "Game Assets",
+        "Fashion": "Fashion",
+        "Cinematic": "Cinematic"
+    },
+    "Auth": {
+        "welcomeBack": "Welcome Back",
+        "createAccount": "Create an Account",
+        "enterDetails": "Enter your email and password to access your account.",
+        "joinNow": "Join now to start discovering amazing prompts.",
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "rememberMe": "Remember me for 30 days",
+        "forgotPassword": "Forgot password?",
+        "signIn": "Sign In",
+        "register": "Create account",
+        "orContinueWith": "Or continue with",
+        "dontHaveAccount": "Don't have an account?",
+        "alreadyHaveAccount": "Already have an account?",
+        "signUpLink": "Sign up",
+        "signInLink": "Sign in",
+        "copyright": "© 2024 Promptda. All rights reserved.",
+        "privacy": "Privacy Policy"
+    },
+    "Profile": {
+        "title": "Your Profile",
+        "editProfile": "Edit Profile",
+        "stats": "Stats",
+        "promptsCreated": "Prompts Created",
+        "favorites": "Favorites",
+        "memberSince": "Member since",
+        "role": "Role",
+        "email": "Email Address",
+        "location": "Location",
+        "bio": "Bio",
+        "saveChanges": "Save Changes",
+        "tabs": {
+            "overview": "Overview",
+            "prompts": "My Prompts",
+            "collections": "Collections"
+        }
+    },
+    "UserMenu": {
+        "profile": "Profile",
+        "adminPanel": "Admin Panel",
+        "settings": "Settings",
+        "logout": "Log Out"
+    },
+    "Prompts": {
+        "title": "All Prompts",
+        "metaTitle": "AI Prompts Library - ChatGPT, Midjourney & Stable Diffusion Prompts",
+        "metaDescription": "Explore our curated collection of high-quality AI prompts for Midjourney, DALL-E, GPT-4, and more. Find the perfect prompt for your creative projects.",
+        "browseLibrary": "Browse Premium AI Prompts",
+        "libraryDesc": "Explore our curated collection of high-quality AI prompts for Midjourney, DALL-E, GPT-4, and more. Find the perfect prompt for your creative projects.",
+        "promptsAvailable": "prompts available",
+        "noPromptsFound": "No prompts found",
+        "noPromptsDesc": "Try adjusting your filters or check back later for new content.",
+        "breadcrumbHome": "Home",
+        "breadcrumbPrompts": "Prompts"
+    },
+    "Scripts": {
+        "metaTitle": "Scripts Library | AI & Development Scripts | Promptda",
+        "metaDescription": "Explore our curated collection of useful scripts for development, automation, and AI integration. Find Python, Bash, and JavaScript scripts."
+    },
+    "Hooks": {
+        "metaTitle": "Hooks Library | Expert AI Response Engineering | Promptda",
+        "metaDescription": "Explore our curated collection of elite AI response hooks. Professional engineering for consistent AI outputs."
+    },
+    "Blog": {
+        "metaTitle": "Blog | AI News, Tutorials & Insights",
+        "metaDescription": "Read the latest articles about AI, prompts, development, and productivity."
+    },
+    "Tools": {
+        "metaTitle": "AI Tools Directory | Best AI Software & Services | Promptda",
+        "metaDescription": "Discover the best AI tools and services. Compare features, pricing, and reviews to find the perfect solution for your needs."
+    },
+    "Community": {
+        "metaTitle": "AI Community | Connect with Creators & Developers | Promptda",
+        "metaDescription": "Join our community of AI enthusiasts, developers, and prompt engineers. Share knowledge, ask questions, and collaborate."
+    },
+    "Filters": {
+        "allCategories": "All Categories",
+        "allModels": "All Models",
+        "sortBy": "Sort by",
+        "newest": "Newest First",
+        "popular": "Most Popular"
+    },
+    "Settings": {
+        "title": "Settings",
+        "account": "Account",
+        "appearance": "Appearance",
+        "notifications": "Notifications",
+        "general": "General",
+        "language": "Language",
+        "theme": "Theme",
+        "deleteAccount": "Delete Account",
+        "deleteWarning": "Once you delete your account, there is no going back. Please be certain.",
+        "section": {
+            "profile": "Profile Settings",
+            "security": "Security",
+            "preferences": "Preferences"
+        },
+        "fields": {
+            "displayName": "Display Name",
+            "username": "Username",
+            "currentPassword": "Current Password",
+            "newPassword": "New Password",
+            "confirmNewPassword": "Confirm New Password",
+            "emailNotifications": "Email Notifications",
+            "marketingEmails": "Marketing Emails"
+        }
+    },
+    "Admin": {
+        "title": "Admin Dashboard",
+        "totalUsers": "Total Users",
+        "totalPrompts": "Total Prompts",
+        "dailyViews": "Daily Views",
+        "revenue": "Revenue",
+        "recentPrompts": "Recent Prompts",
+        "popularCategories": "Popular Categories",
+        "userManagement": "User Management",
+        "analytics": "Analytics",
+        "settings": "System Settings",
+        "approvals": "Waiting List"
+    }
+}

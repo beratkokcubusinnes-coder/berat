@@ -1,0 +1,33 @@
+<svg width="980" height="260" viewBox="0 0 980 260" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <g transform="translate(40,20)">
+    
+    <!-- ICON = P harfi -->
+    <g id="icon-p">
+      <path d="
+          M160 20
+          C160 20, 160 220, 160 220
+          L215 220
+          L215 138
+          C290 138, 330 104, 330 62
+          C330 20, 290 -8, 215 -8
+          L160 -8
+          Z
+
+          M215 28
+          C255 28, 275 42, 275 62
+          C275 82, 255 96, 215 96
+          L215 28
+          Z
+        " fill="#FFFFFF"></path>
+
+      <!-- Sol nokta kolon -->
+      <circle cx="125" cy="52" r="11.5" fill="#FFFFFF"></circle>
+      <circle cx="125" cy="102" r="11.5" fill="#FFFFFF"></circle>
+      <circle cx="125" cy="152" r="11.5" fill="#FFFFFF"></circle>
+    </g>
+
+    <!-- "romptda" – ikonla neredeyse temas -->
+    <text x="312" y="156" fill="#FFFFFF" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="92" font-weight="700" letter-spacing="-1.2">romptda</text>
+
+  </g>
+</svg>

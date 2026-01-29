@@ -1,0 +1,230 @@
+{
+    "Sidebar": {
+        "discover": "Entdecken",
+        "favorites": "Favoriten",
+        "blog": "Blog",
+        "prompts": "Prompts",
+        "scripts": "Skripte",
+        "hooks": "Hooks",
+        "members": "Mitglieder",
+        "tools": "Werkzeuge",
+        "community": "Community",
+        "about": "Über uns",
+        "contact": "Kontakt",
+        "privacy": "Datenschutz",
+        "terms": "AGB",
+        "beta": "Beta",
+        "admin": "Admin-Bereich"
+    },
+    "Navbar": {
+        "searchPlaceholder": "Prompts suchen...",
+        "upload": "Prompt hochladen",
+        "tools": "Werkzeuge",
+        "login": "Anmelden",
+        "notifications": {
+            "title": "Benachrichtigungen",
+            "markAllRead": "Alle als gelesen markieren",
+            "welcomeTitle": "Willkommen bei Promptda!",
+            "welcomeText": "Entdecken Sie tausende KI-Prompts.",
+            "updateTitle": "Neue Funktionen verfügbar",
+            "updateText": "Sehen Sie sich die neuen Profilanpassungsoptionen an."
+        }
+    },
+    "Home": {
+        "verifiedLibrary": "Verifizierte KI-Prompt-Bibliothek",
+        "heroTitlePart1": "KI-Prompt-Bibliothek:",
+        "heroTitlePart2": "Hochwertige",
+        "heroTitlePart3": "ChatGPT & KI-Prompts",
+        "metaTitle": "Promptda - Premium KI-Prompt-Bibliothek & ChatGPT Prompts",
+        "metaDescription": "Entdecken Sie die besten ChatGPT, Midjourney und Claude Prompts. Steigern Sie Ihre Produktivität mit unserer verifizierten KI-Prompt-Bibliothek.",
+        "heroSubtitle": "Entdecken Sie tausende bewährte KI-Prompts für den Praxiseinsatz. Steigern Sie Ihre Produktivität mit professionellem Engineering für ChatGPT, Midjourney und mehr.",
+        "explorePrompts": "Prompts erkunden",
+        "submitPrompt": "Prompt einreichen",
+        "featuredPrompts": "Angesagte Trend-Prompts",
+        "contentH2": "Entdecken Sie tausende bewährte KI-Prompts für den Praxiseinsatz",
+        "contentText1": "Willkommen in der weltweit fortschrittlichsten KI-Prompt-Bibliothek. Unsere Mission ist es, Entwickler, Vermarkter und Kreative mit hochwertigen ChatGPT-Prompts und KI-Bild-Prompts zu unterstützen, die tatsächlich Ergebnisse liefern. Jede Interaktion in unserer Datenbank ist ein getesteter Prompt.",
+        "contentText2": "Unsere Bibliothek wird regelmäßig aktualisiert und bringt Ihnen die neuesten Fortschritte im Prompt-Engineering für 2026. Von Marketing-Workflows bis hin zu strategischen Verkaufsskripten bieten wir die Grundlagen für erstklassige KI-Interaktion.",
+        "popularCategories": "Beliebte ChatGPT & KI-Prompt-Kategorien",
+        "popularSub": "Klicken Sie auf eine Kategorie, um spezialisierte Prompt-Engineering-Sets für Ihre Nische zu erkunden.",
+        "whyProfessionals": "Warum Profis unsere KI-Prompt-Bibliothek nutzen",
+        "reasons": {
+            "tested": "Prompts sind getestet",
+            "testedDesc": "Jeder einzelne Prompt wurde auf Genauigkeit und Effizienz über mehrere Modelle hinweg verifiziert.",
+            "updated": "Wöchentlich aktualisiert",
+            "updatedDesc": "Wir bleiben am Puls der Zeit und aktualisieren unser Repository mit den neuesten KI-Trends.",
+            "useCase": "Anwendungsfall-fokussiert",
+            "useCaseDesc": "Kein generischer Füller. Nur praktische Prompts für echte Geschäftsaufgaben.",
+            "friendly": "Anfänger- & Expertenfreundlich",
+            "friendlyDesc": "Einfache Einzeiler oder komplexe mehrstufige logische Ketten."
+        },
+        "howItWorks": "So nutzen Sie unsere KI-Prompts effektiv",
+        "steps": {
+            "step1": "Ziel auswählen",
+            "step1Desc": "Wählen Sie eine Prompt-Kategorie basierend auf der Aufgabe, die Sie erledigen möchten.",
+            "step2": "Kopieren & Anpassen",
+            "step2Desc": "Nutzen Sie unsere One-Click-Copy-Funktion und ersetzen Sie Platzhalter durch Ihre Daten.",
+            "step3": "Ausführen & Verfeinern",
+            "step3Desc": "In die KI Ihrer Wahl einfügen und die Magie erleben."
+        },
+        "latestScripts": "Neueste KI-Skripte",
+        "exploreByUseCase": "KI-Prompts nach Anwendungsfall erkunden",
+        "faqTitle": "Häufig gestellte Fragen zu KI-Prompts",
+        "faqs": [
+            {
+                "question": "Was ist eine KI-Prompt-Bibliothek?",
+                "answer": "Eine KI-Prompt-Bibliothek ist ein zentrales Ökosystem, in dem Prompt-Ingenieure bewährte Rezepte für die KI-Interaktion teilen."
+            },
+            {
+                "question": "Ist die Nutzung dieser Prompts kostenlos?",
+                "answer": "Die meisten unserer Community-Prompts sind absolut kostenlos zum Kopieren und Verwenden."
+            },
+            {
+                "question": "Funktionieren diese Prompts mit ChatGPT?",
+                "answer": "Ja, unsere Prompts wurden explizit mit ChatGPT, Claude und anderen führenden LLMs getestet."
+            },
+            {
+                "question": "Wie oft wird die Bibliothek aktualisiert?",
+                "answer": "Unser Team und die Community veröffentlichen wöchentlich neue getestete Prompts."
+            }
+        ],
+        "viewAll": "Alle ansehen",
+        "trending": "Gerade angesagt",
+        "allModels": "Alle Modelle",
+        "sortBy": "Sortierung: Neueste",
+        "official": "Offiziell",
+        "community": "Community"
+    },
+    "Common": {
+        "verified": "Verifiziert",
+        "official": "Offiziell",
+        "script": "Skript",
+        "hook": "Hook",
+        "tool": "Werkzeug",
+        "blog": "Blog",
+        "article": "Artikel",
+        "readTime": "{min} Min. Lesezeit",
+        "views": "Aufrufe",
+        "likes": "Likes",
+        "follow": "Folgen",
+        "viewPost": "Beitrag ansehen",
+        "followers": "Follower",
+        "prompts": "Prompts",
+        "following": "Folgt"
+    },
+    "Categories": {
+        "All Models": "Alle Modelle",
+        "Photography": "Fotografie",
+        "Portrait": "Porträt",
+        "Anime & Manga": "Anime & Manga",
+        "3D Render": "3D Render",
+        "Architecture": "Architektur",
+        "Interior Design": "Inneneinrichtung",
+        "Logo & Icon": "Logo & Icon",
+        "UI/UX Design": "UI/UX Design",
+        "Game Assets": "Spiel-Assets",
+        "Fashion": "Mode",
+        "Cinematic": "Cinematisch"
+    },
+    "Auth": {
+        "welcomeBack": "Willkommen zurück",
+        "createAccount": "Konto erstellen",
+        "enterDetails": "Geben Sie Ihre E-Mail und Ihr Passwort ein, um auf Ihr Konto zuzugreifen.",
+        "joinNow": "Jetzt beitreten und tolle Prompts entdecken.",
+        "name": "Name",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "confirmPassword": "Passwort bestätigen",
+        "rememberMe": "30 Tage angemeldet bleiben",
+        "forgotPassword": "Passwort vergessen?",
+        "signIn": "Anmelden",
+        "register": "Konto erstellen",
+        "orContinueWith": "Oder fortfahren mit",
+        "dontHaveAccount": "Noch kein Konto?",
+        "alreadyHaveAccount": "Bereits ein Konto?",
+        "signUpLink": "Registrieren",
+        "signInLink": "Anmelden",
+        "copyright": "© 2024 Promptda. Alle Rechte vorbehalten.",
+        "privacy": "Datenschutz"
+    },
+    "Profile": {
+        "title": "Ihr Profil",
+        "editProfile": "Profil bearbeiten",
+        "stats": "Statistiken",
+        "promptsCreated": "Erstellte Prompts",
+        "favorites": "Favoriten",
+        "memberSince": "Mitglied seit",
+        "role": "Rolle",
+        "email": "E-Mail-Adresse",
+        "location": "Standort",
+        "bio": "Bio",
+        "saveChanges": "Änderungen speichern",
+        "tabs": {
+            "overview": "Übersicht",
+            "prompts": "Meine Prompts",
+            "collections": "Kollektionen"
+        }
+    },
+    "UserMenu": {
+        "profile": "Profil",
+        "adminPanel": "Admin-Bereich",
+        "settings": "Einstellungen",
+        "logout": "Abmelden"
+    },
+    "Prompts": {
+        "title": "Alle Prompts",
+        "metaTitle": "KI-Prompt-Bibliothek - ChatGPT, Midjourney & Stable Diffusion Prompts",
+        "metaDescription": "Entdecken Sie unsere kuratierte Sammlung hochwertiger KI-Prompts für Midjourney, DALL-E, GPT-4 und mehr. Finden Sie den perfekten Prompt für Ihre kreativen Projekte.",
+        "browseLibrary": "Premium KI-Prompt-Bibliothek durchsuchen",
+        "libraryDesc": "Entdecken Sie unsere kuratierte Sammlung hochwertiger KI-Prompts.",
+        "promptsAvailable": "Prompts verfügbar",
+        "noPromptsFound": "Keine Prompts gefunden",
+        "noPromptsDesc": "Versuchen Sie es mit anderen Filtern.",
+        "breadcrumbHome": "Home",
+        "breadcrumbPrompts": "Prompts"
+    },
+    "Filters": {
+        "allCategories": "Alle Kategorien",
+        "allModels": "Alle Modelle",
+        "sortBy": "Sortieren nach",
+        "newest": "Neueste",
+        "popular": "Beliebteste"
+    },
+    "Settings": {
+        "title": "Einstellungen",
+        "account": "Konto",
+        "appearance": "Erscheinungsbild",
+        "notifications": "Benachrichtigungen",
+        "general": "Allgemein",
+        "language": "Sprache",
+        "theme": "Design",
+        "deleteAccount": "Konto löschen",
+        "deleteWarning": "Achtung: Dies kann nicht rückgängig gemacht werden.",
+        "section": {
+            "profile": "Profil-Einstellungen",
+            "security": "Sicherheit",
+            "preferences": "Einstellungen"
+        },
+        "fields": {
+            "displayName": "Anzeigename",
+            "username": "Benutzername",
+            "currentPassword": "Aktuelles Passwort",
+            "newPassword": "Neues Passwort",
+            "confirmNewPassword": "Neues Passwort bestätigen",
+            "emailNotifications": "E-Mail-Benachrichtigungen",
+            "marketingEmails": "Marketing-E-Mails"
+        }
+    },
+    "Admin": {
+        "title": "Admin-Dashboard",
+        "totalUsers": "Benutzer gesamt",
+        "totalPrompts": "Prompts gesamt",
+        "dailyViews": "Tägliche Aufrufe",
+        "revenue": "Umsatz",
+        "recentPrompts": "Neueste Prompts",
+        "popularCategories": "Beliebte Kategorien",
+        "userManagement": "Benutzerverwaltung",
+        "analytics": "Analysen",
+        "settings": "Systemeinstellungen",
+        "approvals": "Warteliste"
+    }
+}

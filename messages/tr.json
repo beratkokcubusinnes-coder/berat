@@ -1,0 +1,286 @@
+{
+    "Sidebar": {
+        "discover": "Keşfet",
+        "favorites": "Favoriler",
+        "blog": "Blog",
+        "prompts": "Promptlar",
+        "scripts": "Scriptler",
+        "hooks": "Hooklar",
+        "members": "Üyeler",
+        "tools": "Araçlar",
+        "community": "Topluluk",
+        "about": "Hakkımızda",
+        "contact": "İletişim",
+        "privacy": "Gizlilik Politikası",
+        "terms": "Şartlar",
+        "beta": "Beta",
+        "admin": "Admin Paneli"
+    },
+    "Navbar": {
+        "searchPlaceholder": "Prompt ara...",
+        "upload": "Prompt Yükle",
+        "tools": "Araçlar",
+        "login": "Giriş Yap",
+        "notifications": {
+            "title": "Bildirimler",
+            "markAllRead": "Tümünü okundu işaretle",
+            "welcomeTitle": "Promptda'ya Hoş Geldiniz!",
+            "welcomeText": "Binlerce yapay zeka promptunu keşfetmeye başlayın.",
+            "updateTitle": "Yeni Özellikler Mevcut",
+            "updateText": "Yeni profil özelleştirme seçeneklerine göz atın."
+        }
+    },
+    "Home": {
+        "verifiedLibrary": "Onaylı AI Prompt Kütüphanesi",
+        "heroTitlePart1": "AI Prompt Kütüphanesi:",
+        "heroTitlePart2": "Yüksek Kaliteli",
+        "heroTitlePart3": "ChatGPT & AI Promptları",
+        "metaTitle": "Promptda - Premium AI Prompt Kütüphanesi & ChatGPT Promptları",
+        "metaDescription": "En iyi ChatGPT, Midjourney ve Claude promptlarını keşfedin. Onaylı AI prompt kütüphanemiz ile üretkenliğinizi artırın.",
+        "heroSubtitle": "Gerçek dünya kullanımı için binlerce kanıtlanmış AI promptunu keşfedin. ChatGPT, Midjourney ve daha fazlası için profesyonel mühendislik ile verimliliğinizi artırın.",
+        "explorePrompts": "Promptları Keşfet",
+        "submitPrompt": "Prompt Gönder",
+        "featuredPrompts": "Öne Çıkan Trend Promptlar",
+        "contentH2": "Gerçek Dünya Kullanımı İçin Binlerce Kanıtlanmış AI Promptunu Keşfedin",
+        "contentText1": "Dünyanın en gelişmiş AI Prompt Kütüphanesine hoş geldiniz. Misyonumuz, geliştiricilere, pazarlamacılara ve içerik oluşturuculara aslında sonuç veren yüksek kaliteli ChatGPT promptları ve AI görsel promptları sunmaktır. Veritabanımızdaki her etkileşim test edilmiş bir promptdur, bu da halüsinasyonlar veya düşük kaliteli çıktılarla zaman kaybetmemenizi sağlar.",
+        "contentText2": "Kütüphanemiz düzenli olarak güncellenerek 2026 yılı için prompt mühendisliğindeki en son gelişmeleri size sunar. İster bir işi ölçeklendiriyor, ister SEO'yu optimize ediyor veya viral sosyal medya içeriği oluşturuyor olun, AI promptlarımız insan yaratıcılığı ile makine zekası arasındaki boşluğu kapatmak için tasarlanmıştır. Pazarlama iş akışlarından stratejik satış senaryolarına kadar, elit AI etkileşimi için temel öğeleri sağlıyoruz.",
+        "popularCategories": "Popüler ChatGPT & AI Prompt Kategorileri",
+        "popularCategoriesList": [
+            {
+                "title": "Pazarlama İçin ChatGPT Promptları",
+                "iconName": "Sparkles"
+            },
+            {
+                "title": "Satış İçin ChatGPT Promptları",
+                "iconName": "Wrench"
+            },
+            {
+                "title": "İK Uzmanları İçin Promptlar",
+                "iconName": "Users"
+            },
+            {
+                "title": "AI Görsel & Sanat Promptları",
+                "iconName": "ImageIcon"
+            },
+            {
+                "title": "SEO & İçerik Yazımı Promptları",
+                "iconName": "FileCode2"
+            },
+            {
+                "title": "İş & Strateji Promptları",
+                "iconName": "Anchor"
+            }
+        ],
+        "popularSub": "Nişiniz için özel prompt mühendisliği setlerini keşfetmek için herhangi bir kategoriye tıklayın.",
+        "whyProfessionals": "Profesyoneller Neden Bizim AI Prompt Kütüphanemizi Kullanıyor?",
+        "reasons": {
+            "tested": "Promptlar test edilmiştir",
+            "testedDesc": "Her bir prompt, birden fazla modelde doğruluk ve verimlilik açısından doğrulanmıştır.",
+            "updated": "Haftalık güncellenir",
+            "updatedDesc": "En son AI trendleriyle depomuzu güncel tutarak eğrinin önünde kalıyoruz.",
+            "useCase": "Kullanım senaryosu odaklı",
+            "useCaseDesc": "Genel dolgu maddesi yok. Sadece gerçek iş görevleri için tasarlanmış pratik promptlar.",
+            "friendly": "Başlangıç ve ileri seviye dostu",
+            "friendlyDesc": "Basit tek satırlık ifadeler veya karmaşık çok adımlı mantıksal zincirler."
+        },
+        "howItWorks": "AI Promptlarımızı Etkili Bir Şekilde Nasıl Kullanırsınız?",
+        "steps": {
+            "step1": "Hedefinizi Seçin",
+            "step1Desc": "Tamamlamanız gereken göreve göre bir prompt kategorisi seçin.",
+            "step2": "Kopyala ve Uyarla",
+            "step2Desc": "Tek tıkla kopyalama özelliğimizi kullanın ve parantez içindeki bilgileri verilerinizle değiştirin.",
+            "step3": "Çalıştır ve İyileştir",
+            "step3Desc": "Seçtiğiniz AI'ya yapıştırın ve sihrin gerçekleşmesini izleyin."
+        },
+        "latestScripts": "En Son AI Scriptleri",
+        "exploreByUseCaseLinks": [
+            "Pazarlama için ChatGPT Promptları",
+            "Satış için ChatGPT Promptları",
+            "Video Oluşturma için AI Promptları",
+            "Görsel Üretimi için AI Promptları",
+            "İş Stratejisi Promptları",
+            "Akademik Yazım AI Araçları",
+            "Müşteri Destek Senaryoları",
+            "Kodlama Asistanı Hookları"
+        ],
+        "exploreByUseCase": "Kullanım Senaryolarına Göre AI Promptlarını Keşfet",
+        "faqTitle": "AI Promptları Hakkında Sıkça Sorulan Sorular",
+        "faqs": [
+            {
+                "question": "AI prompt kütüphanesi nedir?",
+                "answer": "AI prompt kütüphanesi, prompt mühendislerinin AI etkileşimi için kanıtlanmış tarifleri paylaştığı merkezi bir ekosistemdir. Kullanıcıların ChatGPT ve Midjourney gibi modellerden daha iyi sonuçlar almasına yardımcı olur."
+            },
+            {
+                "question": "Bu promptları kullanmak ücretsiz mi?",
+                "answer": "Topluluk promptlarımızın çoğu kopyalamak ve kullanmak için tamamen ücretsizdir. Ayrıca kurumsal düzeydeki görevler için doğrulanmış premium scriptler sunuyoruz."
+            },
+            {
+                "question": "Bu promptlar ChatGPT ile çalışıyor mu?",
+                "answer": "Evet, promptlarımız tutarlı performans sağlamak için ChatGPT (GPT-4o, o1), Claude ve diğer önde gelen LLM modelleriyle açıkça test edilmiştir."
+            },
+            {
+                "question": "Kütüphane ne sıklıkla güncelleniyor?",
+                "answer": "Ekibimiz ve topluluğumuz, AI model davranışlarındaki ve yeteneklerindeki en son değişiklikleri yansıtan haftalık olarak test edilmiş yeni promptlar yayınlamaktadır."
+            }
+        ],
+        "viewAll": "Hepsini Gör",
+        "trending": "Şu Anda Trend",
+        "allModels": "Tüm Modeller",
+        "sortBy": "Sıralama: En Yeni",
+        "official": "Resmi",
+        "community": "Topluluk"
+    },
+    "Common": {
+        "verified": "Onaylı",
+        "official": "Resmi",
+        "script": "Script",
+        "hook": "Hook",
+        "tool": "Araç",
+        "blog": "Blog",
+        "article": "Makale",
+        "readTime": "{min} dk okuma",
+        "views": "İzlenme",
+        "likes": "Beğeni",
+        "follow": "Takip Et",
+        "viewPost": "Gönderiyi Gör",
+        "followers": "Takipçi",
+        "prompts": "Promptlar",
+        "following": "Takip Ediliyor"
+    },
+    "Categories": {
+        "All Models": "Tüm Modeller",
+        "Photography": "Fotoğrafçılık",
+        "Portrait": "Portre",
+        "Anime & Manga": "Anime & Manga",
+        "3D Render": "3D Render",
+        "Architecture": "Mimari",
+        "Interior Design": "İç Tasarım",
+        "Logo & Icon": "Logo & İkon",
+        "UI/UX Design": "UI/UX Tasarımı",
+        "Game Assets": "Oyun Varlıkları",
+        "Fashion": "Moda",
+        "Cinematic": "Sinematik"
+    },
+    "Auth": {
+        "welcomeBack": "Tekrar Hoş Geldiniz",
+        "createAccount": "Hesap Oluştur",
+        "enterDetails": "Hesabınıza erişmek için e-posta adresinizi ve şifrenizi girin.",
+        "joinNow": "Harika promptları keşfetmeye başlamak için şimdi katılın.",
+        "name": "İsim",
+        "email": "E-posta",
+        "password": "Şifre",
+        "confirmPassword": "Şifreyi Onayla",
+        "rememberMe": "30 gün boyunca beni hatırla",
+        "forgotPassword": "Şifrenizi mi unuttunuz?",
+        "signIn": "Giriş Yap",
+        "register": "Hesap oluştur",
+        "orContinueWith": "Veya şununla devam et",
+        "dontHaveAccount": "Hesabınız yok mu?",
+        "alreadyHaveAccount": "Zaten bir hesabınız var mı?",
+        "signUpLink": "Kayıt ol",
+        "signInLink": "Giriş yap",
+        "copyright": "© 2024 Promptda. Tüm hakları saklıdır.",
+        "privacy": "Gizlilik Politikası"
+    },
+    "Profile": {
+        "title": "Profiliniz",
+        "editProfile": "Profili Düzenle",
+        "stats": "İstatistikler",
+        "promptsCreated": "Oluşturulan Promptlar",
+        "favorites": "Favoriler",
+        "memberSince": "Üyelik Tarihi",
+        "role": "Rol",
+        "email": "E-posta Adresi",
+        "location": "Konum",
+        "bio": "Hakkında",
+        "saveChanges": "Değişiklikleri Kaydet",
+        "tabs": {
+            "overview": "Genel Bakış",
+            "prompts": "Promptlarım",
+            "collections": "Koleksiyonlar"
+        }
+    },
+    "UserMenu": {
+        "profile": "Profil",
+        "adminPanel": "Admin Paneli",
+        "settings": "Ayarlar",
+        "logout": "Çıkış Yap"
+    },
+    "Prompts": {
+        "title": "Tüm Promptlar",
+        "metaTitle": "AI Prompt Kütüphanesi - ChatGPT, Midjourney & Stable Diffusion Promptları",
+        "metaDescription": "Midjourney, DALL-E, GPT-4 ve daha fazlası için küratörlüğünü yaptığımız yüksek kaliteli AI prompt koleksiyonumuzu keşfedin. Yaratıcı projeleriniz için mükemmel promptu bulun.",
+        "browseLibrary": "Premium AI Prompt Kütüphanesine Göz Atın",
+        "libraryDesc": "Midjourney, DALL-E, GPT-4 ve daha fazlası için küratörlüğünü yaptığımız yüksek kaliteli AI prompt koleksiyonumuzu keşfedin. Yaratıcı projeleriniz için mükemmel promptu bulun.",
+        "promptsAvailable": "prompt mevcut",
+        "noPromptsFound": "Prompt bulunamadı",
+        "noPromptsDesc": "Filtrelerinizi ayarlamayı deneyin veya yeni içerikler için daha sonra tekrar kontrol edin.",
+        "breadcrumbHome": "Ana Sayfa",
+        "breadcrumbPrompts": "Promptlar"
+    },
+    "Scripts": {
+        "metaTitle": "Script Kütüphanesi | AI & Geliştirme Scriptleri | Promptda",
+        "metaDescription": "Geliştirme, otomasyon ve AI entegrasyonu için kullanışlı script koleksiyonumuzu keşfedin. Python, Bash ve JavaScript scriptlerini bulun."
+    },
+    "Hooks": {
+        "metaTitle": "Hook Kütüphanesi | Uzman AI Yanıt Mühendisliği | Promptda",
+        "metaDescription": "Elit AI yanıt hookları koleksiyonumuzu keşfedin. Tutarlı AI çıktıları için profesyonel mühendislik."
+    },
+    "Blog": {
+        "metaTitle": "Blog | AI Haberleri, Eğitimler & İçgörüler",
+        "metaDescription": "AI, promptlar, geliştirme ve üretkenlik hakkında en son makaleleri okuyun."
+    },
+    "Tools": {
+        "metaTitle": "AI Araçları Dizini | En İyi AI Yazılımları & Hizmetleri | Promptda",
+        "metaDescription": "En iyi AI araçlarını ve hizmetlerini keşfedin. İhtiyaçlarınız için mükemmel çözümü bulmak için özellikleri, fiyatları ve incelemeleri karşılaştırın."
+    },
+    "Community": {
+        "metaTitle": "AI Topluluğu | İçerik Oluşturucularla & Geliştiricilerle Bağlantı Kurun | Promptda",
+        "metaDescription": "AI meraklıları, geliştiriciler ve prompt mühendisleri topluluğumuza katılın. Bilgi paylaşın, sorular sorun ve işbirliği yapın."
+    },
+    "Filters": {
+        "allCategories": "Tüm Kategoriler",
+        "allModels": "Tüm Modeller",
+        "sortBy": "Sıralama",
+        "newest": "En Yeni",
+        "popular": "En Popüler"
+    },
+    "Settings": {
+        "title": "Ayarlar",
+        "account": "Hesap",
+        "appearance": "Görünüm",
+        "notifications": "Bildirimler",
+        "general": "Genel",
+        "language": "Dil",
+        "theme": "Tema",
+        "deleteAccount": "Hesabı Sil",
+        "deleteWarning": "Hesabınızı sildiğinizde geri dönüşü yoktur. Lütfen emin olun.",
+        "section": {
+            "profile": "Profil Ayarları",
+            "security": "Güvenlik",
+            "preferences": "Tercihler"
+        },
+        "fields": {
+            "displayName": "Görünen Ad",
+            "username": "Kullanıcı Adı",
+            "currentPassword": "Mevcut Şifre",
+            "newPassword": "Yeni Şifre",
+            "confirmNewPassword": "Yeni Şifreyi Onayla",
+            "emailNotifications": "E-posta Bildirimleri",
+            "marketingEmails": "Pazarlama E-postaları"
+        }
+    },
+    "Admin": {
+        "title": "Admin Paneli",
+        "totalUsers": "Toplam Kullanıcı",
+        "totalPrompts": "Toplam Prompt",
+        "dailyViews": "Günlük İzlenme",
+        "revenue": "Gelir",
+        "recentPrompts": "Son Promptlar",
+        "popularCategories": "Popüler Kategoriler",
+        "userManagement": "Kullanıcı Yönetimi",
+        "analytics": "Analizler",
+        "settings": "Sistem Ayarları",
+        "approvals": "Bekleme Listesi"
+    }
+}

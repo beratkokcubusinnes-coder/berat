@@ -1,0 +1,222 @@
+{
+    "Sidebar": {
+        "discover": "Descubrir",
+        "favorites": "Favoritos",
+        "blog": "Blog",
+        "prompts": "Prompts",
+        "scripts": "Scripts",
+        "hooks": "Hooks",
+        "members": "Miembros",
+        "tools": "Herramientas",
+        "community": "Comunidad",
+        "about": "Sobre nosotros",
+        "contact": "Contacto",
+        "privacy": "Privacidad",
+        "terms": "Términos",
+        "beta": "Beta",
+        "admin": "Panel de Admin"
+    },
+    "Navbar": {
+        "searchPlaceholder": "Buscar prompts...",
+        "upload": "Subir Prompt",
+        "tools": "Herramientas",
+        "login": "Iniciar sesión",
+        "notifications": {
+            "title": "Notificaciones",
+            "markAllRead": "Marcar todo como leído",
+            "welcomeTitle": "¡Bienvenido a Promptda!",
+            "welcomeText": "Comienza a explorar miles de prompts de IA.",
+            "updateTitle": "Nuevas funciones disponibles",
+            "updateText": "Mira las nuevas opciones de personalización de perfil."
+        }
+    },
+    "Home": {
+        "verifiedLibrary": "Biblioteca de Prompts de IA Verificada",
+        "heroTitlePart1": "Biblioteca de Prompts:",
+        "heroTitlePart2": "Alta Calidad",
+        "heroTitlePart3": "ChatGPT & Prompts de IA",
+        "metaTitle": "Promptda - Biblioteca Premium de Prompts de IA & ChatGPT",
+        "metaDescription": "Descubre los mejores prompts para ChatGPT, Midjourney y Claude. Aumenta tu productividad con nuestra biblioteca verificada de prompts de IA.",
+        "heroSubtitle": "Descubre miles de prompts de IA probados para uso real. Aumenta tu productividad con ingeniería profesional.",
+        "explorePrompts": "Explorar Prompts",
+        "submitPrompt": "Enviar un Prompt",
+        "featuredPrompts": "Prompts en Tendencia",
+        "contentH2": "Descubre miles de prompts de IA probados para el mundo real",
+        "contentText1": "Bienvenido a la biblioteca de prompts de IA más avanzada del mundo. Nuestra misión es proporcionar prompts de alta calidad.",
+        "contentText2": "Nuestra biblioteca se actualiza regularmente, ofreciéndote los últimos avances en ingeniería de prompts para 2026.",
+        "popularCategories": "Categorías Populares de Prompts de IA",
+        "popularSub": "Haz clic en cualquier categoría para explorar conjuntos especializados.",
+        "whyProfessionals": "Por qué los profesionales usan nuestra biblioteca",
+        "reasons": {
+            "tested": "Prompts probados",
+            "testedDesc": "Cada prompt es verificado en múltiples modelos.",
+            "updated": "Actualizado semanalmente",
+            "updatedDesc": "Nos mantenemos al día con las últimas tendencias de IA.",
+            "useCase": "Enfocado en casos de uso",
+            "useCaseDesc": "Sin relleno genérico. Solo prompts prácticos.",
+            "friendly": "Para principiantes y avanzados",
+            "friendlyDesc": "Desde líneas simples hasta cadenas lógicas complejas."
+        },
+        "howItWorks": "Cómo usar nuestros prompts de manera efectiva",
+        "steps": {
+            "step1": "Selecciona tu objetivo",
+            "step1Desc": "Elige una categoría basada en tu tarea.",
+            "step2": "Copia y adapta",
+            "step2Desc": "Usa nuestra copia en un clic y adapta los datos.",
+            "step3": "Ejecuta y refina",
+            "step3Desc": "Pega en tu IA favorita y mira la magia."
+        },
+        "latestScripts": "Últimos Scripts de IA",
+        "exploreByUseCase": "Explorar por caso de uso",
+        "faqTitle": "Preguntas frecuentes sobre prompts de IA",
+        "faqs": [
+            {
+                "question": "¿Qué es una biblioteca de prompts?",
+                "answer": "Es un ecosistema centralizado donde expertos comparten recetas probadas."
+            },
+            {
+                "question": "¿Son gratuitos?",
+                "answer": "La mayoría son totalmente gratuitos."
+            }
+        ],
+        "viewAll": "Ver todo",
+        "trending": "Tendencia ahora",
+        "allModels": "Todos los modelos",
+        "sortBy": "Ordenar por: Recientes",
+        "official": "Oficial",
+        "community": "Comunidad"
+    },
+    "Common": {
+        "verified": "Verificado",
+        "official": "Oficial",
+        "script": "Script",
+        "hook": "Hook",
+        "tool": "Herramienta",
+        "blog": "Blog",
+        "article": "Artículo",
+        "readTime": "{min} min de lectura",
+        "views": "Vistas",
+        "likes": "Me gusta",
+        "follow": "Seguir",
+        "viewPost": "Ver post",
+        "followers": "Seguidores",
+        "prompts": "Prompts",
+        "following": "Siguiendo"
+    },
+    "Categories": {
+        "All Models": "Todos los modelos",
+        "Photography": "Fotografía",
+        "Portrait": "Retrato",
+        "Anime & Manga": "Anime & Manga",
+        "3D Render": "Render 3D",
+        "Architecture": "Arquitectura",
+        "Interior Design": "Diseño de Interiores",
+        "Logo & Icon": "Logo & Icono",
+        "UI/UX Design": "Diseño UI/UX",
+        "Game Assets": "Recursos de Juegos",
+        "Fashion": "Moda",
+        "Cinematic": "Cinematográfico"
+    },
+    "Auth": {
+        "welcomeBack": "Bienvenido de nuevo",
+        "createAccount": "Crear una cuenta",
+        "enterDetails": "Ingresa tus datos para acceder.",
+        "joinNow": "Únete ahora para descubrir prompts.",
+        "name": "Nombre",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirmar Password",
+        "rememberMe": "Recordarme por 30 días",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "signIn": "Entrar",
+        "register": "Crear cuenta",
+        "orContinueWith": "O continuar con",
+        "dontHaveAccount": "¿No tienes cuenta?",
+        "alreadyHaveAccount": "¿Ya tienes cuenta?",
+        "signUpLink": "Regístrate",
+        "signInLink": "Entra",
+        "copyright": "© 2024 Promptda. Todos los derechos reservados.",
+        "privacy": "Privacidad"
+    },
+    "Profile": {
+        "title": "Tu Perfil",
+        "editProfile": "Editar Perfil",
+        "stats": "Estadísticas",
+        "promptsCreated": "Prompts Creados",
+        "favorites": "Favoritos",
+        "memberSince": "Miembro desde",
+        "role": "Rol",
+        "email": "Email",
+        "location": "Ubicación",
+        "bio": "Bio",
+        "saveChanges": "Guardar cambios",
+        "tabs": {
+            "overview": "Resumen",
+            "prompts": "Mis Prompts",
+            "collections": "Colecciones"
+        }
+    },
+    "UserMenu": {
+        "profile": "Perfil",
+        "adminPanel": "Panel de Admin",
+        "settings": "Ajustes",
+        "logout": "Salir"
+    },
+    "Prompts": {
+        "title": "Todos los Prompts",
+        "metaTitle": "Biblioteca de Prompts de IA - ChatGPT, Midjourney & Stable Diffusion",
+        "metaDescription": "Explora nuestra colección curada de prompts de IA de alta calidad para Midjourney, DALL-E, GPT-4 y más. Encuentra el prompt perfecto para tus proyectos creativos.",
+        "browseLibrary": "Explora la biblioteca",
+        "libraryDesc": "Encuentra el prompt perfecto.",
+        "promptsAvailable": "prompts disponibles",
+        "noPromptsFound": "No se encontraron prompts",
+        "noPromptsDesc": "Intenta ajustar los filtros.",
+        "breadcrumbHome": "Inicio",
+        "breadcrumbPrompts": "Prompts"
+    },
+    "Filters": {
+        "allCategories": "Todas las categorías",
+        "allModels": "Todos los modelos",
+        "sortBy": "Ordenar por",
+        "newest": "Más recientes",
+        "popular": "Más populares"
+    },
+    "Settings": {
+        "title": "Ajustes",
+        "account": "Cuenta",
+        "appearance": "Apariencia",
+        "notifications": "Notificaciones",
+        "general": "General",
+        "language": "Idioma",
+        "theme": "Tema",
+        "deleteAccount": "Borrar cuenta",
+        "deleteWarning": "Esto no se puede deshacer.",
+        "section": {
+            "profile": "Perfil",
+            "security": "Seguridad",
+            "preferences": "Preferencias"
+        },
+        "fields": {
+            "displayName": "Nombre",
+            "username": "Usuario",
+            "currentPassword": "Password actual",
+            "newPassword": "Nuevo Password",
+            "confirmNewPassword": "Confirmar nuevo Password",
+            "emailNotifications": "Notificaciones por Email",
+            "marketingEmails": "Emails de marketing"
+        }
+    },
+    "Admin": {
+        "title": "Panel de Control",
+        "totalUsers": "Usuarios totales",
+        "totalPrompts": "Prompts totales",
+        "dailyViews": "Vistas diarias",
+        "revenue": "Ingresos",
+        "recentPrompts": "Prompts recientes",
+        "popularCategories": "Categorías populares",
+        "userManagement": "Gestión de usuarios",
+        "analytics": "Analítica",
+        "settings": "Ajustes del sistema",
+        "approvals": "Lista de Espera"
+    }
+}
