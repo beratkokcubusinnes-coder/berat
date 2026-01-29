@@ -75,10 +75,11 @@ export async function updateSystemSettings(formData: FormData) {
         }
 
         revalidatePath("/");
+        revalidatePath("/", "layout"); // Force layout update for logo
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Settings update error:", error);
-        return { error: "Failed to update settings" };
+        return { error: `Failed to update settings: ${error.message}` };
     }
 }
 async function saveSystemFile(file: File, prefix: string) {
