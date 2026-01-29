@@ -143,7 +143,7 @@ export default function TranslationTestPage() {
                             rows: 4,
                         },
                     ]}
-                    defaultLanguage="en"
+
                     values={translations}
                     onChange={(lang, field, value) => {
                         setTranslations(prev => ({
