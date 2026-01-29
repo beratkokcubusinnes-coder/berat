@@ -2,7 +2,7 @@
 
 import { getSession } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { writeFile, mkdir } from "fs/promises"
 import { join } from "path"
 import path from "path"
@@ -76,7 +76,6 @@ export async function updateSystemSettings(formData: FormData) {
 
         revalidatePath("/");
         revalidatePath("/", "layout"); // Force layout update for logo
-        revalidateTag("system-settings");
         return { success: true };
     } catch (error: any) {
         console.error("Settings update error:", error);

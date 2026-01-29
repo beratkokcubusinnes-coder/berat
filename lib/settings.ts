@@ -100,7 +100,7 @@ export const getSystemSettings = unstable_cache(
         }
     },
     ["system-settings"],
-    { revalidate: 3600, tags: ["system-settings"] }
+    { revalidate: 10, tags: ["system-settings"] }
 );
 
 export async function getSystemSetting(key: keyof typeof DEFAULTS) {
