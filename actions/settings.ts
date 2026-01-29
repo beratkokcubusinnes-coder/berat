@@ -75,7 +75,6 @@ export async function updateSystemSettings(formData: FormData) {
         }
 
         revalidatePath("/");
-        revalidateTag("system-settings");
         return { success: true };
     } catch (error) {
         console.error("Settings update error:", error);

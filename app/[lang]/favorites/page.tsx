@@ -21,7 +21,7 @@ export default async function FavoritesPage({ params }: { params: Promise<{ lang
         redirect(`/${lang}/login`);
     }
 
-    const favorites = await getUserFavorites(session.id as string);
+    const favorites = await getUserFavorites(session.userId as string);
 
     return (
         <div className="min-h-screen bg-background text-foreground">

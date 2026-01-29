@@ -65,7 +65,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             data: {
                 content,
                 threadId: thread.id,
-                authorId: session.id
+                authorId: session.userId
             },
             include: {
                 author: {
