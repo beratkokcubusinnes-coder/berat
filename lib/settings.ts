@@ -58,24 +58,24 @@ export const DEFAULTS = {
     ])
 };
 
-import { unstable_cache } from "next/cache";
+// Removed unstable_cache to fetch data directly from DB
+export async function getSystemSettings() {
+    try {
+        const settings = await prisma.systemSetting.findMany();
+        const map: Record<string, any> = {};
+        settings.forEach(s => map[s.key] = s.value);
 
-export const getSystemSettings = unstable_cache(
-    async () => {
+        const finalSettings = { ...DEFAULTS, ...map };
+
+        // Fetch metadata for system assets
+        const assetUrls = [
+            finalSettings.site_logo,
+            finalSettings.site_icon,
+            finalSettings.default_avatar
+        ].filter(url => url && !url.startsWith('http'));
+
+        // Metadata fetching wrapped in try-catch to be safe
         try {
-            const settings = await prisma.systemSetting.findMany();
-            const map: Record<string, any> = {};
-            settings.forEach(s => map[s.key] = s.value);
-
-            const finalSettings = { ...DEFAULTS, ...map };
-
-            // Fetch metadata for system assets
-            const assetUrls = [
-                finalSettings.site_logo,
-                finalSettings.site_icon,
-                finalSettings.default_avatar
-            ].filter(url => url && !url.startsWith('http'));
-
             const mediaItems = await prisma.media.findMany({
                 where: { url: { in: assetUrls } }
             });
@@ -92,16 +92,16 @@ export const getSystemSettings = unstable_cache(
                     finalSettings.default_avatar_alt = item.altText || finalSettings.default_avatar_alt;
                 }
             });
-
-            return finalSettings;
-        } catch (e) {
-            console.error("Failed to fetch settings", e);
-            return DEFAULTS;
+        } catch (mediaError) {
+            console.warn("Failed to fetch media metadata", mediaError);
         }
-    },
-    ["system-settings"],
-    { revalidate: 10, tags: ["system-settings"] }
-);
+
+        return finalSettings;
+    } catch (e) {
+        console.error("Failed to fetch settings", e);
+        return DEFAULTS;
+    }
+}
 
 export async function getSystemSetting(key: keyof typeof DEFAULTS) {
     try {
