@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
     try {
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
         if (action === "clear_cache") {
             // Revalidate the cache tag used in getSeoSettings
-            revalidateTag("seo-settings");
+            revalidatePath("/", "layout");
             return NextResponse.json({ message: "SEO Settings cache cleared successfully." });
         }
 

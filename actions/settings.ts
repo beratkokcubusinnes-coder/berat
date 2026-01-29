@@ -2,7 +2,7 @@
 
 import { getSession } from "@/lib/session"
 import { prisma } from "@/lib/prisma"
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { writeFile } from "fs/promises"
 import { join } from "path"
 import path from "path"
