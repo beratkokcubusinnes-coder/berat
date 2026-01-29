@@ -60,6 +60,7 @@ export default async function UserProfile({ params }: { params: Promise<{ lang: 
     // Map Prisma result to expected ProfilePage format
     const formattedUser = {
         ...user,
+        name: user.name || user.username,
         promptsCount: user._count.prompts,
         followers: user._count.followers,
         following: user._count.following,
