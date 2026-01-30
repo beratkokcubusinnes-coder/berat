@@ -157,6 +157,7 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                                 width={32}
                                 height={32}
                                 className="object-cover w-full h-full transform scale-150"
+                                unoptimized
                             />
                         </button>
 
@@ -169,7 +170,7 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition-colors text-left"
                                     >
                                         <div className="w-5 h-5 rounded-full overflow-hidden border border-border/20 relative shrink-0">
-                                            <Image src={l.flag} alt={l.name} fill className="object-cover scale-150" />
+                                            <Image src={l.flag} alt={l.name} fill className="object-cover scale-150" unoptimized />
                                         </div>
                                         <span>{l.name}</span>
                                     </button>

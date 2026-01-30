@@ -11,6 +11,7 @@ export async function getCategoriesByType(type: string) {
 
 export async function getUsers(): Promise<any[]> {
     return await prisma.user.findMany({
+        orderBy: { createdAt: 'desc' },
         include: {
             _count: {
                 select: {
@@ -127,6 +128,7 @@ export async function getPromptsByCategory(categorySlug: string) {
                 slug: categorySlug
             }
         },
+        orderBy: { createdAt: 'desc' },
         include: { author: true }
     });
 }
@@ -139,6 +141,7 @@ export async function getRelatedPrompts(categoryId: string | null, excludeId: st
             categoryId,
             id: { not: excludeId }
         },
+        orderBy: { createdAt: 'desc' },
         take: 4,
         include: { author: true }
     });
@@ -169,6 +172,7 @@ export async function getRelatedScripts(categoryId: string | null, excludeId: st
             categoryId,
             id: { not: excludeId }
         } as any,
+        orderBy: { createdAt: 'desc' },
         take: 4,
         include: { author: true }
     });
@@ -196,6 +200,7 @@ export async function getScriptsByCategory(categorySlug: string) {
                 slug: categorySlug
             }
         } as any,
+        orderBy: { createdAt: 'desc' },
         include: { author: true }
     });
 }
@@ -225,6 +230,7 @@ export async function getRelatedHooks(categoryId: string | null, excludeId: stri
             categoryId,
             id: { not: excludeId }
         } as any,
+        orderBy: { createdAt: 'desc' },
         take: 4,
         include: { author: true }
     });
@@ -252,6 +258,7 @@ export async function getHooksByCategory(categorySlug: string) {
                 slug: categorySlug
             }
         } as any,
+        orderBy: { createdAt: 'desc' },
         include: { author: true }
     });
 }
@@ -295,6 +302,7 @@ export async function getBlogPostsByCategory(categorySlug: string) {
                 slug: categorySlug
             }
         },
+        orderBy: { createdAt: 'desc' },
         include: { author: true }
     });
 }
@@ -323,6 +331,7 @@ export async function getRelatedTools(categoryId: string | null, excludeId: stri
             categoryId,
             id: { not: excludeId }
         } as any,
+        orderBy: { createdAt: 'desc' },
         take: 4,
         include: { author: true }
     });
@@ -349,6 +358,7 @@ export async function getToolsByCategory(categorySlug: string) {
                 slug: categorySlug
             }
         },
+        orderBy: { createdAt: 'desc' },
         include: { author: true, categoryData: true }
     });
 }

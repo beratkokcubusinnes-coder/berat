@@ -126,6 +126,7 @@ export default async function BlogPage({
                                         alt={post.title}
                                         fill
                                         className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        unoptimized
                                     />
                                     <div className="absolute top-3 left-3">
                                         <span className="px-3 py-1 bg-primary/90 backdrop-blur-sm text-white rounded-full text-xs font-bold">

@@ -43,6 +43,7 @@ export function ImageTextBlock({
                         alt={imageAlt}
                         fill
                         className="object-cover"
+                        unoptimized
                     />
                 </div>
             </div>

@@ -139,6 +139,7 @@ export function UserEditForm({ user, lang }: UserEditFormProps) {
                                             alt="Preview"
                                             fill
                                             className="object-cover transition-all group-hover:scale-105"
+                                            unoptimized
                                         />
                                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                             <Camera className="w-6 h-6 text-white" />

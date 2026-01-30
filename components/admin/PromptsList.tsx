@@ -47,6 +47,7 @@ export function PromptsList({ prompts, lang }: PromptsListProps) {
                                                 alt=""
                                                 fill
                                                 className="object-cover"
+                                                unoptimized
                                             />
                                         </div>
                                         <div className="space-y-1">

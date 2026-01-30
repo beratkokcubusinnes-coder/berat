@@ -25,6 +25,7 @@ export function ToolCard({ tool, lang, dict }: { tool: any; lang: string; dict?:
                     alt={tool.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    unoptimized
                 />
                 <div className="absolute top-3 left-3">
                     <span className="bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full flex items-center gap-1">

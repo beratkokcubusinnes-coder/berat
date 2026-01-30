@@ -183,6 +183,7 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
                                             alt={item.altText || item.filename}
                                             fill
                                             className="object-cover"
+                                            unoptimized
                                         />
                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <span className="text-[10px] text-white font-bold uppercase tracking-widest px-2 py-1 bg-black/60 rounded-lg">
@@ -225,6 +226,7 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
                                         alt={selectedItem.filename}
                                         fill
                                         className="object-contain"
+                                        unoptimized
                                     />
                                     <div className="absolute bottom-4 right-4 flex gap-2">
                                         <button className="p-2 bg-black/60 backdrop-blur-md text-white rounded-xl hover:bg-primary transition-all shadow-lg">

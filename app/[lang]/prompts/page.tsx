@@ -64,13 +64,14 @@ export default async function PromptsPage({
         allPrompts = allPrompts.filter((p: any) => p.model === model);
     }
 
-    // Apply sorting
-    if (sort === "newest") {
+    // Apply sorting (Default: Newest)
+    if (sort === "popular") {
+        allPrompts = allPrompts.sort((a: any, b: any) => (b.likes || 0) - (a.likes || 0));
+    } else {
+        // Newest is default
         allPrompts = allPrompts.sort((a: any, b: any) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-    } else if (sort === "popular") {
-        allPrompts = allPrompts.sort((a: any, b: any) => (b.likes || 0) - (a.likes || 0));
     }
 
     // Get unique categories and models for filters

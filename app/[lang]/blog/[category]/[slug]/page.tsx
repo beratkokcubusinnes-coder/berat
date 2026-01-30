@@ -149,6 +149,7 @@ export default async function BlogPostDetailPage({
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                             className="object-cover"
                             priority
+                            unoptimized
                         />
                         {post.imageCaption && (
                             <figcaption className="absolute bottom-4 left-4 text-xs text-white bg-black/50 px-2 py-1 rounded">

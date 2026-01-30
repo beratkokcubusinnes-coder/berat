@@ -160,6 +160,7 @@ export default function AdminDashboard({ stats, lang, dict }: AdminDashboardProp
                                                     alt=""
                                                     fill
                                                     className="object-cover"
+                                                    unoptimized
                                                 />
                                             </div>
                                             <span className="text-sm font-semibold text-foreground truncate max-w-[200px]">{prompt.title}</span>

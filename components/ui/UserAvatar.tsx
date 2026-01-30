@@ -44,7 +44,7 @@ export default function UserAvatar({ src, alt = "User", size, className }: UserA
                     fill
                     className="object-cover"
                     sizes={`${size || 96}px`}
-                    unoptimized={typeof imageSrc === 'string' && imageSrc.startsWith('data:')}
+                    unoptimized={true}
                     onError={() => {
                         if (imageSrc === defaultAvatar) {
                             setIsError(true);

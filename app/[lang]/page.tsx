@@ -65,10 +65,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     getUsers()
   ]);
 
-  // Limit items for home page display - Prioritize Featured
-  const featuredPrompts = realPrompts.filter((p: any) => p.isFeatured);
-  const otherPrompts = realPrompts.filter((p: any) => !p.isFeatured);
-  const displayPrompts = [...featuredPrompts, ...otherPrompts].slice(0, 4);
+  // Limit items for home page display - STRICTLY BY DATE (Newest First)
+  const displayPrompts = realPrompts.slice(0, 4);
   const displayScripts = scripts.slice(0, 5);
   const displayHooks = hooks.slice(0, 5);
   const displayTools = tools.slice(0, 5);

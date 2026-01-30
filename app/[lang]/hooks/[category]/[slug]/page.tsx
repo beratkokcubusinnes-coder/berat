@@ -92,6 +92,7 @@ export default async function HookDetailPage({
                                     fill
                                     className="object-cover"
                                     priority
+                                    unoptimized
                                 />
                                 {/* Premium Overlay */}
                                 <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />

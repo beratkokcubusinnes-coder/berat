@@ -82,6 +82,7 @@ export default function ProfilePage({ user, lang, dict, isOwnProfile = false, se
                                     alt="Cover"
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    unoptimized
                                 />
                             ) : (
                                 <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-purple-500/20 to-blue-600/20 animate-gradient-x" />

@@ -103,6 +103,7 @@ export default async function ToolDetailPage({
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
                                     className="object-cover"
                                     priority
+                                    unoptimized
                                 />
                                 {/* Premium Overlay */}
                                 <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
