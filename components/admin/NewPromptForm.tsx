@@ -64,6 +64,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
     const [authorBio, setAuthorBio] = useState(initialData?.authorBio || "");
     const [promptCount, setPromptCount] = useState(initialData?.promptCount?.toString() || "1");
     const [promptType, setPromptType] = useState(initialData?.promptType || "ChatGPT");
+    const [content, setContent] = useState(initialData?.content || "");
 
     // Translation State
     const [translations, setTranslations] = useState<Record<string, Record<string, string>>>(initialTranslations || {
@@ -220,11 +221,12 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                 <textarea
                                     name="content"
                                     rows={6}
-                                    defaultValue={initialData?.content || ""}
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
                                     placeholder="Enter the actual prompt text here..."
                                     className="w-full bg-slate-900 text-emerald-400 rounded-3xl p-8 border border-border shadow-inner focus:ring-4 focus:ring-primary/5 outline-none font-mono text-sm leading-relaxed"
                                 />
-                                {state.errors?.prompt && <p className="text-xs text-red-500 font-bold uppercase tracking-widest">{state.errors.prompt[0]}</p>}
+                                {state.errors?.content && <p className="text-xs text-red-500 font-bold uppercase tracking-widest">{state.errors.content[0]}</p>}
                             </div>
 
                             {/* Extra Reference Image / Gallery */}
