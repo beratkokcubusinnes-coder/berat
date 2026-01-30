@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, KeyboardEvent } from "react";
-import { Plus, Trash2, GripVertical, ChevronUp, ChevronDown, Type, Heading1, Heading2, Heading3, HelpCircle, ListTree, Table as TableIcon, Youtube, Quote, Star, Image as ImageIcon, Code, Minus, List, AlertCircle, Terminal, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2, GripVertical, ChevronUp, ChevronDown, Type, Heading1, Heading2, Heading3, HelpCircle, ListTree, Table as TableIcon, Youtube, Quote, Star, Image as ImageIcon, Code, Minus, List, AlertCircle, Terminal, CheckCircle2, Layout } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * With multi-item FAQ, HowTo, dynamic tables, and Review support
  */
 
-type BlockType = "paragraph" | "h1" | "h2" | "h3" | "faq" | "howto" | "table" | "video" | "review" | "image" | "quote" | "code" | "list" | "divider" | "callout";
+type BlockType = "paragraph" | "h1" | "h2" | "h3" | "faq" | "howto" | "table" | "video" | "review" | "image" | "gallery" | "quote" | "code" | "list" | "divider" | "callout";
 
 interface Block {
     id: string;
@@ -61,12 +61,13 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                 type === "faq" ? { items: [{ question: "", answer: "" }] } :
                     type === "howto" ? { name: "", steps: [{ title: "", text: "" }] } :
                         type === "image" ? { url: "", alt: "", caption: "" } :
-                            type === "quote" ? { text: "", author: "" } :
-                                type === "code" ? { lang: "javascript", code: "" } :
-                                    type === "list" ? { style: "bullet", items: [""] } :
-                                        type === "callout" ? { type: "info", text: "" } :
-                                            type === "divider" ? "" :
-                                                type === "review" ? { itemName: "", rating: 5, author: "", text: "" } : ""
+                            type === "gallery" ? { items: [{ url: "", caption: "" }] } :
+                                type === "quote" ? { text: "", author: "" } :
+                                    type === "code" ? { lang: "javascript", code: "" } :
+                                        type === "list" ? { style: "bullet", items: [""] } :
+                                            type === "callout" ? { type: "info", text: "" } :
+                                                type === "divider" ? "" :
+                                                    type === "review" ? { itemName: "", rating: 5, author: "", text: "" } : ""
         };
 
         if (afterBlockId) {
@@ -191,6 +192,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                             <BlockTypeButton type="h2" icon={Heading2} label="H2 Title" color="text-blue-400" />
                             <BlockTypeButton type="h3" icon={Heading3} label="H3 Title" color="text-blue-400" />
                             <BlockTypeButton type="image" icon={ImageIcon} label="Image" color="text-indigo-400" />
+                            <BlockTypeButton type="gallery" icon={Layout} label="Gallery" color="text-cyan-400" />
                             <BlockTypeButton type="quote" icon={Quote} label="Quote" color="text-slate-400" />
                             <BlockTypeButton type="list" icon={List} label="Bullet List" color="text-teal-400" />
                             <BlockTypeButton type="code" icon={Terminal} label="Code Block" color="text-pink-400" />
@@ -256,6 +258,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                 {block.type === "h2" && <Heading2 className="w-3 h-3 text-blue-500" />}
                                 {block.type === "h3" && <Heading3 className="w-3 h-3 text-blue-500" />}
                                 {block.type === "image" && <ImageIcon className="w-3 h-3 text-indigo-500" />}
+                                {block.type === "gallery" && <Layout className="w-3 h-3 text-cyan-500" />}
                                 {block.type === "quote" && <Quote className="w-3 h-3 text-slate-500" />}
                                 {block.type === "code" && <Terminal className="w-3 h-3 text-pink-500" />}
                                 {block.type === "list" && <List className="w-3 h-3 text-teal-500" />}
@@ -524,6 +527,84 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                             <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${block.content}`} frameBorder="0" />
                                         </div>
                                     )}
+                                </div>
+                            )}
+
+                            {/* Gallery Block */}
+                            {block.type === "gallery" && (
+                                <div className="space-y-4 bg-cyan-500/5 border border-cyan-500/10 p-5 rounded-2xl">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2">
+                                            <Layout className="w-4 h-4 text-cyan-400" />
+                                            <span className="text-[10px] font-black uppercase text-cyan-400">Image Gallery</span>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const newItems = [...(block.content.items || []), { url: "", caption: "" }];
+                                                updateBlock(block.id, { ...block.content, items: newItems });
+                                            }}
+                                            className="text-[10px] font-black uppercase text-cyan-400 hover:text-cyan-300 px-3 py-1 bg-cyan-500/10 rounded-lg hover:bg-cyan-500/20 transition-all"
+                                        >
+                                            + Add Image
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {(block.content.items || []).map((item: any, i: number) => (
+                                            <div key={i} className="space-y-2 p-3 bg-black/20 rounded-xl relative group/item">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const newItems = block.content.items.filter((_: any, idx: number) => idx !== i);
+                                                        updateBlock(block.id, { ...block.content, items: newItems });
+                                                    }}
+                                                    className="absolute top-2 right-2 opacity-0 group-hover/item:opacity-100 text-red-400 hover:text-red-300 transition-all z-10"
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </button>
+                                                <div className="aspect-video bg-black/50 rounded-lg overflow-hidden border border-border flex items-center justify-center relative">
+                                                    {item.url ? (
+                                                        <img src={item.url} className="w-full h-full object-cover" alt="" />
+                                                    ) : (
+                                                        <ImageIcon className="w-6 h-6 text-muted-foreground/20" />
+                                                    )}
+                                                    <label className="absolute inset-0 cursor-pointer flex items-center justify-center opacity-0 hover:opacity-100 bg-black/60 transition-all">
+                                                        <span className="text-[10px] font-black uppercase text-white">Upload</span>
+                                                        <input
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept="image/*"
+                                                            onChange={async (e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (!file) return;
+                                                                const formData = new FormData();
+                                                                formData.append("file", file);
+                                                                try {
+                                                                    const res = await fetch("/api/upload", { method: "POST", body: formData });
+                                                                    const data = await res.json();
+                                                                    if (data.url) {
+                                                                        const newItems = [...block.content.items];
+                                                                        newItems[i].url = data.url;
+                                                                        updateBlock(block.id, { ...block.content, items: newItems });
+                                                                    }
+                                                                } catch (err) { console.error(err); }
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
+                                                <input
+                                                    className="w-full bg-transparent border-b border-white/10 py-1 text-[10px] focus:border-cyan-500 outline-none"
+                                                    placeholder="Caption (optional)"
+                                                    value={item.caption || ""}
+                                                    onChange={(e) => {
+                                                        const newItems = [...block.content.items];
+                                                        newItems[i].caption = e.target.value;
+                                                        updateBlock(block.id, { ...block.content, items: newItems });
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 

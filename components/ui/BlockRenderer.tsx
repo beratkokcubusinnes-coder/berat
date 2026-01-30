@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface Block {
     id: string;
-    type: "paragraph" | "h1" | "h2" | "h3" | "faq" | "howto" | "table" | "video" | "review" | "image" | "quote" | "code" | "list" | "divider" | "callout";
+    type: "paragraph" | "h1" | "h2" | "h3" | "faq" | "howto" | "table" | "video" | "review" | "image" | "gallery" | "quote" | "code" | "list" | "divider" | "callout";
     content: any;
 }
 
@@ -281,7 +281,7 @@ export function BlockRenderer({ content, className }: BlockRendererProps) {
 
                     case "image":
                         return (
-                            <div key={block.id} className="my-8 space-y-3">
+                            <div key={block.id} className="my-8 space-y-3 animate-in fade-in duration-700">
                                 <div className="relative group rounded-3xl overflow-hidden border border-border bg-black/40 shadow-2xl">
                                     <img
                                         src={block.content.url}
@@ -295,6 +295,30 @@ export function BlockRenderer({ content, className }: BlockRendererProps) {
                                         {block.content.caption}
                                     </p>
                                 )}
+                            </div>
+                        );
+
+                    case "gallery":
+                        return (
+                            <div key={block.id} className="my-10 space-y-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {(block.content.items || []).map((item: any, i: number) => (
+                                        <div key={i} className="group relative aspect-square rounded-2xl overflow-hidden border border-border bg-card shadow-lg hover:shadow-primary/20 transition-all duration-500">
+                                            <img
+                                                src={item.url}
+                                                alt={item.caption || "Gallery image"}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                            {item.caption && (
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                                    <p className="text-[10px] font-bold text-white uppercase tracking-wider line-clamp-2">
+                                                        {item.caption}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         );
 
