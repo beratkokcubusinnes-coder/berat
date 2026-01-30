@@ -55,9 +55,9 @@ export default async function RootLayout({
   const isMaintenance = settings.maintenance_mode === "true" && session?.role !== 'admin';
 
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning className="dark">
       <head>
-        <meta name="color-scheme" content="dark light" />
+        <meta name="color-scheme" content="dark only" />
         <meta name="theme-color" content="#02040a" />
         {/* Basic scripts that need early execution */}
         <script
@@ -68,7 +68,6 @@ export default async function RootLayout({
                   document.documentElement.classList.remove('dark')
                 } else {
                   document.documentElement.classList.add('dark')
-                  localStorage.theme = 'dark'
                 }
               } catch (_) {}
             `,
