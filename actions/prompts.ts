@@ -62,6 +62,7 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
         if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
             const url = await savePromptImage(imageFile);
             formData.set('image', url);
+            formData.set('images', url);
         }
 
         const beforeImageFile = formData.get('beforeImageFile') as File;
@@ -231,6 +232,7 @@ export async function updatePrompt(id: string, prevState: PromptState, formData:
         if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
             const url = await savePromptImage(imageFile);
             formData.set('image', url);
+            formData.set('images', url);
         }
 
         const beforeImageFile = formData.get('beforeImageFile') as File;
