@@ -68,7 +68,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   // Limit items for home page display - Prioritize Featured
   const featuredPrompts = realPrompts.filter((p: any) => p.isFeatured);
   const otherPrompts = realPrompts.filter((p: any) => !p.isFeatured);
-  const displayPrompts = [...featuredPrompts, ...otherPrompts].slice(0, 5);
+  const displayPrompts = [...featuredPrompts, ...otherPrompts].slice(0, 4);
   const displayScripts = scripts.slice(0, 5);
   const displayHooks = hooks.slice(0, 5);
   const displayTools = tools.slice(0, 5);
@@ -106,61 +106,67 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
         <main className="p-6 md:p-8 space-y-24 max-w-[1920px] mx-auto pb-24">
 
-          {/* SEO HERO SECTION (H1) */}
-          <section className="relative py-8 md:py-10 overflow-hidden rounded-[32px] bg-gradient-to-br from-primary/10 via-background to-background border border-primary/10 px-6 md:px-10">
-            <div className="relative z-10 max-w-4xl space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary border border-primary/20 text-xs font-black uppercase tracking-widest animate-pulse">
-                <Sparkles className="w-3 h-3" />
-                {dict.Home.verifiedLibrary}
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tighter leading-[1.1]">
-                {dict.Home.heroTitlePart1} <span className="text-primary italic">{dict.Home.heroTitlePart2}</span> {dict.Home.heroTitlePart3}
-              </h1>
-              <p className="text-lg text-muted-foreground font-medium leading-relaxed max-w-2xl">
-                {dict.Home.heroSubtitle}
-              </p>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Link href={getHref('/prompts', lang)} className="bg-foreground text-background px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-primary hover:text-white transition-all shadow-xl shadow-black/10">
-                  {dict.Home.explorePrompts}
-                </Link>
-                <Link href={getHref('/upload', lang)} className="bg-card border border-border px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] hover:border-primary transition-all">
-                  {dict.Home.submitPrompt}
-                </Link>
-              </div>
-            </div>
-            {/* Background Glows */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/20 rounded-full blur-[100px] -mr-48 -mt-48" />
-          </section>
-
+          {/* 1. TRENDING NOW - ABSOLUTE TOP */}
           <HomeSection title={dict.Home.trending} icon={Sparkles} href={getHref('/prompts', lang)} color="text-primary" dict={dict}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {displayPrompts.map((prompt: any) => (
                 <PromptCard key={prompt.id} prompt={prompt} lang={lang} dict={dict} />
               ))}
             </div>
           </HomeSection>
 
-          {/* SEO CONTENT PANEL (H2 - 1) */}
-          <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-12 space-y-8">
-              <div className="p-8 md:p-12 bg-card/30 backdrop-blur-xl border border-border rounded-[32px] shadow-2xl">
-                <h2 className="text-3xl font-black text-foreground mb-6">{dict.Home.contentH2}</h2>
-                <div className="prose prose-invert max-w-none text-muted-foreground leading-relaxed text-lg space-y-4">
-                  <p>{dict.Home.contentText1}</p>
-                  <p>{dict.Home.contentText2}</p>
-                </div>
+          {/* 2. SEO HERO SECTION */}
+          <section className="relative py-12 md:py-16 overflow-hidden rounded-[40px] bg-gradient-to-br from-primary/10 via-background to-background border border-primary/10 px-8 md:px-12">
+            <div className="relative z-10 max-w-4xl space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary border border-primary/20 text-xs font-black uppercase tracking-widest animate-pulse">
+                <Sparkles className="w-3 h-3" />
+                {dict.Home.verifiedLibrary}
+              </div>
+              <h1 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-[1.05]">
+                {dict.Home.heroTitlePart1} <span className="text-primary italic">{dict.Home.heroTitlePart2}</span> {dict.Home.heroTitlePart3}
+              </h1>
+              <p className="text-xl text-muted-foreground font-medium leading-relaxed max-w-3xl">
+                {dict.Home.heroSubtitle}
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <Link href={getHref('/prompts', lang)} className="bg-foreground text-background px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-primary hover:text-white transition-all shadow-2xl shadow-black/20">
+                  {dict.Home.explorePrompts}
+                </Link>
+                <Link href={getHref('/upload', lang)} className="bg-card border border-border px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:border-primary transition-all">
+                  {dict.Home.submitPrompt}
+                </Link>
               </div>
             </div>
+            {/* Background Glows */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -mr-64 -mt-64" />
           </section>
 
-          {/* CATEGORY HUB (H2 - 2) */}
-          <section className="space-y-12">
+          {/* 3. COMMUNITY */}
+          <HomeSection title={dict.Sidebar.community} icon={MessageCircle} href={getHref('/community', lang)} color="text-pink-400" dict={dict}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {displayThreads.map((thread: any) => (
+                <CommunityCard key={thread.id} thread={thread} lang={lang} dict={dict} />
+              ))}
+            </div>
+          </HomeSection>
+
+          {/* 4. BLOG / INSIGHTS */}
+          <HomeSection title={dict.Sidebar.blog} icon={BookOpen} href={getHref('/blog', lang)} color="text-orange-400" dict={dict}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {displayBlog.map((post: any) => (
+                <BlogCard key={post.id} post={post} lang={lang} dict={dict} />
+              ))}
+            </div>
+          </HomeSection>
+
+          {/* 5. POPULAR CATEGORIES (Category Hub) */}
+          <section className="space-y-16 py-12">
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-black text-foreground uppercase tracking-tight">{dict.Home.popularCategories}</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">{dict.Home.popularSub}</p>
+              <h2 className="text-5xl font-black text-foreground uppercase tracking-tight">{dict.Home.popularCategories}</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{dict.Home.popularSub}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {(dict.Home.popularCategoriesList || [
                 { title: "ChatGPT Prompts for Marketing", iconName: "Sparkles" },
                 { title: "ChatGPT Prompts for Sales", iconName: "Wrench" },
@@ -177,107 +183,79 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                 const color = colors[i % colors.length];
 
                 return (
-                  <div key={i} className="group p-8 bg-card border border-border rounded-3xl hover:border-primary/50 transition-all cursor-pointer shadow-sm hover:shadow-xl hover:shadow-primary/5">
-                    <IconComponent className={cn("w-10 h-10 mb-6", color)} />
-                    <h3 className="text-xl font-black text-foreground mb-2 group-hover:text-primary transition-colors">{cat.title}</h3>
-                    <p className="text-sm text-muted-foreground">Premium collection of professional grade AI interaction scripts for {cat.title?.toLowerCase()}.</p>
+                  <div key={i} className="group p-10 bg-card border border-border rounded-[40px] hover:border-primary/50 transition-all cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-primary/5">
+                    <IconComponent className={cn("w-12 h-12 mb-8", color)} />
+                    <h3 className="text-2xl font-black text-foreground mb-3 group-hover:text-primary transition-colors">{cat.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">Premium collection of professional grade AI interaction scripts for {cat.title?.toLowerCase()}.</p>
                   </div>
                 );
               })}
             </div>
           </section>
 
-          {/* EEAT / TRUST SECTION (H2 - 4) */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center py-12">
-            <div className="space-y-8">
-              <h2 className="text-4xl font-black text-foreground">{dict.Home.whyProfessionals}</h2>
-              <div className="grid grid-cols-1 gap-6">
-                {[
-                  { title: dict.Home.reasons.tested, desc: dict.Home.reasons.testedDesc },
-                  { title: dict.Home.reasons.updated, desc: dict.Home.reasons.updatedDesc },
-                  { title: dict.Home.reasons.useCase, desc: dict.Home.reasons.useCaseDesc },
-                  { title: dict.Home.reasons.friendly, desc: dict.Home.reasons.friendlyDesc }
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-foreground mb-1">{item.title}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="relative">
-              <div className="aspect-square rounded-[40px] bg-gradient-to-tr from-primary/20 to-transparent border border-white/5 overflow-hidden flex items-center justify-center">
-                <div className="w-3/4 h-3/4 bg-card rounded-3xl border border-border flex items-center justify-center shadow-2xl relative">
-                  <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full" />
-                  <Terminal className="w-24 h-24 text-primary relative z-10" />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* MAIN CONTENT GRIDS (Keep existing logic but H2) */}
-
-
-          {/* HOW IT WORKS (H2 - 5) */}
-          <section className="space-y-12 py-12 border-y border-border/50">
-            <h2 className="text-4xl font-black text-foreground text-center">{dict.Home.howItWorks}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-              {[
-                { step: "01", title: dict.Home.steps.step1, desc: dict.Home.steps.step1Desc },
-                { step: "02", title: dict.Home.steps.step2, desc: dict.Home.steps.step2Desc },
-                { step: "03", title: dict.Home.steps.step3, desc: dict.Home.steps.step3Desc }
-              ].map((s, i) => (
-                <div key={i} className="space-y-4">
-                  <div className="text-6xl font-black text-primary/10 select-none leading-none">{s.step}</div>
-                  <h4 className="text-xl font-black text-foreground">{s.title}</h4>
-                  <p className="text-muted-foreground">{s.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-
-
+          {/* 6. TOOLS SECTION */}
           <HomeSection title={dict.Home.popularCategories} icon={CheckCircle2} href={getHref('/categories', lang)} color="text-purple-400" dict={dict}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {displayTools.map((tool: any) => (
                 <ToolCard key={tool.id} tool={tool} lang={lang} dict={dict} />
               ))}
             </div>
           </HomeSection>
 
-          <HomeSection title={dict.Sidebar.community} icon={MessageCircle} href={getHref('/community', lang)} color="text-pink-400" dict={dict}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {displayThreads.map((thread: any) => (
-                <CommunityCard key={thread.id} thread={thread} lang={lang} dict={dict} />
+          {/* 7. EEAT / TRUST SECTION */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center py-24 bg-card/20 rounded-[64px] px-12 border border-border/50">
+            <div className="space-y-10">
+              <h2 className="text-5xl font-black text-foreground leading-tight">{dict.Home.whyProfessionals}</h2>
+              <div className="grid grid-cols-1 gap-8">
+                {[
+                  { title: dict.Home.reasons.tested, desc: dict.Home.reasons.testedDesc },
+                  { title: dict.Home.reasons.updated, desc: dict.Home.reasons.updatedDesc },
+                  { title: dict.Home.reasons.useCase, desc: dict.Home.reasons.useCaseDesc },
+                  { title: dict.Home.reasons.friendly, desc: dict.Home.reasons.friendlyDesc }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-6">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-black text-foreground mb-2">{item.title}</h4>
+                      <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="aspect-square rounded-[64px] bg-gradient-to-tr from-primary/20 to-transparent border border-white/5 overflow-hidden flex items-center justify-center p-12">
+                <div className="w-full h-full bg-card rounded-[48px] border border-border flex items-center justify-center shadow-2xl relative">
+                  <div className="absolute inset-0 bg-primary/10 blur-[100px] rounded-full" />
+                  <Terminal className="w-32 h-32 text-primary relative z-10" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 8. HOW IT WORKS */}
+          <section className="space-y-16 py-24 border-y border-border/50">
+            <h2 className="text-5xl font-black text-foreground text-center">{dict.Home.howItWorks}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center max-w-6xl mx-auto">
+              {[
+                { step: "01", title: dict.Home.steps.step1, desc: dict.Home.steps.step1Desc },
+                { step: "02", title: dict.Home.steps.step2, desc: dict.Home.steps.step2Desc },
+                { step: "03", title: dict.Home.steps.step3, desc: dict.Home.steps.step3Desc }
+              ].map((s, i) => (
+                <div key={i} className="space-y-6">
+                  <div className="text-8xl font-black text-primary/10 select-none leading-none mb-8">{s.step}</div>
+                  <h4 className="text-2xl font-black text-foreground">{s.title}</h4>
+                  <p className="text-muted-foreground text-lg leading-relaxed">{s.desc}</p>
+                </div>
               ))}
             </div>
-          </HomeSection>
+          </section>
 
-          <HomeSection title={dict.Sidebar.blog} icon={BookOpen} href={getHref('/blog', lang)} color="text-orange-400" dict={dict}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {displayBlog.map((post: any) => (
-                <BlogCard key={post.id} post={post} lang={lang} dict={dict} />
-              ))}
-            </div>
-          </HomeSection>
-
-          <HomeSection title={dict.Sidebar.members} icon={Users} href={getHref('/members', lang)} color="text-indigo-400" dict={dict}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-              {displayMembers.map((user: any) => (
-                <MemberCard key={user.id} member={user} lang={lang} dict={dict} />
-              ))}
-            </div>
-          </HomeSection>
-
-          {/* INTERNAL LINK GOLDMINE (H2 - 6) */}
-          <section className="bg-card/50 border border-border p-12 rounded-[40px] space-y-8">
-            <h2 className="text-3xl font-black text-foreground">{dict.Home.exploreByUseCase}</h2>
+          {/* 9. EXPLORE BY USE CASE */}
+          <section className="bg-card/50 border border-border p-16 rounded-[64px] space-y-12">
+            <h2 className="text-4xl font-black text-foreground">{dict.Home.exploreByUseCase}</h2>
             <div className="flex flex-wrap gap-4">
               {(dict.Home.exploreByUseCaseLinks || [
                 "ChatGPT prompts for marketing", "ChatGPT prompts for sales",
@@ -285,30 +263,39 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                 "Business Strategy Prompts", "Academic Writing AI Tools",
                 "Customer Support Scripts", "Coding Assistant Hooks"
               ]).map((link: string, i: number) => (
-                <Link key={i} href={getHref(`/prompts?search=${encodeURIComponent(link)}`, lang)} className="px-6 py-3 rounded-2xl bg-background border border-border hover:border-primary hover:text-primary font-bold text-sm transition-all">
+                <Link key={i} href={getHref(`/prompts?search=${encodeURIComponent(link)}`, lang)} className="px-8 py-4 rounded-2xl bg-background border border-border hover:border-primary hover:text-primary font-bold text-base transition-all shadow-sm hover:shadow-lg">
                   {link}
                 </Link>
               ))}
             </div>
           </section>
 
-
-
-          {/* FAQ SECTION (H2 - 6) */}
-          <section className="space-y-12 max-w-4xl mx-auto pb-12">
-            <h2 className="text-4xl font-black text-foreground text-center">{dict.Home.faqTitle}</h2>
-            <div className="space-y-4">
+          {/* 10. FAQ SECTION */}
+          <section className="space-y-16 max-w-4xl mx-auto pb-24">
+            <h2 className="text-5xl font-black text-foreground text-center">{dict.Home.faqTitle}</h2>
+            <div className="space-y-6">
               {faqs.map((faq, i) => (
-                <details key={i} className="group p-8 bg-card border border-border rounded-3xl open:border-primary/50 transition-all cursor-pointer">
-                  <summary className="flex items-center justify-between font-bold text-lg list-none">
+                <details key={i} className="group p-10 bg-card border border-border rounded-[40px] open:border-primary/50 transition-all cursor-pointer shadow-sm hover:shadow-xl">
+                  <summary className="flex items-center justify-between font-black text-xl list-none tracking-tight">
                     {faq.question}
-                    <ChevronDown className="w-5 h-5 group-open:rotate-180 transition-transform text-muted-foreground" />
+                    <ChevronDown className="w-6 h-6 group-open:rotate-180 transition-transform text-muted-foreground" />
                   </summary>
-                  <div className="mt-6 pt-6 border-t border-border text-muted-foreground leading-relaxed">
+                  <div className="mt-8 pt-8 border-t border-border/50 text-muted-foreground leading-relaxed text-lg">
                     {faq.answer}
                   </div>
                 </details>
               ))}
+            </div>
+          </section>
+
+          {/* SEO CONTENT PANEL (Lowered but kept for SEO) */}
+          <section className="py-24 border-t border-border/30">
+            <div className="max-w-5xl mx-auto text-center space-y-8">
+              <h2 className="text-3xl font-black text-foreground">{dict.Home.contentH2}</h2>
+              <div className="prose prose-invert max-w-none text-muted-foreground leading-relaxed text-lg space-y-6">
+                <p>{dict.Home.contentText1}</p>
+                <p>{dict.Home.contentText2}</p>
+              </div>
             </div>
           </section>
 
