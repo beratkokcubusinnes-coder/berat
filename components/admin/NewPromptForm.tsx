@@ -52,6 +52,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
     const [isSlugEdited, setIsSlugEdited] = useState(!!initialData?.slug);
     const [model, setModel] = useState(initialData?.model || "");
     const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
+    const [categoryName, setCategoryName] = useState(initialData?.category || "");
 
     // SEO States
     const [metaTitle, setMetaTitle] = useState(initialData?.metaTitle || "");
@@ -136,9 +137,9 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                         </button>
                     </div>
 
-                    {state.message && !state.success && (
-                        <div className="text-red-500 text-[10px] font-bold uppercase tracking-widest bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 mr-2 max-w-[200px] truncate" title={state.message}>
-                            Error: {state.message}
+                    {((state.message && !state.success) || (state.errors && Object.keys(state.errors).length > 0)) && (
+                        <div className="text-red-500 text-[10px] font-bold uppercase tracking-widest bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 mr-2 max-w-[300px] truncate" title={state.message || JSON.stringify(state.errors)}>
+                            {!state.success && state.message ? state.message : `Check fields: ${Object.keys(state.errors || {}).join(", ")}`}
                         </div>
                     )}
                     <button
@@ -205,8 +206,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                         onChange={(e) => {
                                             setCategoryId(e.target.value);
                                             const selected = categories.find(c => c.id === e.target.value);
-                                            const categoryInput = document.querySelector('input[name="category"]') as HTMLInputElement;
-                                            if (categoryInput && selected) categoryInput.value = selected.name;
+                                            if (selected) setCategoryName(selected.name);
                                         }}
                                         className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all appearance-none"
                                     >
@@ -215,7 +215,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                                         ))}
                                     </select>
-                                    <input type="hidden" name="category" value="" />
+                                    <input type="hidden" name="category" value={categoryName} />
                                 </div>
                             </div>
 
