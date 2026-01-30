@@ -7,6 +7,7 @@ export const DEFAULTS = {
     site_icon: "/images/icon.png",
     site_favicon: "/favicon.ico",
     site_name: "Promptda",
+    app_url: "",
     site_logo_alt: "Promptda Logo",
     site_icon_alt: "Promptda Icon",
     default_avatar_alt: "Default User Avatar",
