@@ -11,6 +11,12 @@ import { getUserFavorites } from "@/lib/db";
 import { Heart, Search, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "My Favorites | Promptda",
+    robots: "noindex, nofollow"
+};
 
 export default async function FavoritesPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;

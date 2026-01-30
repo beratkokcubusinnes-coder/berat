@@ -21,17 +21,20 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const dict = await getDictionary(lang) as any;
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+  const path = ''; // Home page path is empty
+
   return {
     title: dict.Home.metaTitle,
     description: dict.Home.metaDescription,
     alternates: {
-      canonical: `https://promptda.com/${lang}`,
+      canonical: lang === 'en' ? `${baseUrl}/` : `${baseUrl}/${lang}`,
       languages: {
-        'en': 'https://promptda.com/en',
-        'tr': 'https://promptda.com/tr',
-        'de': 'https://promptda.com/de',
-        'es': 'https://promptda.com/es',
-        'x-default': 'https://promptda.com/en'
+        'en': `${baseUrl}/`,
+        'tr': `${baseUrl}/tr`,
+        'de': `${baseUrl}/de`,
+        'es': `${baseUrl}/es`,
+        'x-default': `${baseUrl}/`
       }
     }
   };

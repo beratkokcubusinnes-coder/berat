@@ -13,7 +13,7 @@ import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemLis
 import { getPageBlocks } from "@/lib/blocks";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 
-import { getSitemapAlternates } from "@/lib/sitemap-utils";
+import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         title: dict.Scripts.metaTitle,
         description: dict.Scripts.metaDescription,
         alternates: {
-            canonical: `${baseUrl}/${lang}${path}`,
+            canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)
         }
     };

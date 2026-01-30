@@ -19,7 +19,7 @@ import { generateBreadcrumbSchema, generatePromptProductSchema } from "@/lib/seo
 import { getContentWithTranslation } from "@/lib/translations";
 import { AuthorCard } from "@/components/ui/AuthorCard";
 
-import { getSitemapAlternates } from "@/lib/sitemap-utils";
+import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string; category: string; slug: string }> }): Promise<Metadata> {
     const { slug, lang, category } = await params;
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
             title: finalTitle,
             description: finalDescription,
             images: [{
-                url: prompt.images.split(',')[0],
+                url: prompt.images?.includes(',') ? prompt.images.split(',')[0] : prompt.images,
                 width: 1200,
                 height: 630,
                 alt: prompt.title
@@ -56,10 +56,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
             card: 'summary_large_image',
             title: finalTitle,
             description: finalDescription,
-            images: [prompt.images.split(',')[0]],
+            images: [prompt.images?.includes(',') ? prompt.images.split(',')[0] : prompt.images],
         },
         alternates: {
-            canonical: `https://promptda.com/${lang}${path}`,
+            canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)
         }
     };

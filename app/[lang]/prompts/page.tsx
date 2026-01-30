@@ -10,24 +10,22 @@ import { Metadata } from "next";
 import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 import { getPageBlocks } from "@/lib/blocks";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
+import { getSitemapAlternates } from "@/lib/sitemap-utils";
 
 import { getContentWithTranslation } from "@/lib/translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const dict = await getDictionary(lang) as any;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+    const path = '/prompts';
+
     return {
         title: dict.Prompts.metaTitle,
         description: dict.Prompts.metaDescription,
         alternates: {
-            canonical: `https://promptda.com/${lang}/prompts`,
-            languages: {
-                'en': 'https://promptda.com/en/prompts',
-                'tr': 'https://promptda.com/tr/prompts',
-                'de': 'https://promptda.com/de/prompts',
-                'es': 'https://promptda.com/es/prompts',
-                'x-default': 'https://promptda.com/en/prompts'
-            }
+            canonical: lang === 'en' ? `${baseUrl}${path}` : `${baseUrl}/${lang}${path}`,
+            languages: getSitemapAlternates(path, baseUrl)
         }
     };
 }

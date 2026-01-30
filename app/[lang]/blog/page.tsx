@@ -10,12 +10,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 
-import { getSitemapAlternates } from "@/lib/sitemap-utils";
+import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const dict = await getDictionary(lang) as any;
-
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/blog';
 
@@ -23,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         title: dict.Blog.metaTitle,
         description: dict.Blog.metaDescription,
         alternates: {
-            canonical: `${baseUrl}/${lang}${path}`,
+            canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)
         }
     };

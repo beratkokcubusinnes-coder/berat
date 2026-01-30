@@ -13,6 +13,8 @@ import { generateBreadcrumbSchema, generateItemListSchema } from "@/lib/seo";
 import { getCategoryBlocks } from "@/lib/blocks";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 
+import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string; category: string }> }): Promise<Metadata> {
     const { category: categorySlug, lang } = await params;
     const category = await prisma.category.findFirst({
@@ -21,11 +23,15 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
     if (!category) return { title: 'Category Not Found' };
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+    const path = `/prompt/${categorySlug}`;
+
     return {
-        title: category.metaTitle || `${category.name} Prompts | AI Creative Assets | Promptda`,
-        description: category.metaDescription || `Explore our collection of ${category.name} AI prompts. High-quality creative assets for your projects.`,
+        title: category.metaTitle || `${category.name} Prompts | Promptda`,
+        description: category.metaDescription || `Explore our collection of ${category.name} AI prompts.`,
         alternates: {
-            canonical: category.canonicalUrl || `https://promptda.com/${lang}/prompt/${categorySlug}`
+            canonical: getCanonicalUrl(path, lang, baseUrl),
+            languages: getSitemapAlternates(path, baseUrl)
         },
         robots: {
             index: !category.noIndex,
