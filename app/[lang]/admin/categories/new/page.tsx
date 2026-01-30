@@ -1,12 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 import { Tag, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function NewCategoryPage({ params }: { params: { lang: string } }) {
+export default function NewCategoryPage() {
     const searchParams = useSearchParams();
+    const routeParams = useParams();
+    const lang = (routeParams?.lang as string) || "en";
     const type = searchParams.get("type") || "prompt";
 
     const createCategory = async (prevState: any, formData: FormData) => {
@@ -29,7 +31,7 @@ export default function NewCategoryPage({ params }: { params: { lang: string } }
                 return { success: false, message: error.message || "Failed to create category" };
             }
 
-            window.location.href = `/${params.lang}/admin/categories?type=${categoryType}`;
+            window.location.href = `/${lang}/admin/categories?type=${categoryType}`;
             return { success: true, message: "Category created successfully!" };
         } catch (error) {
             return { success: false, message: "An error occurred" };
@@ -50,7 +52,7 @@ export default function NewCategoryPage({ params }: { params: { lang: string } }
             {/* Header */}
             <div>
                 <Link
-                    href={`/${params.lang}/admin/categories?type=${type}`}
+                    href={`/${lang}/admin/categories?type=${type}`}
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
