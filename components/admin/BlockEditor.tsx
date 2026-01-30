@@ -161,6 +161,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
 
     const BlockTypeButton = ({ type, icon: Icon, label, color }: { type: BlockType, icon: any, label: string, color: string }) => (
         <button
+            type="button"
             onClick={() => {
                 addBlock(type, insertAfterBlockId || undefined);
                 setShowBlockMenu(false);
@@ -218,16 +219,18 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                         {/* Block Controls */}
                         <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
+                                type="button"
                                 onClick={() => moveBlock(block.id, 'up')}
                                 disabled={index === 0}
                                 className="p-1.5 text-muted-foreground/50 hover:text-foreground hover:bg-muted rounded-lg disabled:opacity-20 transition-all"
                             >
                                 <ChevronUp className="w-4 h-4" />
                             </button>
-                            <button className="p-1.5 cursor-grab text-muted-foreground/30 hover:text-foreground">
+                            <button type="button" className="p-1.5 cursor-grab text-muted-foreground/30 hover:text-foreground">
                                 <GripVertical className="w-4 h-4" />
                             </button>
                             <button
+                                type="button"
                                 onClick={() => moveBlock(block.id, 'down')}
                                 disabled={index === blocks.length - 1}
                                 className="p-1.5 text-muted-foreground/50 hover:text-foreground hover:bg-muted rounded-lg disabled:opacity-20 transition-all"
@@ -236,6 +239,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                             </button>
                             <div className="h-px bg-border/50 my-1" />
                             <button
+                                type="button"
                                 onClick={() => deleteBlock(block.id)}
                                 className="p-1.5 text-muted-foreground/50 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
                             >
@@ -308,6 +312,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                             <span className="text-[10px] font-black uppercase text-purple-400">SEO FAQ Block</span>
                                         </div>
                                         <button
+                                            type="button"
                                             onClick={() => {
                                                 const newItems = [...(block.content.items || []), { question: "", answer: "" }];
                                                 updateBlock(block.id, { items: newItems });
@@ -320,6 +325,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                     {(block.content.items || []).map((item: any, i: number) => (
                                         <div key={i} className="space-y-2 p-4 bg-black/10 rounded-xl relative group/item">
                                             <button
+                                                type="button"
                                                 onClick={() => {
                                                     const newItems = block.content.items.filter((_: any, idx: number) => idx !== i);
                                                     updateBlock(block.id, { items: newItems });
@@ -363,6 +369,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                             <span className="text-[10px] font-black uppercase text-emerald-400">SEO How-To Guide</span>
                                         </div>
                                         <button
+                                            type="button"
                                             onClick={() => {
                                                 const newSteps = [...(block.content.steps || []), { title: "", text: "" }];
                                                 updateBlock(block.id, { ...block.content, steps: newSteps });
@@ -383,6 +390,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                             <div className="flex items-center justify-between">
                                                 <span className="text-[10px] font-black text-emerald-400">STEP {i + 1}</span>
                                                 <button
+                                                    type="button"
                                                     onClick={() => {
                                                         const newSteps = block.content.steps.filter((_: any, idx: number) => idx !== i);
                                                         updateBlock(block.id, { ...block.content, steps: newSteps });
@@ -437,6 +445,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                         />
                                                         {block.content.headers.length > 1 && (
                                                             <button
+                                                                type="button"
                                                                 onClick={() => {
                                                                     const newHeaders = block.content.headers.filter((_: any, idx: number) => idx !== i);
                                                                     const newRows = block.content.rows.map((row: string[]) =>
@@ -471,6 +480,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                     ))}
                                                     <td className="p-2 w-12">
                                                         <button
+                                                            type="button"
                                                             onClick={() => {
                                                                 const newRows = block.content.rows.filter((_: any, idx: number) => idx !== ri);
                                                                 if (newRows.length === 0) newRows.push(Array(block.content.headers.length).fill(""));
@@ -486,11 +496,11 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                         </tbody>
                                     </table>
                                     <div className="p-2 bg-muted/20 flex gap-2">
-                                        <button onClick={() => {
+                                        <button type="button" onClick={() => {
                                             const newRows = [...block.content.rows, Array(block.content.headers.length).fill("")];
                                             updateBlock(block.id, { ...block.content, rows: newRows });
                                         }} className="text-[10px] font-black uppercase text-orange-500 hover:underline px-2 py-1">+ Row</button>
-                                        <button onClick={() => {
+                                        <button type="button" onClick={() => {
                                             const newHeaders = [...block.content.headers, `Column ${block.content.headers.length + 1}`];
                                             const newRows = block.content.rows.map((row: string[]) => [...row, ""]);
                                             updateBlock(block.id, { headers: newHeaders, rows: newRows });
@@ -607,6 +617,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                         <div className="flex gap-1">
                                             {[1, 2, 3, 4, 5].map(star => (
                                                 <button
+                                                    type="button"
                                                     key={star}
                                                     onClick={() => updateBlock(block.id, { ...block.content, rating: star })}
                                                     className="transition-all"
@@ -686,6 +697,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                             </select>
                                         </div>
                                         <button
+                                            type="button"
                                             onClick={() => {
                                                 const newItems = [...(block.content.items || []), ""];
                                                 updateBlock(block.id, { ...block.content, items: newItems });
@@ -718,6 +730,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                     placeholder="Enter list item..."
                                                 />
                                                 <button
+                                                    type="button"
                                                     onClick={() => {
                                                         const newItems = block.content.items.filter((_: any, idx: number) => idx !== i);
                                                         updateBlock(block.id, { ...block.content, items: newItems });
@@ -784,6 +797,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                         {/* Quick Add Button */}
                         {activeBlock === block.id && (
                             <button
+                                type="button"
                                 onClick={() => openBlockMenu(block.id)}
                                 className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-10"
                             >
