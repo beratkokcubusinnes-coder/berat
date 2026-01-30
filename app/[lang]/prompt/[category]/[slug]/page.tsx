@@ -30,10 +30,32 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = `/prompt/${category}/${slug}`;
 
+    // Clean description from HTML and limit to 160 chars
+    const plainDescription = prompt.description
+        ? prompt.description.replace(/<[^>]*>/g, '').trim().substring(0, 160)
+        : `Professional ${prompt.model} prompt for ${prompt.categoryData?.name || prompt.category}. Created by ${prompt.author.name}.`;
+
+    const finalDescription = prompt.metaDescription || plainDescription;
+    const finalTitle = `${prompt.metaTitle || prompt.title} | AI Prompt for ${prompt.model}`;
+
     return {
-        title: `${prompt.metaTitle || prompt.title} | AI Prompt for ${prompt.model}`,
-        description: prompt.metaDescription || `Get this high-quality ${prompt.categoryData?.name || prompt.category} prompt for ${prompt.model}. Created by ${prompt.author.name}. Explore more AI prompts on Promptda.`,
+        title: finalTitle,
+        description: finalDescription,
         openGraph: {
+            title: finalTitle,
+            description: finalDescription,
+            images: [{
+                url: prompt.images.split(',')[0],
+                width: 1200,
+                height: 630,
+                alt: prompt.title
+            }],
+            type: 'article'
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: finalTitle,
+            description: finalDescription,
             images: [prompt.images.split(',')[0]],
         },
         alternates: {

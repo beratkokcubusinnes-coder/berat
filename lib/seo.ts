@@ -203,14 +203,31 @@ export function generateWebSiteSchema(baseUrl: string) {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "url": baseUrl,
+        "name": "Promptda",
+        "description": "Premium AI Prompt Library & Development Assets",
         "potentialAction": {
             "@type": "SearchAction",
             "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": `${baseUrl}/search?q={search_term_string}`
+                "urlTemplate": `${baseUrl}/prompts?search={search_term_string}`
             },
             "query-input": "required name=search_term_string"
         }
+    };
+}
+
+export function generateItemListSchema(items: { name: string; url: string; image?: string }[], listName: string) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": listName,
+        "itemListElement": items.map((item, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": item.name,
+            "url": item.url,
+            "image": item.image
+        }))
     };
 }
 
