@@ -57,15 +57,18 @@ export default async function RootLayout({
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="dark light" />
+        <meta name="theme-color" content="#02040a" />
         {/* Basic scripts that need early execution */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                if (localStorage.theme === 'dark' || !('theme' in localStorage)) {
-                  document.documentElement.classList.add('dark')
-                } else {
+                if (localStorage.theme === 'light') {
                   document.documentElement.classList.remove('dark')
+                } else {
+                  document.documentElement.classList.add('dark')
+                  localStorage.theme = 'dark'
                 }
               } catch (_) {}
             `,
