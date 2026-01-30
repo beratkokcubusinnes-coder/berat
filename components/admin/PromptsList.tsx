@@ -1,8 +1,10 @@
 "use client";
 
-import { Trash2, MoreHorizontal, Eye, Heart, Calendar, Sparkles, PenTool } from "lucide-react";
+import { Trash2, MoreHorizontal, Eye, Heart, Calendar, Sparkles, PenTool, Languages, Loader2 } from "lucide-react";
 import { deleteAdminContent } from "@/actions/admin-content";
+import { autoTranslateContent } from "@/actions/translate";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,6 +15,7 @@ interface PromptsListProps {
 
 export function PromptsList({ prompts, lang }: PromptsListProps) {
     const router = useRouter();
+    const [translatingIds, setTranslatingIds] = useState<Set<string>>(new Set());
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this prompt?")) {
@@ -20,6 +23,27 @@ export function PromptsList({ prompts, lang }: PromptsListProps) {
             if (res.success) {
                 router.refresh();
             }
+        }
+    };
+
+    const handleTranslate = async (id: string) => {
+        setTranslatingIds(prev => new Set(prev).add(id));
+        try {
+            const res = await autoTranslateContent(id, 'prompt');
+            if (res.success) {
+                alert(`Prompt successfully translated into 3 languages!`);
+                router.refresh();
+            } else {
+                alert(`Translation failed: ${res.error}`);
+            }
+        } catch (error) {
+            alert("An unexpected error occurred during translation.");
+        } finally {
+            setTranslatingIds(prev => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
+            });
         }
     };
 
@@ -90,6 +114,18 @@ export function PromptsList({ prompts, lang }: PromptsListProps) {
                                 </td>
                                 <td className="px-8 py-6 text-right">
                                     <div className="flex items-center justify-end gap-2">
+                                        <button
+                                            onClick={() => handleTranslate(prompt.id)}
+                                            disabled={translatingIds.has(prompt.id)}
+                                            className="p-2.5 hover:bg-emerald-500/10 rounded-xl transition-all text-muted-foreground hover:text-emerald-500 border border-transparent hover:border-emerald-500/20 disabled:opacity-50"
+                                            title="Auto-Translate to Other Languages"
+                                        >
+                                            {translatingIds.has(prompt.id) ? (
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                            ) : (
+                                                <Languages className="w-4 h-4" />
+                                            )}
+                                        </button>
                                         <Link
                                             href={`/${lang}/admin/prompts/${prompt.id}/edit`}
                                             className="p-2.5 hover:bg-primary/10 rounded-xl transition-all text-muted-foreground hover:text-primary border border-transparent hover:border-primary/20"

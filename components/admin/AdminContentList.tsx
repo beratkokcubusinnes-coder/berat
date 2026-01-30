@@ -1,8 +1,10 @@
 "use client";
 
-import { Trash2, MoreHorizontal, ExternalLink, Calendar, Eye, User, PenTool } from "lucide-react";
+import { Trash2, MoreHorizontal, ExternalLink, Calendar, Eye, User, PenTool, Languages, Loader2 } from "lucide-react";
 import { deleteAdminContent } from "@/actions/admin-content";
+import { autoTranslateContent } from "@/actions/translate";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
 
 interface AdminContentListProps {
@@ -13,6 +15,7 @@ interface AdminContentListProps {
 
 export function AdminContentList({ items, type, lang }: AdminContentListProps) {
     const router = useRouter();
+    const [translatingIds, setTranslatingIds] = useState<Set<string>>(new Set());
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this item?")) {
@@ -20,6 +23,27 @@ export function AdminContentList({ items, type, lang }: AdminContentListProps) {
             if (res.success) {
                 router.refresh();
             }
+        }
+    };
+
+    const handleTranslate = async (id: string) => {
+        setTranslatingIds(prev => new Set(prev).add(id));
+        try {
+            const res = await autoTranslateContent(id, type);
+            if (res.success) {
+                alert(`${type.charAt(0).toUpperCase() + type.slice(1)} successfully translated!`);
+                router.refresh();
+            } else {
+                alert(`Translation failed: ${res.error}`);
+            }
+        } catch (error) {
+            alert("An unexpected error occurred during translation.");
+        } finally {
+            setTranslatingIds(prev => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
+            });
         }
     };
 
@@ -73,6 +97,18 @@ export function AdminContentList({ items, type, lang }: AdminContentListProps) {
                                 </td>
                                 <td className="px-8 py-6 text-right">
                                     <div className="flex items-center justify-end gap-2">
+                                        <button
+                                            onClick={() => handleTranslate(item.id)}
+                                            disabled={translatingIds.has(item.id)}
+                                            className="p-2.5 hover:bg-emerald-500/10 rounded-xl transition-all text-muted-foreground hover:text-emerald-500 border border-transparent hover:border-emerald-500/20 disabled:opacity-50"
+                                            title="Auto-Translate"
+                                        >
+                                            {translatingIds.has(item.id) ? (
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                            ) : (
+                                                <Languages className="w-4 h-4" />
+                                            )}
+                                        </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
                                             className="p-2.5 hover:bg-red-500/10 rounded-xl transition-all text-muted-foreground hover:text-red-500"
