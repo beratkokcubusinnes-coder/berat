@@ -6096,8 +6096,18 @@ export namespace Prisma {
 
   export type AggregateThread = {
     _count: ThreadCountAggregateOutputType | null
+    _avg: ThreadAvgAggregateOutputType | null
+    _sum: ThreadSumAggregateOutputType | null
     _min: ThreadMinAggregateOutputType | null
     _max: ThreadMaxAggregateOutputType | null
+  }
+
+  export type ThreadAvgAggregateOutputType = {
+    views: number | null
+  }
+
+  export type ThreadSumAggregateOutputType = {
+    views: number | null
   }
 
   export type ThreadMinAggregateOutputType = {
@@ -6109,6 +6119,7 @@ export namespace Prisma {
     mediaUrls: string | null
     category: string | null
     tags: string | null
+    views: number | null
     authorId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6123,6 +6134,7 @@ export namespace Prisma {
     mediaUrls: string | null
     category: string | null
     tags: string | null
+    views: number | null
     authorId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6137,12 +6149,21 @@ export namespace Prisma {
     mediaUrls: number
     category: number
     tags: number
+    views: number
     authorId: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type ThreadAvgAggregateInputType = {
+    views?: true
+  }
+
+  export type ThreadSumAggregateInputType = {
+    views?: true
+  }
 
   export type ThreadMinAggregateInputType = {
     id?: true
@@ -6153,6 +6174,7 @@ export namespace Prisma {
     mediaUrls?: true
     category?: true
     tags?: true
+    views?: true
     authorId?: true
     createdAt?: true
     updatedAt?: true
@@ -6167,6 +6189,7 @@ export namespace Prisma {
     mediaUrls?: true
     category?: true
     tags?: true
+    views?: true
     authorId?: true
     createdAt?: true
     updatedAt?: true
@@ -6181,6 +6204,7 @@ export namespace Prisma {
     mediaUrls?: true
     category?: true
     tags?: true
+    views?: true
     authorId?: true
     createdAt?: true
     updatedAt?: true
@@ -6225,6 +6249,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ThreadAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ThreadSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ThreadMinAggregateInputType
@@ -6255,6 +6291,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ThreadCountAggregateInputType | true
+    _avg?: ThreadAvgAggregateInputType
+    _sum?: ThreadSumAggregateInputType
     _min?: ThreadMinAggregateInputType
     _max?: ThreadMaxAggregateInputType
   }
@@ -6268,10 +6306,13 @@ export namespace Prisma {
     mediaUrls: string | null
     category: string
     tags: string | null
+    views: number
     authorId: string
     createdAt: Date
     updatedAt: Date
     _count: ThreadCountAggregateOutputType | null
+    _avg: ThreadAvgAggregateOutputType | null
+    _sum: ThreadSumAggregateOutputType | null
     _min: ThreadMinAggregateOutputType | null
     _max: ThreadMaxAggregateOutputType | null
   }
@@ -6299,6 +6340,7 @@ export namespace Prisma {
     mediaUrls?: boolean
     category?: boolean
     tags?: boolean
+    views?: boolean
     authorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6317,6 +6359,7 @@ export namespace Prisma {
     mediaUrls?: boolean
     category?: boolean
     tags?: boolean
+    views?: boolean
     authorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6332,6 +6375,7 @@ export namespace Prisma {
     mediaUrls?: boolean
     category?: boolean
     tags?: boolean
+    views?: boolean
     authorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6363,6 +6407,7 @@ export namespace Prisma {
       mediaUrls: string | null
       category: string
       tags: string | null
+      views: number
       authorId: string
       createdAt: Date
       updatedAt: Date
@@ -6770,6 +6815,7 @@ export namespace Prisma {
     readonly mediaUrls: FieldRef<"Thread", 'String'>
     readonly category: FieldRef<"Thread", 'String'>
     readonly tags: FieldRef<"Thread", 'String'>
+    readonly views: FieldRef<"Thread", 'Int'>
     readonly authorId: FieldRef<"Thread", 'String'>
     readonly createdAt: FieldRef<"Thread", 'DateTime'>
     readonly updatedAt: FieldRef<"Thread", 'DateTime'>
@@ -25123,6 +25169,7 @@ export namespace Prisma {
     mediaUrls: 'mediaUrls',
     category: 'category',
     tags: 'tags',
+    views: 'views',
     authorId: 'authorId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -25805,6 +25852,7 @@ export namespace Prisma {
     mediaUrls?: StringNullableFilter<"Thread"> | string | null
     category?: StringFilter<"Thread"> | string
     tags?: StringNullableFilter<"Thread"> | string | null
+    views?: IntFilter<"Thread"> | number
     authorId?: StringFilter<"Thread"> | string
     createdAt?: DateTimeFilter<"Thread"> | Date | string
     updatedAt?: DateTimeFilter<"Thread"> | Date | string
@@ -25822,6 +25870,7 @@ export namespace Prisma {
     mediaUrls?: SortOrderInput | SortOrder
     category?: SortOrder
     tags?: SortOrderInput | SortOrder
+    views?: SortOrder
     authorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -25842,6 +25891,7 @@ export namespace Prisma {
     mediaUrls?: StringNullableFilter<"Thread"> | string | null
     category?: StringFilter<"Thread"> | string
     tags?: StringNullableFilter<"Thread"> | string | null
+    views?: IntFilter<"Thread"> | number
     authorId?: StringFilter<"Thread"> | string
     createdAt?: DateTimeFilter<"Thread"> | Date | string
     updatedAt?: DateTimeFilter<"Thread"> | Date | string
@@ -25859,12 +25909,15 @@ export namespace Prisma {
     mediaUrls?: SortOrderInput | SortOrder
     category?: SortOrder
     tags?: SortOrderInput | SortOrder
+    views?: SortOrder
     authorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ThreadCountOrderByAggregateInput
+    _avg?: ThreadAvgOrderByAggregateInput
     _max?: ThreadMaxOrderByAggregateInput
     _min?: ThreadMinOrderByAggregateInput
+    _sum?: ThreadSumOrderByAggregateInput
   }
 
   export type ThreadScalarWhereWithAggregatesInput = {
@@ -25879,6 +25932,7 @@ export namespace Prisma {
     mediaUrls?: StringNullableWithAggregatesFilter<"Thread"> | string | null
     category?: StringWithAggregatesFilter<"Thread"> | string
     tags?: StringNullableWithAggregatesFilter<"Thread"> | string | null
+    views?: IntWithAggregatesFilter<"Thread"> | number
     authorId?: StringWithAggregatesFilter<"Thread"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Thread"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Thread"> | Date | string
@@ -27950,6 +28004,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     comments?: CommentCreateNestedManyWithoutThreadInput
@@ -27966,6 +28021,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     authorId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27982,6 +28038,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutThreadNestedInput
@@ -27998,6 +28055,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     authorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28014,6 +28072,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     authorId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28028,6 +28087,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28041,6 +28101,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     authorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30524,9 +30585,14 @@ export namespace Prisma {
     mediaUrls?: SortOrder
     category?: SortOrder
     tags?: SortOrder
+    views?: SortOrder
     authorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ThreadAvgOrderByAggregateInput = {
+    views?: SortOrder
   }
 
   export type ThreadMaxOrderByAggregateInput = {
@@ -30538,6 +30604,7 @@ export namespace Prisma {
     mediaUrls?: SortOrder
     category?: SortOrder
     tags?: SortOrder
+    views?: SortOrder
     authorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30552,9 +30619,14 @@ export namespace Prisma {
     mediaUrls?: SortOrder
     category?: SortOrder
     tags?: SortOrder
+    views?: SortOrder
     authorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ThreadSumOrderByAggregateInput = {
+    views?: SortOrder
   }
 
   export type ThreadRelationFilter = {
@@ -33378,6 +33450,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     comments?: CommentCreateNestedManyWithoutThreadInput
@@ -33393,6 +33466,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     comments?: CommentUncheckedCreateNestedManyWithoutThreadInput
@@ -33877,6 +33951,7 @@ export namespace Prisma {
     mediaUrls?: StringNullableFilter<"Thread"> | string | null
     category?: StringFilter<"Thread"> | string
     tags?: StringNullableFilter<"Thread"> | string | null
+    views?: IntFilter<"Thread"> | number
     authorId?: StringFilter<"Thread"> | string
     createdAt?: DateTimeFilter<"Thread"> | Date | string
     updatedAt?: DateTimeFilter<"Thread"> | Date | string
@@ -34632,6 +34707,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     author: UserCreateNestedOneWithoutThreadsInput
@@ -34647,6 +34723,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     authorId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34745,6 +34822,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutThreadsNestedInput
@@ -34760,6 +34838,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     authorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34848,6 +34927,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     comments?: CommentCreateNestedManyWithoutThreadInput
@@ -34863,6 +34943,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     authorId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34961,6 +35042,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutThreadNestedInput
@@ -34976,6 +35058,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     authorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37104,6 +37187,7 @@ export namespace Prisma {
     mediaUrls?: string | null
     category?: string
     tags?: string | null
+    views?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -37621,6 +37705,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutThreadNestedInput
@@ -37636,6 +37721,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUncheckedUpdateManyWithoutThreadNestedInput
@@ -37651,6 +37737,7 @@ export namespace Prisma {
     mediaUrls?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     tags?: NullableStringFieldUpdateOperationsInput | string | null
+    views?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
