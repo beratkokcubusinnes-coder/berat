@@ -1,12 +1,29 @@
 import { languages, defaultLanguage } from './i18n'
 
+function escapeXml(unsafe: string) {
+    return unsafe.replace(/[<>&"']/g, (c) => {
+        switch (c) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '&': return '&amp;';
+            case '"': return '&quot;';
+            case "'": return '&apos;';
+            default: return c;
+        }
+    });
+}
+
 export function getSitemapUrl(path: string, lang: string, baseUrl: string) {
     const cleanPath = path === '/' ? '' : path.startsWith('/') ? path : `/${path}`;
+    let finalUrl = '';
 
     if (lang === defaultLanguage) {
-        return `${baseUrl}${cleanPath === '' ? '/' : cleanPath}`;
+        finalUrl = `${baseUrl}${cleanPath === '' ? '/' : cleanPath}`;
+    } else {
+        finalUrl = `${baseUrl}/${lang}${cleanPath === '' ? '/' : cleanPath}`;
     }
-    return `${baseUrl}/${lang}${cleanPath === '' ? '/' : cleanPath}`;
+
+    return escapeXml(finalUrl);
 }
 
 export function getCanonicalUrl(path: string, lang: string, baseUrl: string) {
