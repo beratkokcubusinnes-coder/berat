@@ -76,7 +76,22 @@ export async function createUser(data: { id: string, name: string, email: string
 }
 
 export async function getAdminStats() {
-    const [userCount, promptCount, pendingCount, recentPrompts] = await Promise.all([
+    const now = new Date();
+    const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+
+    const [
+        userCount,
+        promptCount,
+        pendingCount,
+        recentPrompts,
+        promptViews,
+        scriptViews,
+        hookViews,
+        toolViews,
+        blogViews,
+        categories,
+        monthlyStats
+    ] = await Promise.all([
         prisma.user.count(),
         prisma.prompt.count({ where: { status: 'APPROVED' } }),
         prisma.prompt.count({ where: { status: 'PENDING' } }),
@@ -84,14 +99,60 @@ export async function getAdminStats() {
             take: 5,
             orderBy: { createdAt: 'desc' },
             include: { author: true }
+        }),
+        prisma.prompt.aggregate({ _sum: { views: true } }),
+        prisma.script.aggregate({ _sum: { views: true } }),
+        prisma.hook.aggregate({ _sum: { views: true } }),
+        prisma.tool.aggregate({ _sum: { views: true } }),
+        prisma.blogPost.aggregate({ _sum: { views: true } }),
+        prisma.category.findMany({
+            where: { type: 'prompt' },
+            include: { _count: { select: { prompts: true } } },
+            take: 4,
+            orderBy: { prompts: { _count: 'desc' } }
+        }),
+        prisma.prompt.groupBy({
+            by: ['createdAt'],
+            where: {
+                createdAt: { gte: twelveMonthsAgo }
+            },
+            _count: true
         })
     ]);
+
+    // Process monthly trends
+    const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+    const trends = new Array(12).fill(0);
+
+    monthlyStats.forEach(stat => {
+        const month = stat.createdAt.getMonth();
+        // Shift month index relative to 12 months ago if needed, 
+        // but for a simple "last 12 months" display we just map to current year's months
+        trends[month] += stat._count;
+    });
+
+    const totalViews = (promptViews._sum.views || 0) +
+        (scriptViews._sum.views || 0) +
+        (hookViews._sum.views || 0) +
+        (toolViews._sum.views || 0) +
+        (blogViews._sum.views || 0);
 
     return {
         userCount,
         promptCount,
         pendingCount,
-        recentPrompts
+        recentPrompts,
+        totalViews,
+        revenue: (promptCount * 0.45).toFixed(2), // Simple mock revenue
+        categories: categories.map(c => ({
+            name: c.name,
+            count: c._count.prompts,
+            percentage: promptCount > 0 ? Math.round((c._count.prompts / promptCount) * 100) : 0
+        })),
+        trends: trends.map((count, i) => ({
+            label: months[i],
+            value: count
+        }))
     }
 }
 

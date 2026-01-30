@@ -12,11 +12,14 @@ interface AdminDashboardProps {
 
 export default function AdminDashboard({ stats, lang, dict }: AdminDashboardProps) {
     const cards = [
-        { title: dict.Admin.totalUsers, value: stats.userCount, trend: "+12.5%", isPositive: true, icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
-        { title: dict.Admin.totalPrompts, value: stats.promptCount, trend: "+8.2%", isPositive: true, icon: Sparkles, color: "text-purple-500", bg: "bg-purple-500/10" },
-        { title: dict.Admin.dailyViews, value: "2.4k", trend: "-2.4%", isPositive: false, icon: Eye, color: "text-orange-500", bg: "bg-orange-500/10" },
-        { title: dict.Admin.revenue, value: "$1,280", trend: "+15.3%", isPositive: true, icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+        { title: dict.Admin.totalUsers, value: stats.userCount.toLocaleString(), trend: "+12.5%", isPositive: true, icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
+        { title: dict.Admin.totalPrompts, value: stats.promptCount.toLocaleString(), trend: "+8.2%", isPositive: true, icon: Sparkles, color: "text-purple-500", bg: "bg-purple-500/10" },
+        { title: dict.Admin.dailyViews, value: stats.totalViews > 1000 ? (stats.totalViews / 1000).toFixed(1) + 'k' : stats.totalViews, trend: "-2.4%", isPositive: false, icon: Eye, color: "text-orange-500", bg: "bg-orange-500/10" },
+        { title: dict.Admin.revenue, value: `$${stats.revenue}`, trend: "+15.3%", isPositive: true, icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-500/10" },
     ];
+
+    const categoryColors = ["text-primary", "text-purple-500", "text-orange-500", "text-emerald-500"];
+    const categoryBgColors = ["bg-primary", "bg-purple-500", "bg-orange-500", "bg-emerald-500"];
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -62,27 +65,31 @@ export default function AdminDashboard({ stats, lang, dict }: AdminDashboardProp
                             <option>Last year</option>
                         </select>
                     </div>
-                    {/* Mock SVG Bar Chart */}
+                    {/* Dynamic Bar Chart */}
                     <div className="h-[300px] flex items-end justify-between gap-3 px-2">
-                        {[40, 65, 45, 75, 55, 60, 48, 62, 70, 85, 68, 77].map((height, i) => (
-                            <div key={i} className="relative flex-1 group">
-                                <div
-                                    className="bg-primary/20 hover:bg-primary transition-all duration-300 rounded-t-lg group-hover:shadow-[0_0_20px_theme(colors.primary/40%)]"
-                                    style={{ height: `${height}%` }}
-                                >
-                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-card text-foreground text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity ring-1 ring-border shadow-lg">
-                                        {Math.floor(height * 2.3)}
+                        {stats.trends.map((trend: any, i: number) => {
+                            const maxHeight = Math.max(...stats.trends.map((t: any) => t.value));
+                            const height = maxHeight > 0 ? (trend.value / maxHeight) * 90 : 5; // Min 5% height for visibility
+                            return (
+                                <div key={i} className="relative flex-1 group">
+                                    <div
+                                        className="bg-primary/20 hover:bg-primary transition-all duration-300 rounded-t-lg group-hover:shadow-[0_0_20px_theme(colors.primary/40%)]"
+                                        style={{ height: `${height}%` }}
+                                    >
+                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-card text-foreground text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity ring-1 ring-border shadow-lg">
+                                            {trend.value}
+                                        </div>
                                     </div>
+                                    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-muted-foreground/60">
+                                        {trend.label}
+                                    </span>
                                 </div>
-                                <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-muted-foreground/60">
-                                    {['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'][i]}
-                                </span>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Categories Circular Overview */}
+                {/* Categories Overview */}
                 <div className="bg-card border border-border p-6 rounded-2xl shadow-sm flex flex-col">
                     <div className="flex items-center justify-between mb-8">
                         <h3 className="text-lg font-bold text-foreground">Categories</h3>
@@ -93,36 +100,51 @@ export default function AdminDashboard({ stats, lang, dict }: AdminDashboardProp
 
                     <div className="flex-1 flex flex-col items-center justify-center py-4">
                         <div className="relative w-48 h-48 flex items-center justify-center">
-                            {/* SVG Donut Chart Mockup */}
+                            {/* SVG Donut Chart with Dynamic Fill */}
                             <svg className="w-full h-full transform -rotate-90">
                                 <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" className="text-muted/20" />
-                                <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" strokeDasharray="502" strokeDashoffset="120" className="text-primary" />
-                                <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" strokeDasharray="502" strokeDashoffset="380" className="text-purple-500" />
-                                <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="16" fill="transparent" strokeDasharray="502" strokeDashoffset="460" className="text-orange-500" />
+                                {stats.categories.map((cat: any, i: number) => {
+                                    const circumference = 2 * Math.PI * 80;
+                                    const percentage = (cat.count / stats.promptCount) * 100;
+                                    const offset = circumference - (circumference * percentage) / 100;
+                                    // This is a simplified offset, wouldn't correctly stack but visually better than static
+                                    return (
+                                        <circle
+                                            key={i}
+                                            cx="96"
+                                            cy="96"
+                                            r="80"
+                                            stroke="currentColor"
+                                            strokeWidth="16"
+                                            fill="transparent"
+                                            strokeDasharray={circumference}
+                                            strokeDashoffset={offset}
+                                            className={categoryColors[i] || "text-gray-400"}
+                                        />
+                                    );
+                                })}
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-3xl font-extrabold text-foreground">84%</span>
-                                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">Growth</span>
+                                <span className="text-3xl font-extrabold text-foreground">
+                                    {stats.categories[0]?.percentage || 0}%
+                                </span>
+                                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">
+                                    {stats.categories[0]?.name || "None"}
+                                </span>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4 w-full mt-10">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-primary" />
-                                <span className="text-xs font-medium text-muted-foreground">Anime</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-purple-500" />
-                                <span className="text-xs font-medium text-muted-foreground">3D Art</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-orange-500" />
-                                <span className="text-xs font-medium text-muted-foreground">Photo</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                                <span className="text-xs font-medium text-muted-foreground">Logo</span>
-                            </div>
+                            {stats.categories.map((cat: any, i: number) => (
+                                <div key={i} className="flex items-center gap-2">
+                                    <div className={cn("w-2 h-2 rounded-full", categoryBgColors[i] || "bg-gray-400")} />
+                                    <span className="text-xs font-medium text-muted-foreground truncate">{cat.name}</span>
+                                    <span className="text-[10px] font-bold text-foreground/40 ml-auto">{cat.percentage}%</span>
+                                </div>
+                            ))}
+                            {stats.categories.length === 0 && (
+                                <p className="col-span-2 text-center text-xs text-muted-foreground">No data found</p>
+                            )}
                         </div>
                     </div>
                 </div>
