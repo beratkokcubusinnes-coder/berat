@@ -28,10 +28,7 @@ export async function uploadMedia(formData: FormData) {
     if (!file) return { success: false, error: "No file provided" };
 
     try {
-        // Use the centralized utility for saving and optimization
         const url = await saveContentImage(file, file.name, "misc", true);
-
-        // Find the record created by saveContentImage
         const media = await prisma.media.findFirst({
             where: { url },
             orderBy: { createdAt: 'desc' }
@@ -89,62 +86,112 @@ export async function getUnusedMedia() {
     const session = await getSession();
     if (!session || session.role !== 'admin') throw new Error("Unauthorized");
 
+    // 1. Get all media records
     const allMedia = await prisma.media.findMany({
         orderBy: { createdAt: 'desc' }
     });
 
     const usedUrls = new Set<string>();
 
-    // Scan all possible tables for media references
-    const users = await prisma.user.findMany({ select: { avatar: true, coverImage: true } });
+    // Regex to find all locally hosted upload URLs in strings (HTML, JSON, etc.)
+    const uploadRegex = /\/uploads\/[^\s"'>)]+/g;
+
+    const addUrlsFromText = (text: string | null | undefined) => {
+        if (!text) return;
+        const matches = text.match(uploadRegex);
+        if (matches) {
+            matches.forEach(match => {
+                // Clean up potential trailing characters from regex capture in JSON/HTML
+                const cleanUrl = match.replace(/[\\",;]$/, '');
+                usedUrls.add(cleanUrl);
+            });
+        }
+    };
+
+    // --- SCAN SPECIFIC FIELDS ---
+
+    // Users
+    const users = await prisma.user.findMany({ select: { avatar: true, coverImage: true, bio: true } });
     users.forEach(u => {
         if (u.avatar) usedUrls.add(u.avatar);
         if (u.coverImage) usedUrls.add(u.coverImage);
+        addUrlsFromText(u.bio);
     });
 
+    // Prompts
     const prompts = await prisma.prompt.findMany({
-        select: { image: true, images: true, ogImage: true, beforeImage: true, afterImage: true }
+        select: {
+            image: true, images: true, ogImage: true, beforeImage: true, afterImage: true,
+            content: true, description: true
+        }
     });
     prompts.forEach(p => {
         if (p.image) usedUrls.add(p.image);
         if (p.ogImage) usedUrls.add(p.ogImage);
         if (p.beforeImage) usedUrls.add(p.beforeImage);
         if (p.afterImage) usedUrls.add(p.afterImage);
-        if (p.images) {
-            p.images.split(',').forEach(img => usedUrls.add(img.trim()));
-        }
+        if (p.images) p.images.split(',').forEach(img => usedUrls.add(img.trim()));
+        addUrlsFromText(p.content);
+        addUrlsFromText(p.description);
     });
 
-    const items = [
-        await prisma.script.findMany({ select: { image: true, ogImage: true } }),
-        await prisma.hook.findMany({ select: { image: true, ogImage: true } }),
-        await prisma.tool.findMany({ select: { image: true, ogImage: true } }),
-        await prisma.blogPost.findMany({ select: { image: true, ogImage: true } })
+    // Scripts, Hooks, Tools, Blogs
+    const complexItems = [
+        { data: await prisma.script.findMany({ select: { image: true, ogImage: true, content: true, description: true } }) },
+        { data: await prisma.hook.findMany({ select: { image: true, ogImage: true, content: true, description: true } }) },
+        { data: await prisma.tool.findMany({ select: { image: true, ogImage: true, content: true, description: true } }) },
+        { data: await prisma.blogPost.findMany({ select: { image: true, ogImage: true, content: true, excerpt: true } }) }
     ];
-    items.flat().forEach((item: any) => {
-        if (item.image) usedUrls.add(item.image);
-        if (item.ogImage) usedUrls.add(item.ogImage);
+    complexItems.forEach(group => {
+        group.data.forEach((item: any) => {
+            if (item.image) usedUrls.add(item.image);
+            if (item.ogImage) usedUrls.add(item.ogImage);
+            addUrlsFromText(item.content);
+            addUrlsFromText(item.description || item.excerpt);
+        });
     });
 
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ['site_logo', 'site_icon', 'default_avatar'] } }
-    });
-    settings.forEach(s => usedUrls.add(s.value));
+    // --- SCAN MASSIVE TEXT FIELDS & JSON ---
 
-    const threads = await prisma.thread.findMany({ select: { mediaUrls: true } });
+    // Page Blocks (Rich text, sliders, etc.)
+    const blocks = await prisma.pageBlock.findMany({ select: { content: true } });
+    blocks.forEach(b => addUrlsFromText(b.content));
+
+    // Static Pages (About, Privacy, etc.)
+    const staticPages = await prisma.staticPage.findMany({ select: { content: true } });
+    staticPages.forEach(p => addUrlsFromText(p.content));
+
+    // Category SEO content
+    const categories = await prisma.category.findMany({ select: { seoContent: true } });
+    categories.forEach(c => addUrlsFromText(c.seoContent));
+
+    // Translations
+    const translations = await prisma.contentTranslation.findMany({ select: { content: true, description: true, seoContent: true } });
+    translations.forEach(t => {
+        addUrlsFromText(t.content);
+        addUrlsFromText(t.description);
+        addUrlsFromText(t.seoContent);
+    });
+
+    // System Settings
+    const settings = await prisma.systemSetting.findMany({ select: { value: true } });
+    settings.forEach(s => {
+        if (s.value.startsWith('/uploads/')) usedUrls.add(s.value);
+        else addUrlsFromText(s.value);
+    });
+
+    // Threads
+    const threads = await prisma.thread.findMany({ select: { mediaUrls: true, content: true } });
     threads.forEach(t => {
-        if (t.mediaUrls) {
-            try {
-                const parsed = JSON.parse(t.mediaUrls);
-                if (Array.isArray(parsed)) parsed.forEach(url => usedUrls.add(url));
-                else usedUrls.add(t.mediaUrls);
-            } catch {
-                t.mediaUrls.split(',').forEach(url => usedUrls.add(url.trim()));
-            }
-        }
+        addUrlsFromText(t.mediaUrls);
+        addUrlsFromText(t.content);
     });
 
+    // 2. Filter out media that is NOT in the used search
+    // Duplicate protection: If two Media entries have different URLs points to different physical files, 
+    // only the one present in content is kept.
     const unusedMedia = allMedia.filter(m => !usedUrls.has(m.url));
+
     return unusedMedia;
 }
 
