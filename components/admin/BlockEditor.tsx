@@ -88,6 +88,34 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
         setBlocks(blocks.map(b => b.id === id ? { ...b, content } : b));
     };
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, blockId: string) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+
+            if (data.url) {
+                const currentBlock = blocks.find(b => b.id === blockId);
+                if (currentBlock) {
+                    updateBlock(blockId, { ...currentBlock.content, url: data.url });
+                }
+            } else {
+                alert("Upload failed");
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Upload failed");
+        }
+    };
+
     const deleteBlock = (id: string) => {
         if (blocks.length === 1) {
             setBlocks([{ id: Math.random().toString(36).substr(2, 9), type: "paragraph", content: "" }]);
@@ -496,12 +524,23 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                         <ImageIcon className="w-4 h-4 text-indigo-400" />
                                         <span className="text-[10px] font-black uppercase text-indigo-400">Image Asset</span>
                                     </div>
-                                    <input
-                                        className="w-full bg-transparent border-b border-indigo-500/20 py-2 text-xs focus:border-indigo-500 outline-none"
-                                        placeholder="Image URL (or select from library...)"
-                                        value={block.content.url || ""}
-                                        onChange={(e) => updateBlock(block.id, { ...block.content, url: e.target.value })}
-                                    />
+                                    <div className="flex gap-2 items-center">
+                                        <input
+                                            className="w-full bg-transparent border-b border-indigo-500/20 py-2 text-xs focus:border-indigo-500 outline-none"
+                                            placeholder="Image URL (or upload...)"
+                                            value={block.content.url || ""}
+                                            onChange={(e) => updateBlock(block.id, { ...block.content, url: e.target.value })}
+                                        />
+                                        <label className="cursor-pointer bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-500 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all whitespace-nowrap">
+                                            Upload
+                                            <input
+                                                type="file"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, block.id)}
+                                            />
+                                        </label>
+                                    </div>
                                     {block.content.url && (
                                         <div className="relative group aspect-video rounded-xl overflow-hidden border border-border bg-black/50">
                                             <img src={block.content.url} alt="" className="w-full h-full object-contain" />

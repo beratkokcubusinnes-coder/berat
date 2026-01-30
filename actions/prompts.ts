@@ -6,6 +6,9 @@ import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
 import { slugify } from '@/lib/utils'
 import { saveContentTranslation } from '@/lib/translations'
+import { writeFile, mkdir } from "fs/promises"
+import { join } from "path"
+import path from "path"
 
 const PromptSchema = z.object({
     title: z.string().min(5, "Title must be at least 5 characters"),
@@ -51,6 +54,25 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
     const session = await getSession();
     if (!session || !session.userId) {
         return { message: "Unauthorized" };
+    }
+
+    // Handle File Uploads
+    const imageFile = formData.get('imageFile') as File;
+    if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
+        const url = await savePromptImage(imageFile);
+        formData.set('image', url);
+    }
+
+    const beforeImageFile = formData.get('beforeImageFile') as File;
+    if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
+        const url = await savePromptImage(beforeImageFile);
+        formData.set('beforeImage', url);
+    }
+    
+    const afterImageFile = formData.get('afterImageFile') as File;
+    if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
+        const url = await savePromptImage(afterImageFile);
+        formData.set('afterImage', url);
     }
 
     const validatedFields = PromptSchema.safeParse({
@@ -197,6 +219,25 @@ export async function updatePrompt(id: string, prevState: PromptState, formData:
     const lang = formData.get('lang') as string || 'en';
     const session = await getSession();
     if (!session || !session.userId) return { message: "Unauthorized" };
+
+    // Handle File Uploads
+    const imageFile = formData.get('imageFile') as File;
+    if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
+        const url = await savePromptImage(imageFile);
+        formData.set('image', url);
+    }
+
+    const beforeImageFile = formData.get('beforeImageFile') as File;
+    if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
+        const url = await savePromptImage(beforeImageFile);
+        formData.set('beforeImage', url);
+    }
+    
+    const afterImageFile = formData.get('afterImageFile') as File;
+    if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
+        const url = await savePromptImage(afterImageFile);
+        formData.set('afterImage', url);
+    }
 
     const validatedFields = PromptSchema.safeParse({
         title: formData.get('title'),
@@ -353,5 +394,33 @@ export async function submitPublicPrompt(prevState: PromptState, formData: FormD
         console.error("Failed to submit prompt:", error);
         return { message: "Failed to submit prompt. Please try again." };
     }
+}
+
+async function savePromptImage(file: File) {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const rawFilename = `prompt-${Date.now()}${path.extname(file.name)}`;
+    const uploadDir = join(process.cwd(), "public", "uploads", "prompts");
+    
+    await mkdir(uploadDir, { recursive: true });
+    await writeFile(join(uploadDir, rawFilename), buffer);
+
+    const url = `/uploads/prompts/${rawFilename}`;
+
+    // Add to Media Library
+    try {
+        await prisma.media.create({
+            data: {
+                url,
+                filename: file.name,
+                mimeType: file.type,
+                size: file.size,
+            }
+        });
+    } catch (e) {
+        console.error("Failed to add prompt image to media library", e);
+    }
+
+    return url;
 }
 

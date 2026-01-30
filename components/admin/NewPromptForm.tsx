@@ -5,6 +5,7 @@ import { createPrompt, updatePrompt, PromptState } from "@/actions/prompts";
 import { useRouter } from "next/navigation";
 import BlockEditor from "./BlockEditor";
 import { MultiLanguageEditor } from "./MultiLanguageEditor";
+import { ImageUpload } from "./ImageUpload";
 import { cn, slugify } from "@/lib/utils";
 import {
     Sparkles,
@@ -359,22 +360,11 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                         <ImageIcon className="w-3 h-3" /> Primary Featured Image
                                     </h4>
                                     <div className="space-y-4">
-                                        <div className="aspect-video bg-muted/30 rounded-[2rem] border border-border overflow-hidden relative group">
-                                            {image ? (
-                                                <img src={image} className="w-full h-full object-cover" alt="Featured" />
-                                            ) : (
-                                                <div className="flex flex-col items-center justify-center h-full text-muted-foreground/30 gap-2">
-                                                    <Layout className="w-8 h-8" />
-                                                    <span className="text-[8px] font-black uppercase italic">Not Set</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <input
+                                        <ImageUpload
                                             name="image"
-                                            value={image}
-                                            onChange={(e) => setImage(e.target.value)}
-                                            placeholder="Paste primary image URL..."
-                                            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-[10px] font-medium focus:ring-2 focus:ring-primary/20 transition-all italic"
+                                            label="Primary Featured Image"
+                                            defaultValue={image}
+                                            onPreviewChange={(url) => setImage(url)}
                                         />
                                         <div className="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10">
                                             <p className="text-[8px] text-emerald-500/80 leading-relaxed font-bold uppercase tracking-widest">
@@ -456,22 +446,16 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                         <ImageIcon className="w-3 h-3" /> Before & After Images
                                     </h4>
                                     <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Before Image URL</label>
-                                            <input
-                                                name="beforeImage"
-                                                placeholder="https://..."
-                                                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-[10px] font-medium focus:ring-2 focus:ring-primary/20 transition-all font-mono"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">After Image URL</label>
-                                            <input
-                                                name="afterImage"
-                                                placeholder="https://..."
-                                                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-[10px] font-medium focus:ring-2 focus:ring-primary/20 transition-all font-mono"
-                                            />
-                                        </div>
+                                        <ImageUpload
+                                            name="beforeImage"
+                                            label="Before Image"
+                                            defaultValue={initialData?.beforeImage}
+                                        />
+                                        <ImageUpload
+                                            name="afterImage"
+                                            label="After Image"
+                                            defaultValue={initialData?.afterImage}
+                                        />
                                     </div>
                                 </div>
 
