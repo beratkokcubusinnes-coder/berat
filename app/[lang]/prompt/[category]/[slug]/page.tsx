@@ -3,7 +3,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopNavbar } from "@/components/layout/TopNavbar";
 import { getSession } from "@/lib/session";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import { Share2, Heart, Eye, ShieldCheck, Info, MessageSquare, Download } from "lucide-react";
 import { CopyPrompt } from "@/components/ui/CopyPrompt";
@@ -81,10 +81,12 @@ export default async function PromptDetailPage({
 
     const prompt = await getContentWithTranslation(rawPromptData as any, 'prompt', (rawPromptData as any).id, lang as any);
 
-    // Safety check: ensure category matches (optional but good for SEO consistency)
-    // if (prompt.categoryData?.slug !== categorySlug) {
-    //     notFound();
-    // }
+    // Dynamic Category Redirect (SEO Safety)
+    // If the category in the URL doesn't match the prompt's actual category, 
+    // redirect to the correct canonical URL to prevent duplicate content.
+    if (prompt.categoryData?.slug && prompt.categoryData.slug !== categorySlug) {
+        redirect(`/${lang}/prompt/${prompt.categoryData.slug}/${slug}`);
+    }
 
     const relatedPrompts = await getRelatedPrompts(prompt.categoryId, prompt.id);
 
