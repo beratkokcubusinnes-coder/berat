@@ -117,6 +117,7 @@ export function PromptCard({ prompt, lang, dict }: PromptCardProps) {
                     className="object-cover pointer-events-none"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     draggable={false}
+                    unoptimized
                 />
 
                 {/* Foreground Image (Left side - 'Before') - Clipped */}
@@ -130,6 +131,7 @@ export function PromptCard({ prompt, lang, dict }: PromptCardProps) {
                         fill
                         className="object-cover pointer-events-none"
                         draggable={false}
+                        unoptimized
                     />
                 </div>
 
