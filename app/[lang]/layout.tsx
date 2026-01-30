@@ -57,23 +57,20 @@ export default async function RootLayout({
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
-        {/* Dynamic Meta Tags Extra */}
-        {settings.meta_tags_extra && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `/* Site Meta Tags Extra Placeholder - Next.js would move this */`,
-            }}
-          />
-        )}
-        {settings.meta_tags_extra && (
-          <title>{/* Keep this to ensure head exists */}</title>
-        )}
-        {settings.meta_tags_extra && (
-          <div dangerouslySetInnerHTML={{ __html: settings.meta_tags_extra }} style={{ display: 'none' }} />
-        )}
-        {/* Note: In Next.js App Router, injecting raw HTML into head is tricky without a dedicated component.
-            For now, I will use a div with display none at the start of body if head injection is unstable,
-            but usually, browsers are lenient. Let's try to put them at the top of head. */}
+        {/* Basic scripts that need early execution */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.theme === 'dark' || !('theme' in localStorage)) {
+                  document.documentElement.classList.add('dark')
+                } else {
+                  document.documentElement.classList.remove('dark')
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
 
         {/* Google Analytics */}
         {gaId && (
@@ -91,39 +88,37 @@ export default async function RootLayout({
             />
           </>
         )}
-
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.theme === 'dark' || !('theme' in localStorage)) {
-                  document.documentElement.classList.add('dark')
-                } else {
-                  document.documentElement.classList.remove('dark')
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
       </head>
+
       <body className={`${inter.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300`}>
+        {/* Inject Extra Meta Tags (Hidden) at the very beginning of the body if they contain non-script HTML */}
+        {settings.meta_tags_extra && (
+          <div
+            dangerouslySetInnerHTML={{ __html: settings.meta_tags_extra }}
+            className="hidden pointer-events-none appearance-none h-0 w-0 overflow-hidden"
+            aria-hidden="true"
+          />
+        )}
+
         {isMaintenance ? (
           <MaintenanceView lang={lang} />
         ) : (
-          <>
-            <SystemSettingsProvider settings={settings}>
-              {children}
-            </SystemSettingsProvider>
+          <SystemSettingsProvider settings={settings}>
+            {children}
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{ __html: JSON.stringify(await getGlobalSchema()) }}
             />
-          </>
+          </SystemSettingsProvider>
         )}
 
         {/* Dynamic Footer Script */}
         {settings.custom_footer_script && (
-          <div dangerouslySetInnerHTML={{ __html: settings.custom_footer_script }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: settings.custom_footer_script }}
+            className="hidden"
+            aria-hidden="true"
+          />
         )}
       </body>
     </html>

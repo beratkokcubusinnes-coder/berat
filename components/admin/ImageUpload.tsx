@@ -103,6 +103,20 @@ export function ImageUpload({ name, label, defaultValue, className, onPreviewCha
                     </button>
                 )}
             </div>
+
+            {/* Optimization Toggle */}
+            <div className="flex items-center gap-2 px-1">
+                <input
+                    type="checkbox"
+                    id={`optimize-${name}`}
+                    name={`${name}Optimize`}
+                    defaultChecked={true}
+                    className="w-4 h-4 rounded border-border text-primary focus:ring-primary/20 transition-all cursor-pointer"
+                />
+                <label htmlFor={`optimize-${name}`} className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest cursor-pointer hover:text-foreground transition-colors">
+                    Optimize & Convert to WEBP
+                </label>
+            </div>
         </div>
     );
 }

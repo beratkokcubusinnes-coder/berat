@@ -14,9 +14,10 @@ interface PromptCardProps {
     prompt: any; // Using any to handle prisma includes flexibly
     lang: string;
     dict?: any;
+    priority?: boolean;
 }
 
-export function PromptCard({ prompt, lang, dict }: PromptCardProps) {
+export function PromptCard({ prompt, lang, dict, priority }: PromptCardProps) {
     const [sliderPosition, setSliderPosition] = useState(50);
     const [isDragging, setIsDragging] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -112,12 +113,14 @@ export function PromptCard({ prompt, lang, dict }: PromptCardProps) {
                 {/* Background Image (Right side - 'After') */}
                 <Image
                     src={images.after}
-                    alt={prompt.title}
+                    alt={`After result for ${prompt.title} AI Prompt - ${prompt.model}`}
                     fill
                     className="object-cover pointer-events-none"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     draggable={false}
                     unoptimized
+                    priority={priority}
+                    loading={priority ? "eager" : "lazy"}
                 />
 
                 {/* Foreground Image (Left side - 'Before') - Clipped */}
@@ -127,11 +130,13 @@ export function PromptCard({ prompt, lang, dict }: PromptCardProps) {
                 >
                     <Image
                         src={images.before}
-                        alt={prompt.title}
+                        alt={`Input/Before preview for ${prompt.title} AI Prompt`}
                         fill
                         className="object-cover pointer-events-none"
                         draggable={false}
                         unoptimized
+                        priority={priority}
+                        loading={priority ? "eager" : "lazy"}
                     />
                 </div>
 

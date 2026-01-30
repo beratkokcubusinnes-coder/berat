@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { slugify } from '@/lib/utils'
 import { saveContentTranslation } from '@/lib/translations'
+import { saveContentImage } from '@/lib/upload-utils'
 
 const ContentSchema = z.object({
     title: z.string().min(5, "Title is too short"),
@@ -48,6 +49,20 @@ export async function createAdminContent(prevState: ContentState, formData: Form
     if (!session || !session.userId) return { message: "Unauthorized" };
 
     const type = formData.get('type') as string;
+    const title = formData.get('title') as string || 'content';
+
+    // Handle File Upload
+    try {
+        const imageFile = formData.get('imageFile') as File;
+        const optimize = formData.get('imageOptimize') === 'on';
+        if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
+            const url = await saveContentImage(imageFile, title, type + 's', optimize);
+            formData.set('image', url);
+            formData.set('images', url);
+        }
+    } catch (error) {
+        console.error("File upload failed:", error);
+    }
 
     const validatedFields = ContentSchema.safeParse({
         title: formData.get('title'),
@@ -167,6 +182,20 @@ export async function updateAdminContent(id: string, prevState: ContentState, fo
     if (!session || !session.userId) return { message: "Unauthorized" };
 
     const type = formData.get('type') as string;
+    const title = formData.get('title') as string || 'content';
+
+    // Handle File Upload
+    try {
+        const imageFile = formData.get('imageFile') as File;
+        const optimize = formData.get('imageOptimize') === 'on';
+        if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
+            const url = await saveContentImage(imageFile, title, type + 's', optimize);
+            formData.set('image', url);
+            formData.set('images', url);
+        }
+    } catch (error) {
+        console.error("File upload failed:", error);
+    }
 
     const validatedFields = ContentSchema.safeParse({
         title: formData.get('title'),

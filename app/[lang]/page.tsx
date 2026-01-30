@@ -111,8 +111,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           {/* 1. TRENDING NOW */}
           <HomeSection title={dict.Home.trending} icon={Sparkles} href={getHref('/prompts', lang)} color="text-primary" dict={dict}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {displayPrompts.map((prompt: any) => (
-                <PromptCard key={prompt.id} prompt={prompt} lang={lang} dict={dict} />
+              {displayPrompts.map((prompt: any, index: number) => (
+                <PromptCard key={prompt.id} prompt={prompt} lang={lang} dict={dict} priority={index < 2} />
               ))}
             </div>
           </HomeSection>

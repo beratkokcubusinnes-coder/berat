@@ -180,17 +180,14 @@ export default async function PromptDetailPage({
                             </div>
 
                             {/* Detailed Description / SEO Content */}
-                            <article className="bg-card/50 border border-border rounded-3xl p-8 md:p-10 space-y-8 prose prose-invert prose-headings:font-black prose-headings:tracking-tight max-w-none">
+                            <article className="bg-card/50 border border-border rounded-[2rem] p-8 md:p-10 space-y-8 prose prose-invert prose-headings:font-black prose-headings:tracking-tight max-w-none shadow-sm animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
                                 <div className="flex items-center gap-3 mb-6 non-prose">
-                                    <Info className="w-5 h-5 text-primary" />
+                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                                        <Info className="w-5 h-5" />
+                                    </div>
                                     <h2 className="text-xl font-black m-0 tracking-tight">Technical Breakdown & Guide</h2>
                                 </div>
-                                <div className="bg-card/50 border border-border rounded-3xl p-8 md:p-10 space-y-8 prose-invert max-w-none non-prose">
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <Info className="w-5 h-5 text-primary" />
-                                        <h2 className="text-xl font-black m-0 tracking-tight">Technical Breakdown & Guide</h2>
-                                    </div>
-
+                                <div className="non-prose">
                                     <BlockRenderer content={prompt.description || "<p>No detailed guide provided for this prompt yet.</p>"} />
                                 </div>
                             </article>

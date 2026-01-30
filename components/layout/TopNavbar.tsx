@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { Plus, Search, User, Settings, LogOut, Bell, Sun, Moon } from "lucide-react";
+import { Plus, Search, User, Settings, LogOut, Bell, Sun, Moon, Menu, X } from "lucide-react";
 import Image from "next/image";
 import UserAvatar from "@/components/ui/UserAvatar";
 import { usePathname } from "next/navigation";
@@ -10,6 +10,7 @@ import { logout } from "@/actions/auth";
 import { useSystemSettings } from "@/components/providers/SystemSettingsProvider";
 import { getHref } from "@/lib/i18n";
 import { NotificationBell } from "@/components/ui/NotificationBell";
+import { cn } from "@/lib/utils";
 
 export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?: any }) {
     const pathname = usePathname();
@@ -25,8 +26,9 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
 
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [isnotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Refs for clicking outside to close
     const langMenuRef = useRef<HTMLDivElement>(null);
@@ -112,14 +114,31 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
 
     return (
         <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-md px-6 py-4 flex items-center justify-between transition-colors duration-300">
-            {/* Mobile Menu Trigger (Hidden on Desktop) & Search */}
+            {/* Mobile Menu Trigger & Search */}
             <div className="flex items-center gap-4 w-full max-w-md">
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="md:hidden p-2 hover:bg-muted rounded-xl transition-colors"
+                    aria-label="Toggle Menu"
+                >
+                    {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+
                 {isVisible('search') && (
                     <div className="flex items-center gap-4 w-full">
                         <div className="md:hidden">
                             <Link href={getHref('/', lang)} className="flex items-center gap-2">
                                 {settings.site_icon ? (
-                                    <img src={settings.site_icon} alt={settings.site_icon_alt} className="w-8 h-8 object-contain" />
+                                    <div className="relative w-8 h-8">
+                                        <Image
+                                            src={settings.site_icon.startsWith('http') ? settings.site_icon : (settings.site_icon.startsWith('/') ? settings.site_icon : `/${settings.site_icon}`)}
+                                            alt={settings.site_icon_alt || "Logo"}
+                                            fill
+                                            className="object-contain"
+                                            priority
+                                            unoptimized={settings.site_icon.endsWith('.svg') || settings.site_icon.startsWith('http')}
+                                        />
+                                    </div>
                                 ) : (
                                     <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">P</div>
                                 )}
@@ -263,5 +282,75 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                 )}
             </div>
         </header>
+
+        {/* Mobile Navigation Overlay */ }
+    {
+        isMobileMenuOpen && (
+            <div className="fixed inset-0 z-50 md:hidden animate-in fade-in duration-300">
+                <div className="absolute inset-0 bg-background/95 backdrop-blur-xl" />
+                <div className="relative h-full flex flex-col p-8">
+                    <div className="flex items-center justify-between mb-12">
+                        <Link href={getHref('/', lang)} className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
+                            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">P</div>
+                            <span className="font-bold text-2xl tracking-tighter">{settings.site_name || "Promptda"}</span>
+                        </Link>
+                        <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="p-2 hover:bg-muted rounded-xl transition-colors"
+                        >
+                            <X className="w-8 h-8" />
+                        </button>
+                    </div>
+
+                    <nav className="flex-1 space-y-4">
+                        {JSON.parse(settings.navigation_sidebar || "[]").map((item: any) => (
+                            <Link
+                                key={item.id}
+                                href={item.href.startsWith('http') ? item.href : getHref(item.href, lang)}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="flex items-center gap-4 p-4 rounded-2xl text-xl font-bold text-foreground hover:bg-primary hover:text-white transition-all"
+                            >
+                                <span className="opacity-70 group-hover:opacity-100">{item.name}</span>
+                            </Link>
+                        ))}
+                    </nav>
+
+                    <div className="pt-8 border-t border-border/50">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex bg-muted rounded-xl p-1">
+                                {languages.map((l) => (
+                                    <button
+                                        key={l.code}
+                                        onClick={() => switchLanguage(l.code)}
+                                        className={cn("px-3 py-1.5 rounded-lg text-xs font-bold transition-all", lang === l.code ? "bg-background shadow-sm text-primary" : "text-muted-foreground")}
+                                    >
+                                        {l.code.toUpperCase()}
+                                    </button>
+                                ))}
+                            </div>
+                            <button onClick={toggleTheme} className="p-3 bg-muted rounded-xl">
+                                {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                            </button>
+                        </div>
+
+                        {user ? (
+                            <div className="flex items-center gap-4 bg-muted/50 p-4 rounded-[2rem]">
+                                <UserAvatar src={user.avatar} alt={user.name} size={48} />
+                                <div className="flex-1 overflow-hidden">
+                                    <p className="font-bold truncate">{user.name}</p>
+                                    <button onClick={() => logout()} className="text-xs text-red-500 font-bold uppercase tracking-widest">{dict.UserMenu.logout}</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <Link href={getHref('/login', lang)} className="block w-full text-center bg-primary text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20">
+                                {dict.Navbar.login}
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    </>
     );
 }

@@ -58,22 +58,23 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
 
     // Handle File Uploads
     try {
+        const title = formData.get('title') as string || 'prompt';
         const imageFile = formData.get('imageFile') as File;
         if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
-            const url = await savePromptImage(imageFile);
+            const url = await savePromptImage(imageFile, title);
             formData.set('image', url);
             formData.set('images', url);
         }
 
         const beforeImageFile = formData.get('beforeImageFile') as File;
         if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
-            const url = await savePromptImage(beforeImageFile);
+            const url = await savePromptImage(beforeImageFile, `${title}-before`);
             formData.set('beforeImage', url);
         }
 
         const afterImageFile = formData.get('afterImageFile') as File;
         if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
-            const url = await savePromptImage(afterImageFile);
+            const url = await savePromptImage(afterImageFile, `${title}-after`);
             formData.set('afterImage', url);
         }
     } catch (error: any) {
@@ -228,22 +229,23 @@ export async function updatePrompt(id: string, prevState: PromptState, formData:
 
     // Handle File Uploads
     try {
+        const title = formData.get('title') as string || 'prompt';
         const imageFile = formData.get('imageFile') as File;
         if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
-            const url = await savePromptImage(imageFile);
+            const url = await savePromptImage(imageFile, title);
             formData.set('image', url);
             formData.set('images', url);
         }
 
         const beforeImageFile = formData.get('beforeImageFile') as File;
         if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
-            const url = await savePromptImage(beforeImageFile);
+            const url = await savePromptImage(beforeImageFile, `${title}-before`);
             formData.set('beforeImage', url);
         }
 
         const afterImageFile = formData.get('afterImageFile') as File;
         if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
-            const url = await savePromptImage(afterImageFile);
+            const url = await savePromptImage(afterImageFile, `${title}-after`);
             formData.set('afterImage', url);
         }
     } catch (error: any) {
@@ -408,31 +410,8 @@ export async function submitPublicPrompt(prevState: PromptState, formData: FormD
     }
 }
 
-async function savePromptImage(file: File) {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const rawFilename = `prompt-${Date.now()}${path.extname(file.name)}`;
-    const uploadDir = join(process.cwd(), "public", "uploads", "prompts");
+import { saveContentImage } from "@/lib/upload-utils"
 
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(join(uploadDir, rawFilename), buffer);
-
-    const url = `/uploads/prompts/${rawFilename}`;
-
-    // Add to Media Library
-    try {
-        await prisma.media.create({
-            data: {
-                url,
-                filename: file.name,
-                mimeType: file.type,
-                size: file.size,
-            }
-        });
-    } catch (e) {
-        console.error("Failed to add prompt image to media library", e);
-    }
-
-    return url;
+async function savePromptImage(file: File, title: string = "prompt") {
+    return saveContentImage(file, title, "prompts");
 }
-

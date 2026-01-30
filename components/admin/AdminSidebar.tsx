@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Users, Sparkles, PieChart, Settings, LogOut, ChevronLeft, BarChart3, MessageSquare, Bell, Calendar, FileCode2, Anchor, Wrench, MessageCircle, BookOpen, Tag, Globe, Layout, Languages, FileText } from "lucide-react";
+import { LayoutDashboard, Users, Sparkles, PieChart, Settings, LogOut, ChevronLeft, BarChart3, MessageSquare, Bell, Calendar, FileCode2, Anchor, Wrench, MessageCircle, BookOpen, Tag, Globe, Layout, Languages, FileText, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useSystemSettings } from "@/components/providers/SystemSettingsProvider";
@@ -27,6 +27,7 @@ export function AdminSidebar({ lang, dict }: { lang: string, dict: any }) {
 
     const generalItems = [
         { name: "Static Pages", icon: FileText, href: `/${lang}/admin/pages` },
+        { name: "Media Library", icon: ImageIcon, href: `/${lang}/admin/media` },
         { name: "SEO Settings", icon: Globe, href: `/${lang}/admin/seo` },
         { name: "🌍 Translations", icon: Languages, href: `/${lang}/admin/translations/test` },
         { name: dict.Admin.settings, icon: Settings, href: `/${lang}/admin/settings` },
