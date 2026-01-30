@@ -259,7 +259,8 @@ export default function EditPromptForm({ prompt, lang, dict, categories }: { pro
                                             <input
                                                 name="slug"
                                                 value={slug}
-                                                onChange={(e) => setSlug(slugify(e.target.value))}
+                                                onChange={(e) => setSlug(e.target.value)}
+                                                onBlur={() => setSlug(slugify(slug))}
                                                 className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-mono"
                                             />
                                         </div>

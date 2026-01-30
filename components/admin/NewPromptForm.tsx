@@ -48,6 +48,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
     const [description, setDescription] = useState(initialData?.description || "");
     const [title, setTitle] = useState(initialData?.title || "");
     const [slug, setSlug] = useState(initialData?.slug || "");
+    const [isSlugEdited, setIsSlugEdited] = useState(!!initialData?.slug);
     const [model, setModel] = useState(initialData?.model || "");
     const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
 
@@ -85,11 +86,11 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
 
     // Auto-sync
     useEffect(() => {
-        if (title && !slug) setSlug(slugify(title));
+        if (title && !isSlugEdited) setSlug(slugify(title));
         if (title && !metaTitle) setMetaTitle(title);
         if (title && !ogTitle) setOgTitle(title);
         if (image && !ogImage) setOgImage(image);
-    }, [title, image]);
+    }, [title, image, isSlugEdited]);
 
     return (
         <form action={action} className="min-h-screen bg-background flex flex-col -m-4 sm:-m-8">
@@ -316,7 +317,11 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                             <input
                                                 name="slug"
                                                 value={slug}
-                                                onChange={(e) => setSlug(slugify(e.target.value))}
+                                                onChange={(e) => {
+                                                    setSlug(e.target.value);
+                                                    setIsSlugEdited(true);
+                                                }}
+                                                onBlur={() => setSlug(slugify(slug))}
                                                 className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-mono"
                                             />
                                         </div>

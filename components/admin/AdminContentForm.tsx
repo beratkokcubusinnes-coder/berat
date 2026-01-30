@@ -50,6 +50,7 @@ export function AdminContentForm({ type, lang, dict, categories, initialData, in
     const [description, setDescription] = useState(isBlog ? (initialData?.content || "") : (initialData?.description || ""));
     const [title, setTitle] = useState(initialData?.title || "");
     const [slug, setSlug] = useState(initialData?.slug || "");
+    const [isSlugEdited, setIsSlugEdited] = useState(!!initialData?.slug);
 
     // SEO States
     const [metaTitle, setMetaTitle] = useState(initialData?.metaTitle || "");
@@ -85,11 +86,11 @@ export function AdminContentForm({ type, lang, dict, categories, initialData, in
 
     // Auto-sync slug and meta
     useEffect(() => {
-        if (title && !slug) setSlug(slugify(title));
+        if (title && !isSlugEdited) setSlug(slugify(title));
         if (title && !metaTitle) setMetaTitle(title);
         if (title && !ogTitle) setOgTitle(title);
         if (image && !ogImage) setOgImage(image);
-    }, [title, image]);
+    }, [title, image, isSlugEdited]);
 
 
     return (
@@ -323,7 +324,11 @@ export function AdminContentForm({ type, lang, dict, categories, initialData, in
                                                 <input
                                                     name="slug"
                                                     value={slug}
-                                                    onChange={(e) => setSlug(slugify(e.target.value))}
+                                                    onChange={(e) => {
+                                                        setSlug(e.target.value);
+                                                        setIsSlugEdited(true);
+                                                    }}
+                                                    onBlur={() => setSlug(slugify(slug))}
                                                     className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
                                                 />
                                                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
