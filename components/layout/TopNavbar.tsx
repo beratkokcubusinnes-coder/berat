@@ -210,7 +210,7 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                     {isVisible('theme') && (
                         <button
                             onClick={toggleTheme}
-                            className="w-8 h-8 flex items-center justify-center rounded-full border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-all"
+                            className="hidden md:flex w-8 h-8 items-center justify-center rounded-full border border-border/50 hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-all"
                             aria-label="Toggle Theme"
                         >
                             {theme === 'dark' ? (
@@ -222,7 +222,7 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                     )}
 
                     {isVisible('upload') && (
-                        <Link href={getHref('/upload', lang)} className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium px-4 py-2 rounded-full transition-all shadow-lg shadow-primary/20">
+                        <Link href={getHref('/upload', lang)} className="hidden md:flex items-center gap-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium px-4 py-2 rounded-full transition-all shadow-lg shadow-primary/20">
                             <Plus className="w-4 h-4" />
                             <span className="hidden sm:inline">{dict.Navbar.upload}</span>
                         </Link>
