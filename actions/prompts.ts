@@ -57,22 +57,27 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
     }
 
     // Handle File Uploads
-    const imageFile = formData.get('imageFile') as File;
-    if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
-        const url = await savePromptImage(imageFile);
-        formData.set('image', url);
-    }
+    try {
+        const imageFile = formData.get('imageFile') as File;
+        if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
+            const url = await savePromptImage(imageFile);
+            formData.set('image', url);
+        }
 
-    const beforeImageFile = formData.get('beforeImageFile') as File;
-    if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
-        const url = await savePromptImage(beforeImageFile);
-        formData.set('beforeImage', url);
-    }
-    
-    const afterImageFile = formData.get('afterImageFile') as File;
-    if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
-        const url = await savePromptImage(afterImageFile);
-        formData.set('afterImage', url);
+        const beforeImageFile = formData.get('beforeImageFile') as File;
+        if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
+            const url = await savePromptImage(beforeImageFile);
+            formData.set('beforeImage', url);
+        }
+
+        const afterImageFile = formData.get('afterImageFile') as File;
+        if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
+            const url = await savePromptImage(afterImageFile);
+            formData.set('afterImage', url);
+        }
+    } catch (error: any) {
+        console.error("File upload error:", error);
+        return { message: `File upload failed. Please checking permissions. Details: ${error.message}` };
     }
 
     const validatedFields = PromptSchema.safeParse({
@@ -221,22 +226,27 @@ export async function updatePrompt(id: string, prevState: PromptState, formData:
     if (!session || !session.userId) return { message: "Unauthorized" };
 
     // Handle File Uploads
-    const imageFile = formData.get('imageFile') as File;
-    if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
-        const url = await savePromptImage(imageFile);
-        formData.set('image', url);
-    }
+    try {
+        const imageFile = formData.get('imageFile') as File;
+        if (imageFile && imageFile.size > 0 && imageFile.name !== "undefined") {
+            const url = await savePromptImage(imageFile);
+            formData.set('image', url);
+        }
 
-    const beforeImageFile = formData.get('beforeImageFile') as File;
-    if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
-        const url = await savePromptImage(beforeImageFile);
-        formData.set('beforeImage', url);
-    }
-    
-    const afterImageFile = formData.get('afterImageFile') as File;
-    if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
-        const url = await savePromptImage(afterImageFile);
-        formData.set('afterImage', url);
+        const beforeImageFile = formData.get('beforeImageFile') as File;
+        if (beforeImageFile && beforeImageFile.size > 0 && beforeImageFile.name !== "undefined") {
+            const url = await savePromptImage(beforeImageFile);
+            formData.set('beforeImage', url);
+        }
+
+        const afterImageFile = formData.get('afterImageFile') as File;
+        if (afterImageFile && afterImageFile.size > 0 && afterImageFile.name !== "undefined") {
+            const url = await savePromptImage(afterImageFile);
+            formData.set('afterImage', url);
+        }
+    } catch (error: any) {
+        console.error("File upload error:", error);
+        return { message: `File upload failed: ${error.message}` };
     }
 
     const validatedFields = PromptSchema.safeParse({
@@ -401,7 +411,7 @@ async function savePromptImage(file: File) {
     const buffer = Buffer.from(bytes);
     const rawFilename = `prompt-${Date.now()}${path.extname(file.name)}`;
     const uploadDir = join(process.cwd(), "public", "uploads", "prompts");
-    
+
     await mkdir(uploadDir, { recursive: true });
     await writeFile(join(uploadDir, rawFilename), buffer);
 

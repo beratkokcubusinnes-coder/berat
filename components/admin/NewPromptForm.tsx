@@ -136,6 +136,11 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                         </button>
                     </div>
 
+                    {state.message && !state.success && (
+                        <div className="text-red-500 text-[10px] font-bold uppercase tracking-widest bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 mr-2 max-w-[200px] truncate" title={state.message}>
+                            Error: {state.message}
+                        </div>
+                    )}
                     <button
                         type="submit"
                         disabled={isPending}
