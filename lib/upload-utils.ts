@@ -25,13 +25,13 @@ export async function saveContentImage(file: File, title: string = "content", su
     const uploadDir = join(process.cwd(), "public", "uploads", subDir);
     await mkdir(uploadDir, { recursive: true });
 
-    let finalBuffer = buffer;
+    let finalBuffer: any = buffer;
     if (optimize) {
         try {
             finalBuffer = await sharp(buffer)
                 .resize(1920, 1080, { fit: 'inside', withoutEnlargement: true })
                 .webp({ quality: 80 })
-                .toBuffer();
+                .toBuffer() as any as Buffer;
         } catch (e) {
             console.error("Sharp optimization failed, saving original", e);
             finalBuffer = buffer;
