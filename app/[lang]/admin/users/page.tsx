@@ -7,6 +7,7 @@ import Image from "next/image";
 import { UsersFilterBar } from "@/components/admin/UsersFilterBar";
 import { DeleteUserButton } from "@/components/admin/DeleteUserButton";
 import UserAvatar from "@/components/ui/UserAvatar";
+import { UserActionButtons } from "@/components/admin/UserActionButtons";
 
 export const metadata: Metadata = {
     title: "User Management | Admin Panel",
@@ -200,29 +201,7 @@ export default async function AdminUsersPage({
                                             >
                                                 <Edit className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                                             </Link>
-                                            <form action={`/api/users/warn`} method="POST" className="inline">
-                                                <input type="hidden" name="id" value={user.id} />
-                                                <button
-                                                    type="submit"
-                                                    className="p-2 hover:bg-yellow-500/10 rounded-lg transition-all"
-                                                    title="Warn user"
-                                                >
-                                                    <AlertTriangle className="w-4 h-4 text-yellow-500" />
-                                                </button>
-                                            </form>
-                                            <form action={`/api/users/${user.banned ? 'unban' : 'ban'}`} method="POST" className="inline">
-                                                <input type="hidden" name="id" value={user.id} />
-                                                <button
-                                                    type="submit"
-                                                    className={`p-2 rounded-lg transition-all ${user.banned
-                                                        ? 'hover:bg-green-500/10'
-                                                        : 'hover:bg-red-500/10'
-                                                        }`}
-                                                    title={user.banned ? "Unban user" : "Ban user"}
-                                                >
-                                                    <Ban className={`w-4 h-4 ${user.banned ? 'text-green-500' : 'text-red-500'}`} />
-                                                </button>
-                                            </form>
+                                            <UserActionButtons user={user} />
                                             <DeleteUserButton userId={user.id} />
                                         </div>
                                     </td>
