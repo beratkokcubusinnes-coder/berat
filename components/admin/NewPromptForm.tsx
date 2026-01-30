@@ -474,7 +474,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                             <input
                                                 type="number"
                                                 name="views"
-                                                defaultValue={0}
+                                                defaultValue={initialData?.views || 0}
                                                 className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-bold"
                                             />
                                         </div>
@@ -483,7 +483,7 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                             <input
                                                 type="number"
                                                 name="likes"
-                                                defaultValue={0}
+                                                defaultValue={initialData?.likes || 0}
                                                 className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-bold"
                                             />
                                         </div>
