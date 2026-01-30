@@ -132,7 +132,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/20 rounded-full blur-[100px] -mr-48 -mt-48" />
           </section>
 
-          <HomeSection title={dict.Home.featuredPrompts} icon={Sparkles} href={getHref('/prompts', lang)} color="text-yellow-400" dict={dict}>
+          <HomeSection title={dict.Home.trending} icon={Sparkles} href={getHref('/prompts', lang)} color="text-primary" dict={dict}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
               {displayPrompts.map((prompt: any) => (
                 <PromptCard key={prompt.id} prompt={prompt} lang={lang} dict={dict} />
@@ -241,14 +241,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             </div>
           </section>
 
-          <HomeSection title={dict.Home.trending} icon={Sparkles} href={getHref('/prompts', lang)} color="text-primary" dict={dict}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-              {/* Use HookCard as an example here if needed, but let's just pass dict to existing ones */}
-              {displayHooks.map((hook: any) => (
-                <HookCard key={hook.id} hook={hook} lang={lang} dict={dict} />
-              ))}
-            </div>
-          </HomeSection>
+
 
           <HomeSection title={dict.Home.popularCategories} icon={CheckCircle2} href={getHref('/categories', lang)} color="text-purple-400" dict={dict}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
