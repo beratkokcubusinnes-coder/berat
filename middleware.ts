@@ -32,7 +32,7 @@ export default function middleware(request: NextRequest) {
 export const config = {
     // Match only internationalized pathnames, but exclude API and static files
     matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|sitemap_index.xml|pages_index.xml|categories_index.xml|prompts_index.xml|scripts_index.xml|hooks_index.xml|tools_index.xml|blog_index.xml|community_index.xml|members_index.xml).*)',
     ]
 };
 
