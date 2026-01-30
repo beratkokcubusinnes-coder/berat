@@ -17,7 +17,7 @@ const ContentSchema = z.object({
     content: z.string().min(10, "Content is too short"),
     description: z.string().optional(),
     language: z.string().optional(),
-    type: z.enum(['script', 'hook', 'blog', 'tool']),
+    type: z.enum(['script', 'hook', 'blog', 'tool', 'thread']),
     model: z.string().optional(),
     // SEO & Metadata
     slug: z.string().optional(),
@@ -249,6 +249,14 @@ export async function updateAdminContent(id: string, prevState: ContentState, fo
                 where: { id },
                 data: commonData
             });
+        } else if (type === 'thread') {
+            await prisma.thread.update({
+                where: { id },
+                data: {
+                    title: data.title,
+                    content: data.content,
+                }
+            });
         }
 
         // Handle Translations if provided
@@ -282,7 +290,7 @@ export async function updateAdminContent(id: string, prevState: ContentState, fo
     }
 }
 
-export async function deleteAdminContent(id: string, type: 'prompt' | 'script' | 'hook' | 'blog' | 'tool') {
+export async function deleteAdminContent(id: string, type: 'prompt' | 'script' | 'hook' | 'blog' | 'tool' | 'thread' | 'comment') {
     const session = await getSession();
     if (!session || !session.userId) throw new Error("Unauthorized");
 
@@ -292,8 +300,11 @@ export async function deleteAdminContent(id: string, type: 'prompt' | 'script' |
         else if (type === 'hook') await (prisma as any).hook.delete({ where: { id } });
         else if (type === 'blog') await (prisma as any).blogPost.delete({ where: { id } });
         else if (type === 'tool') await (prisma as any).tool.delete({ where: { id } });
+        else if (type === 'thread') await prisma.thread.delete({ where: { id } });
+        else if (type === 'comment') await prisma.comment.delete({ where: { id } });
 
         revalidatePath(`/[lang]/admin/${type === 'blog' ? 'blog' : type + 's'}`, 'page');
+        revalidatePath(`/[lang]/admin/community`, 'page');
         revalidatePath('/', 'layout');
         return { success: true };
     } catch (error) {

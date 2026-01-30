@@ -432,6 +432,13 @@ export async function getThreads() {
     });
 }
 
+export async function getThreadById(id: string) {
+    return await prisma.thread.findUnique({
+        where: { id },
+        include: { author: true }
+    });
+}
+
 export async function getThreadBySlug(slug: string) {
     return await prisma.thread.findUnique({
         where: { slug },
@@ -442,6 +449,16 @@ export async function getThreadBySlug(slug: string) {
                 orderBy: { createdAt: 'desc' }
             },
             _count: { select: { comments: true, likes: true } }
+        }
+    });
+}
+
+export async function getComments() {
+    return await prisma.comment.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: {
+            author: true,
+            thread: true
         }
     });
 }
