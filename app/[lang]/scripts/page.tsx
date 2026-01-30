@@ -9,7 +9,7 @@ import { getContentWithTranslation } from "@/lib/translations";
 import { Metadata } from "next";
 
 import Link from "next/link";
-import { generateBreadcrumbSchema, generateCollectionPageSchema } from "@/lib/seo";
+import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 import { getPageBlocks } from "@/lib/blocks";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 
@@ -74,6 +74,22 @@ export default async function ScriptsPage({
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateItemListSchema(
+                        scripts.map((s: any) => {
+                            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://promptda.com";
+                            return {
+                                name: s.title,
+                                url: `${baseUrl}/${lang}/scripts/${s.categoryData?.slug || 'general'}/${s.slug}`,
+                                image: s.image
+                            };
+                        }),
+                        "Scripts Library"
+                    ))
+                }}
             />
 
             <Sidebar lang={lang} dict={dict} user={session} />

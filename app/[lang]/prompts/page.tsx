@@ -7,7 +7,7 @@ import { PromptCard } from "@/components/ui/PromptCard";
 import { FilterBar } from "@/components/ui/FilterBar";
 import { Sparkles } from "lucide-react";
 import { Metadata } from "next";
-import { generateBreadcrumbSchema, generateCollectionPageSchema } from "@/lib/seo";
+import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 import { getPageBlocks } from "@/lib/blocks";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 
@@ -104,6 +104,23 @@ export default async function PromptsPage({
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            {/* Listing Schema for Prompts */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateItemListSchema(
+                        allPrompts.map((p: any) => {
+                            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://promptda.com";
+                            return {
+                                name: p.title,
+                                url: `${baseUrl}/${lang}/prompt/${p.categoryData?.slug || p.category}/${p.slug}`,
+                                image: p.images?.includes(',') ? p.images.split(',')[0] : p.images
+                            };
+                        }),
+                        "AI Prompts Explorer"
+                    ))
+                }}
             />
 
             {/* Sidebar - Fixed Left */}

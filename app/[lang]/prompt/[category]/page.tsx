@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { generateBreadcrumbSchema } from "@/lib/seo";
+import { generateBreadcrumbSchema, generateItemListSchema } from "@/lib/seo";
 import { getCategoryBlocks } from "@/lib/blocks";
 import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 
@@ -67,6 +67,23 @@ export default async function CategoryPromptsPage({
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            {/* Listing Schema for Category Prompts */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateItemListSchema(
+                        prompts.map((p: any) => {
+                            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://promptda.com";
+                            return {
+                                name: p.title,
+                                url: `${baseUrl}/${lang}/prompt/${categorySlug}/${p.slug}`,
+                                image: p.images?.includes(',') ? p.images.split(',')[0] : p.images
+                            };
+                        }),
+                        `${category.name} Prompts Collection`
+                    ))
+                }}
             />
             <Sidebar lang={lang} dict={dict} user={session} />
 

@@ -8,7 +8,7 @@ import { getContentWithTranslation } from "@/lib/translations";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { generateBreadcrumbSchema, generateCollectionPageSchema } from "@/lib/seo";
+import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 
 import { getSitemapAlternates } from "@/lib/sitemap-utils";
 
@@ -68,6 +68,22 @@ export default async function BlogPage({
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateItemListSchema(
+                        posts.map((p: any) => {
+                            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://promptda.com";
+                            return {
+                                name: p.title,
+                                url: `${baseUrl}/${lang}/blog/${p.slug}`,
+                                image: p.image
+                            };
+                        }),
+                        "AI Blog & Guide Articles"
+                    ))
+                }}
             />
 
             {/* Sidebar - Fixed Left */}

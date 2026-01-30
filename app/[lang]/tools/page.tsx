@@ -8,7 +8,7 @@ import { Wrench, Search, Filter, Cpu, Zap } from "lucide-react";
 import { getContentWithTranslation } from "@/lib/translations";
 import { Metadata } from "next";
 import Link from "next/link";
-import { generateBreadcrumbSchema, generateCollectionPageSchema } from "@/lib/seo";
+import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
     title: "AI Tools Library | Productivity & Development Tools | Promptda",
@@ -54,6 +54,22 @@ export default async function ToolsPage({
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateItemListSchema(
+                        tools.map((t: any) => {
+                            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://promptda.com";
+                            return {
+                                name: t.title,
+                                url: `${baseUrl}/${lang}/tools/${t.categoryData?.slug || 'general'}/${t.slug}`,
+                                image: t.image
+                            };
+                        }),
+                        "Tools Library"
+                    ))
+                }}
             />
 
             <Sidebar lang={lang} dict={dict} user={session} />
