@@ -123,19 +123,31 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                         <div className="flex items-center gap-4 w-full">
                             <div className="md:hidden">
                                 <Link href={getHref('/', lang)} className="flex items-center gap-2">
-                                    {settings.site_icon ? (
-                                        <div className="relative w-8 h-8">
-                                            <Image
-                                                src={settings.site_icon.startsWith('http') ? settings.site_icon : (settings.site_icon.startsWith('/') ? settings.site_icon : `/${settings.site_icon}`)}
-                                                alt={settings.site_icon_alt || "Logo"}
-                                                fill
-                                                className="object-contain"
-                                                priority
-                                                unoptimized={settings.site_icon.endsWith('.svg') || settings.site_icon.startsWith('http')}
+                                    {settings.site_logo && settings.site_logo !== "/images/logo.png" ? (
+                                        <div className="relative h-8 w-auto">
+                                            <img
+                                                src={settings.site_logo}
+                                                alt={settings.site_logo_alt || "Logo"}
+                                                className="h-8 w-auto object-contain"
                                             />
                                         </div>
                                     ) : (
-                                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">P</div>
+                                        <>
+                                            {settings.site_icon ? (
+                                                <div className="relative w-8 h-8">
+                                                    <Image
+                                                        src={settings.site_icon.startsWith('http') ? settings.site_icon : (settings.site_icon.startsWith('/') ? settings.site_icon : `/${settings.site_icon}`)}
+                                                        alt={settings.site_icon_alt || "Logo"}
+                                                        fill
+                                                        className="object-contain"
+                                                        priority
+                                                        unoptimized={settings.site_icon.endsWith('.svg') || settings.site_icon.startsWith('http')}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">P</div>
+                                            )}
+                                        </>
                                     )}
                                 </Link>
                             </div>
@@ -283,8 +295,20 @@ export function TopNavbar({ lang, dict, user }: { lang: string, dict: any, user?
                     <div className="relative h-full flex flex-col p-8">
                         <div className="flex items-center justify-between mb-12">
                             <Link href={getHref('/', lang)} className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen(false)}>
-                                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">P</div>
-                                <span className="font-bold text-2xl tracking-tighter">{settings.site_name || "Promptda"}</span>
+                                {settings.site_logo && settings.site_logo !== "/images/logo.png" ? (
+                                    <div className="relative h-10 w-auto">
+                                        <img
+                                            src={settings.site_logo}
+                                            alt={settings.site_logo_alt || "Logo"}
+                                            className="h-10 w-auto object-contain"
+                                        />
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">P</div>
+                                        <span className="font-bold text-2xl tracking-tighter">{settings.site_name || "Promptda"}</span>
+                                    </>
+                                )}
                             </Link>
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
