@@ -27,6 +27,7 @@ export function AdminSidebar({ lang, dict }: { lang: string, dict: any }) {
 
     const generalItems = [
         { name: "Static Pages", icon: FileText, href: `/${lang}/admin/pages` },
+        { name: "Social Manager", icon: MessageSquare, href: `/${lang}/admin/social` },
         { name: "Media Library", icon: ImageIcon, href: `/${lang}/admin/media` },
         { name: "SEO Settings", icon: Globe, href: `/${lang}/admin/seo` },
         { name: "🌍 Translations", icon: Languages, href: `/${lang}/admin/translations/test` },
