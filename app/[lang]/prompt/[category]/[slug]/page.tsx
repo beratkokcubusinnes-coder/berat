@@ -80,7 +80,7 @@ export default async function PromptDetailPage({
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const productSchema = generatePromptProductSchema({
         name: prompt.title,
-        description: prompt.metaDescription || prompt.description?.substring(0, 160),
+        description: prompt.metaDescription || prompt.description?.replace(/<[^>]*>/g, '').substring(0, 160),
         image: prompt.images.includes(',') ? prompt.images.split(',')[0] : prompt.images,
         url: `${baseUrl}/${lang}/prompt/${categorySlug}/${slug}`,
         authorName: prompt.author.name || 'Promptda Team',
@@ -89,7 +89,9 @@ export default async function PromptDetailPage({
         aggregateRating: prompt.likes > 0 ? {
             ratingValue: Math.min(5, 3 + (prompt.likes / 50)), // Simple calculation
             reviewCount: Math.max(1, Math.floor(prompt.likes / 5))
-        } : undefined
+        } : undefined,
+        model: prompt.model,
+        category: prompt.categoryData?.name || prompt.category
     });
 
     return (

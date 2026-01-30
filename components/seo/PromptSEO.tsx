@@ -6,19 +6,26 @@ interface StructuredDataProps {
 }
 
 export function PromptSEO({ prompt, faq }: StructuredDataProps) {
-    // Main Product/Prompt Schema
+    const mainImage = prompt.images.includes(',') ? prompt.images.split(',')[0] : prompt.images;
+
+    // Main Software Source Code Schema (Prompt Specific)
     const promptSchema = {
         "@context": "https://schema.org",
         "@type": "SoftwareSourceCode",
         "name": prompt.title,
-        "description": prompt.description || prompt.title,
-        "codeSampleType": "AI Prompt",
-        "programmingLanguage": prompt.model,
+        "description": prompt.metaDescription || prompt.description?.replace(/<[^>]*>/g, '').substring(0, 160),
+        "image": mainImage,
+        "codeSampleType": "AI Prompt Command",
+        "programmingLanguage": {
+            "@type": "ComputerLanguage",
+            "name": prompt.model
+        },
         "author": {
             "@type": "Person",
             "name": prompt.author.name
         },
         "datePublished": prompt.createdAt,
+        "text": prompt.content,
         "interactionStatistic": [
             {
                 "@type": "InteractionCounter",
@@ -47,23 +54,38 @@ export function PromptSEO({ prompt, faq }: StructuredDataProps) {
         }))
     } : null;
 
-    // HowTo Schema
+    // HowTo Schema - Enhanced for better Rich Result Detection
     const howToSchema = {
         "@context": "https://schema.org",
         "@type": "HowTo",
-        "name": `How to use ${prompt.title}`,
+        "name": `How to use ${prompt.title} on ${prompt.model}`,
+        "description": `Detailed guide on implementing the ${prompt.title} asset into your workflow.`,
+        "image": mainImage,
+        "tool": [
+            {
+                "@type": "HowToTool",
+                "name": prompt.model
+            }
+        ],
         "step": [
             {
                 "@type": "HowToStep",
-                "text": `Copy the prompt command from the ${prompt.model} section.`
+                "name": "Copy Command",
+                "text": `Copy the prompt command from the ${prompt.model} section on this page.`,
+                "url": "#copy-prompt",
+                "image": mainImage
             },
             {
                 "@type": "HowToStep",
-                "text": `Paste it into your ${prompt.model} interface.`
+                "name": "Access Interface",
+                "text": `Open your ${prompt.model} interface or workspace.`,
+                "url": "#access"
             },
             {
                 "@type": "HowToStep",
-                "text": "Press enter and generate your artwork."
+                "name": "Execute & Generate",
+                "text": "Paste the prompt and press enter to generate your professional artwork or text output.",
+                "url": "#execute"
             }
         ]
     };
