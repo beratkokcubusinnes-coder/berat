@@ -49,11 +49,11 @@ export async function constructMetadata({
 
     const fav = sysMap.site_favicon || "/favicon.ico";
 
-    const siteTitle = settings.site_title || "My SaaS";
+    const siteTitle = settings.site_title || "Promptda";
     const separator = settings.title_separator || "|";
-    const defaultDescription = settings.site_description || "A cutting-edge platform.";
+    const defaultDescription = settings.site_description || "Premium AI Prompts, Scripts & Marketing Tools";
     const defaultImage = settings.og_image || "/og-image.jpg";
-    const twitterHandle = settings.twitter_handle || "@mysaas";
+    const twitterHandle = settings.twitter_handle || "@promptda";
 
     // Robots logic
     let robots: any = {

@@ -3,6 +3,14 @@ import { SeoSettingsForm } from "@/components/admin/seo/SeoSettingsForm";
 import Link from "next/link";
 import { ArrowLeftRight } from "lucide-react";
 
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+    return {
+        title: `SEO Manager`,
+        description: `Configure search engine settings.`
+    };
+}
+
 export default async function SeoPage({
     params
 }: {

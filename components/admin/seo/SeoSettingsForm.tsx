@@ -231,7 +231,7 @@ export function SeoSettingsForm() {
                                             <input
                                                 type="text"
                                                 className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                                placeholder="My Awesome SaaS"
+                                                placeholder="Promptda"
                                                 value={settings.site_title || ""}
                                                 onChange={(e) => handleChange("site_title", e.target.value)}
                                             />
