@@ -10,16 +10,17 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
+import { getPageSeo } from "@/lib/seo-settings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
-    const dict = await getDictionary(lang) as any;
+    const seo = await getPageSeo("Tools", lang);
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/tools';
 
     return {
-        title: dict.Tools.metaTitle || "AI Tools Library | Promptda",
-        description: dict.Tools.metaDescription || "Discover powerful AI tools and resources.",
+        title: seo.title,
+        description: seo.description,
         alternates: {
             canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)

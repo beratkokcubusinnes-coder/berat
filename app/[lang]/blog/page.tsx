@@ -11,16 +11,17 @@ import Image from "next/image";
 import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
 
 import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
+import { getPageSeo } from "@/lib/seo-settings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
-    const dict = await getDictionary(lang) as any;
+    const seo = await getPageSeo("Blog", lang);
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/blog';
 
     return {
-        title: dict.Blog.metaTitle,
-        description: dict.Blog.metaDescription,
+        title: seo.title,
+        description: seo.description,
         alternates: {
             canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)

@@ -13,10 +13,18 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-    title: "My Favorites | Promptda",
-    robots: "noindex, nofollow"
-};
+import { getPageSeo } from "@/lib/seo-settings";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+    const { lang } = await params;
+    const seo = await getPageSeo("Favorites", lang);
+
+    return {
+        title: seo.title || "My Favorites | Promptda",
+        description: seo.description,
+        robots: "noindex, nofollow"
+    };
+}
 
 export default async function FavoritesPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;

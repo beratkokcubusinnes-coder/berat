@@ -10,17 +10,18 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import { getSitemapAlternates } from "@/lib/sitemap-utils";
+import { getPageSeo } from "@/lib/seo-settings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
-    const dict = await getDictionary(lang) as any;
+    const seo = await getPageSeo("Hooks", lang);
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/hooks';
 
     return {
-        title: dict.Hooks.metaTitle,
-        description: dict.Hooks.metaDescription,
+        title: seo.title,
+        description: seo.description,
         alternates: {
             canonical: `${baseUrl}/${lang}${path}`,
             languages: getSitemapAlternates(path, baseUrl)

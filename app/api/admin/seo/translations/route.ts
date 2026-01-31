@@ -85,6 +85,14 @@ export async function GET(request: Request) {
                 metaTitle: getVal('Community', 'metaTitle', json.Community?.metaTitle),
                 metaDescription: getVal('Community', 'metaDescription', json.Community?.metaDescription)
             },
+            Members: {
+                metaTitle: getVal('Members', 'metaTitle', json.Members?.metaTitle),
+                metaDescription: getVal('Members', 'metaDescription', json.Members?.metaDescription)
+            },
+            Favorites: {
+                metaTitle: getVal('Favorites', 'metaTitle', json.Favorites?.metaTitle),
+                metaDescription: getVal('Favorites', 'metaDescription', json.Favorites?.metaDescription)
+            },
         };
 
         return NextResponse.json(seoSections);

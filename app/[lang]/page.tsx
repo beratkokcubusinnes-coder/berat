@@ -16,17 +16,18 @@ import { generateWebSiteSchema, generateFAQSchema, generateItemListSchema } from
 import { getSession } from "@/lib/session";
 import { getPrompts, getScripts, getHooks, getTools, getThreads, getBlogPosts, getUsers } from "@/lib/db";
 import { cn } from "@/lib/utils";
+import { getPageSeo } from "@/lib/seo-settings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const dict = await getDictionary(lang) as any;
+  const seo = await getPageSeo("Home", lang);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
   const path = ''; // Home page path is empty
 
   return {
-    title: dict.Home.metaTitle,
-    description: dict.Home.metaDescription,
+    title: seo.title,
+    description: seo.description,
     alternates: {
       canonical: lang === 'en' ? `${baseUrl}/` : `${baseUrl}/${lang}`,
       languages: {

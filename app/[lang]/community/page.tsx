@@ -6,10 +6,24 @@ import { getSession } from "@/lib/session";
 import CommunityClient from "./CommunityClient";
 import { generateCollectionPageSchema, generateBreadcrumbSchema } from "@/lib/seo";
 
-export const metadata = {
-    title: "Community | Promptda",
-    description: "Join the discussion, share prompts, and connect with other creators. Explore the latest threads and conversations.",
-};
+import { getPageSeo } from "@/lib/seo-settings";
+import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+    const { lang } = await params;
+    const seo = await getPageSeo("Community", lang);
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+    const path = '/community';
+
+    return {
+        title: seo.title,
+        description: seo.description,
+        alternates: {
+            canonical: getCanonicalUrl(path, lang, baseUrl),
+            languages: getSitemapAlternates(path, baseUrl)
+        }
+    };
+}
 
 export default async function CommunityPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;

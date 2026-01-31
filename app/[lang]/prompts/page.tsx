@@ -13,16 +13,17 @@ import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 import { getSitemapAlternates } from "@/lib/sitemap-utils";
 
 import { getContentWithTranslation } from "@/lib/translations";
+import { getPageSeo } from "@/lib/seo-settings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
-    const dict = await getDictionary(lang) as any;
+    const seo = await getPageSeo("Prompts", lang);
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/prompts';
 
     return {
-        title: dict.Prompts.metaTitle,
-        description: dict.Prompts.metaDescription,
+        title: seo.title,
+        description: seo.description,
         alternates: {
             canonical: lang === 'en' ? `${baseUrl}${path}` : `${baseUrl}/${lang}${path}`,
             languages: getSitemapAlternates(path, baseUrl)
