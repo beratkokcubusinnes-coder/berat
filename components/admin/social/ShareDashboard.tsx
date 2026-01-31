@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { shareToTwitter, shareToFacebook } from '@/actions/social-share';
+import { shareToTwitter, shareToFacebook, shareToMedium } from '@/actions/social-share';
 import { toast } from 'sonner';
-import { Twitter, Facebook, Loader2, ExternalLink, Calendar, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Twitter, Facebook, Loader2, ExternalLink, Calendar, CheckCircle2, AlertCircle, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 interface ContentItem {
@@ -19,9 +19,9 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
     const [processing, setProcessing] = useState<Record<string, boolean>>({});
 
     // Track shared status simply in local state for this session (could be persisted in DB ideally)
-    const [sharedStatus, setSharedStatus] = useState<Record<string, { twitter?: boolean, facebook?: boolean }>>({});
+    const [sharedStatus, setSharedStatus] = useState<Record<string, { twitter?: boolean, facebook?: boolean, medium?: boolean }>>({});
 
-    const handleShare = async (item: ContentItem, platform: 'twitter' | 'facebook') => {
+    const handleShare = async (item: ContentItem, platform: 'twitter' | 'facebook' | 'medium') => {
         const key = `${item.id}-${platform}`;
         setProcessing(p => ({ ...p, [key]: true }));
 
@@ -29,9 +29,16 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
         const message = `Check out this new ${item.type}: ${item.title}`;
 
         try {
-            const result = platform === 'twitter'
-                ? await shareToTwitter(item.id, item.type, message, url)
-                : await shareToFacebook(item.id, item.type, message, url);
+            let result;
+            if (platform === 'twitter') {
+                result = await shareToTwitter(item.id, item.type, message, url);
+            } else if (platform === 'facebook') {
+                result = await shareToFacebook(item.id, item.type, message, url);
+            } else {
+                // Medium usually takes title + content. The action handles fetching content.
+                // We pass title and url.
+                result = await shareToMedium(item.id, item.type, item.title, url);
+            }
 
             if (result.success) {
                 toast.success(`Shared to ${platform} successfully!`);
@@ -121,6 +128,27 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
                                 ) : (
                                     <>
                                         <Facebook className="w-4 h-4 mr-2" /> Share
+                                    </>
+                                )}
+                            </Button>
+
+                            {/* Medium Button */}
+                            <Button
+                                variant={sharedStatus[item.id]?.medium ? "outline" : "default"}
+                                size="sm"
+                                onClick={() => handleShare(item, 'medium')}
+                                disabled={processing[`${item.id}-medium`] || sharedStatus[item.id]?.medium}
+                                className={sharedStatus[item.id]?.medium ? "text-green-500 border-green-500/20 bg-green-500/10" : "bg-zinc-800 hover:bg-zinc-900 text-white"}
+                            >
+                                {processing[`${item.id}-medium`] ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : sharedStatus[item.id]?.medium ? (
+                                    <>
+                                        <CheckCircle2 className="w-4 h-4 mr-1" /> Posted
+                                    </>
+                                ) : (
+                                    <>
+                                        <BookOpen className="w-4 h-4 mr-2" /> Medium
                                     </>
                                 )}
                             </Button>

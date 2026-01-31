@@ -96,6 +96,29 @@ export function SocialSettings({ initialData }: { initialData: any }) {
                 </div>
             </div>
 
+
+            {/* Medium Section */}
+            <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+                <div className="flex items-center gap-2 border-b border-border pb-4">
+                    <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center text-white font-serif font-bold text-xs">M</div>
+                    <h3 className="font-bold text-lg">Medium API Settings</h3>
+                </div>
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label>Integration Token</Label>
+                        <Input
+                            name="medium_integration_token"
+                            type="password"
+                            defaultValue={initialData.medium_integration_token}
+                            placeholder="Get this from Medium Settings > Integration Tokens"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                            Create a token at <a href="https://medium.com/me/settings/security" target="_blank" className="underline hover:text-primary">Medium Settings</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <Button type="submit" disabled={loading} className="w-full md:w-auto">
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 Save Connections
