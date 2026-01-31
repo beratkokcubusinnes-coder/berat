@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getDictionary } from "@/lib/dictionary";
 import Link from "next/link";
 import { Plus, Tag, Edit, Trash2 } from "lucide-react";
+import { DeleteCategoryButton } from "@/components/admin/categories/DeleteCategoryButton";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -68,8 +69,8 @@ export default async function CategoriesPage({
                         key={t.value}
                         href={`/${lang}/admin/categories?type=${t.value}`}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all ${selectedType === t.value
-                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                                : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                            : "bg-card border border-border text-muted-foreground hover:text-foreground"
                             }`}
                     >
                         <span>{t.icon}</span>
@@ -100,15 +101,7 @@ export default async function CategoriesPage({
                                         >
                                             <Edit className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                                         </Link>
-                                        <form action={`/api/categories/delete`} method="POST">
-                                            <input type="hidden" name="id" value={category.id} />
-                                            <button
-                                                type="submit"
-                                                className="p-2 hover:bg-red-500/10 rounded-lg transition-all"
-                                            >
-                                                <Trash2 className="w-4 h-4 text-red-500" />
-                                            </button>
-                                        </form>
+                                        <DeleteCategoryButton id={category.id} />
                                     </div>
                                 </div>
                                 {category.description && (
