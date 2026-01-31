@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Save, Globe, Search, Share2, FileText, Settings, Loader2, AlertCircle, CheckCircle2, RefreshCw, Box, Sliders, Languages, LayoutTemplate, Check, Info, Crop, Calendar, HardDrive, Trash2, Edit3, X, Image as ImageIcon } from "lucide-react";
 import { MediaLibrary } from "../settings/MediaLibrary";
+import { AnimatePresence } from "framer-motion";
 
 export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<string, string> }) {
     const [activeTab, setActiveTab] = useState("global");
@@ -798,82 +799,133 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                         <input
                                             type="text"
                                             className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all font-mono"
-                                            placeholder="utm_source, utm_medium, utm_campaign, fbclid, gclid"
+                                            placeholder="utm_source, ref, tracking_id"
                                             value={settings.canonical_clean_params || ""}
                                             onChange={(e) => handleChange("canonical_clean_params", e.target.value)}
                                         />
-                                        <p className="text-xs text-muted-foreground">Comma separated list of query parameters to remove from canonical URLs.</p>
+                                        <p className="text-xs text-muted-foreground">URL parameters to strip from canonical tags (comma separated).</p>
                                     </div>
 
-                                    <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-muted/30">
+                                    <label className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors">
                                         <input
                                             type="checkbox"
                                             className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                                             checked={settings.force_trailing_slash === "true"}
                                             onChange={(e) => handleChange("force_trailing_slash", e.target.checked ? "true" : "false")}
                                         />
-                                        <div>
-                                            <p className="font-bold text-sm">Force Trailing Slash</p>
-                                            <p className="text-xs text-muted-foreground">Enforce trailing slash on all URLs (recommended for some setups).</p>
-                                        </div>
-                                    </div>
+                                        <span className="text-sm">Force Trailing Slash (Recommended for most Next.js setups)</span>
+                                    </label>
                                 </div>
                             </div>
                         )}
 
-                        {/* Save Button Area */}
-                        <div className="pt-6 mt-6 border-t border-border flex items-center justify-between">
-                            <span className="text-xs text-muted-foreground">
-                                Last saved: <span className="font-mono">{new Date().toLocaleTimeString()}</span> (Local)
-                            </span>
-                            <button
-                                onClick={() => (activeTab === 'metadata' || activeTab === 'content') ? handleSaveMetadata() : handleSave(activeTab)}
-                                disabled={isSaving}
-                                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-primary/20 hover:scale-105"
-                            >
-                                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                Save Changes
-                            </button>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4">
+                        <p className="text-xs text-muted-foreground">
+                            {isSaving ? "Saving changes..." : "All changes are saved to database immediately on save."}
+                        </p>
+                        <button
+                            onClick={() => handleSave(activeTab)}
+                            disabled={isSaving}
+                            className="bg-primary text-primary-foreground px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-primary/90 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSaving ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Saving...
+                                </>
+                            ) : (
+                                <>
+                                    <Save className="w-4 h-4" />
+                                    Save Changes
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+
+                {/* Sidebar Info */}
+                <div className="space-y-6">
+                    <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+                        <h3 className="font-bold flex items-center gap-2">
+                            <Info className="w-4 h-4 text-primary" />
+                            SEO Health
+                        </h3>
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground">Sitemap</span>
+                                <span className="text-green-500 font-bold flex items-center gap-1"><Check className="w-3 h-3" /> Active</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground">Robots.txt</span>
+                                <span className="text-green-500 font-bold flex items-center gap-1"><Check className="w-3 h-3" /> Configured</span>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground">Meta Tags</span>
+                                <span className="text-green-500 font-bold flex items-center gap-1"><Check className="w-3 h-3" /> Optimized</span>
+                            </div>
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            {/* Sidebar Info Panel */}
-            <div className="space-y-6">
-                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                    <h3 className="font-bold mb-4 flex items-center gap-2">
-                        <Settings className="w-4 h-4" />
-                        Quick Actions
-                    </h3>
-                    <div className="space-y-2">
-                        <button
-                            onClick={() => handleAction('clear_cache')}
-                            disabled={isSaving}
-                            className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors text-sm font-medium border border-transparent hover:border-border"
-                        >
-                            Clear SEO Cache
-                            <RefreshCw className={`w-3 h-3 text-muted-foreground ${isSaving ? "animate-spin" : ""}`} />
-                        </button>
-                        <button
-                            onClick={() => handleAction('ping_sitemaps')}
-                            disabled={isSaving}
-                            className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors text-sm font-medium border border-transparent hover:border-border"
-                        >
-                            Ping Search Engines
-                            <Share2 className={`w-3 h-3 text-muted-foreground ${isSaving ? "animate-pulse" : ""}`} />
-                        </button>
+                    <div className="bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 rounded-2xl p-6 space-y-4">
+                        <h3 className="font-bold text-primary flex items-center gap-2">
+                            Quick Actions
+                        </h3>
+                        <div className="space-y-2">
+                            <button
+                                onClick={() => handleAction('clear_cache')}
+                                disabled={isSaving}
+                                className="w-full bg-background hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center justify-between group"
+                            >
+                                Clear SEO Cache
+                                <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform" />
+                            </button>
+                            <button
+                                onClick={() => handleAction('regenerate_sitemap')}
+                                disabled={isSaving}
+                                className="w-full bg-background hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center justify-between group"
+                            >
+                                Re-build Sitemap
+                                <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform" />
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div className="bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/10 rounded-2xl p-6">
-                    <h3 className="font-bold mb-2 text-primary">SEO Pro Tip</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                        Ensure your <strong>Title Separator</strong> matches your brand style. The pipe symbol (|) is standard, but the hyphen (-) can save pixels in search results.
-                    </p>
-                </div>
             </div>
+
+            {/* Media Selector Modal */}
+            <AnimatePresence>
+                {isMediaModalOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                        <div
+                            className="bg-background border border-border w-full max-w-5xl h-[800px] rounded-[32px] overflow-hidden shadow-2xl flex flex-col animate-in zoom-in-95 duration-200"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="p-6 border-b border-border flex items-center justify-between bg-muted/20">
+                                <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
+                                    <ImageIcon className="w-5 h-5 text-primary" />
+                                    Select Image
+                                </h3>
+                                <button
+                                    onClick={() => setIsMediaModalOpen(false)}
+                                    className="p-2 hover:bg-muted rounded-full transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <div className="flex-1 overflow-hidden p-6 bg-card">
+                                <MediaLibrary
+                                    onSelect={(url) => {
+                                        handleChange("og_image", url);
+                                        setIsMediaModalOpen(false);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
