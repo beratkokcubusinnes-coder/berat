@@ -15,16 +15,20 @@ import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 
 import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
 
+import { getPageSeo } from "@/lib/seo-settings";
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
-    const dict = await getDictionary(lang) as any;
+
+    // Fetch dynamic SEO settings (with fallback to dictionary)
+    const seo = await getPageSeo('Scripts', lang);
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/scripts';
 
     return {
-        title: dict.Scripts.metaTitle,
-        description: dict.Scripts.metaDescription,
+        title: seo.title,
+        description: seo.description,
         alternates: {
             canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)

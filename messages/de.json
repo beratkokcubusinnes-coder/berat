@@ -226,5 +226,25 @@
         "analytics": "Analysen",
         "settings": "Systemeinstellungen",
         "approvals": "Warteliste"
+    },
+    "Scripts": {
+        "metaTitle": "Scripts Library | AI & Development Scripts | Promptda",
+        "metaDescription": "Explore our curated collection of useful scripts for development, automation, and AI integration. Find Python, Bash, and JavaScript scripts."
+    },
+    "Hooks": {
+        "metaTitle": "Hooks Library | Expert AI Response Engineering | Promptda",
+        "metaDescription": "Explore our curated collection of elite AI response hooks. Professional engineering for consistent AI outputs."
+    },
+    "Blog": {
+        "metaTitle": "Blog | AI News, Tutorials & Insights",
+        "metaDescription": "Read the latest articles about AI, prompts, development, and productivity."
+    },
+    "Tools": {
+        "metaTitle": "AI Tools Directory | Best AI Software & Services | Promptda",
+        "metaDescription": "Discover the best AI tools and services. Compare features, pricing, and reviews to find the perfect solution for your needs."
+    },
+    "Community": {
+        "metaTitle": "AI Community | Connect with Creators & Developers | Promptda",
+        "metaDescription": "Join our community of AI enthusiasts, developers, and prompt engineers. Share knowledge, ask questions, and collaborate."
     }
 }
