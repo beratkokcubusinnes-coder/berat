@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import { getDictionary } from "@/lib/dictionary";
 import { getSession } from "@/lib/session";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string, username: string }> }): Promise<Metadata> {
     const { username } = await params;
     const user = await prisma.user.findUnique({
