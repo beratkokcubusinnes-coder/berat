@@ -34,9 +34,26 @@ export async function updateProfile(formData: FormData) {
             const ext = path.extname(avatarFile.name) || ".png"
             const filename = `avatar-${session.userId}-${Date.now()}${ext}`
             const uploadDir = join(process.cwd(), "public", "uploads", "avatars")
+
+            // Ensure directory exists
+            const { mkdir } = require("fs/promises");
+            await mkdir(uploadDir, { recursive: true });
+
             const filepath = join(uploadDir, filename)
             await writeFile(filepath, buffer)
             avatarUrl = `/uploads/avatars/${filename}`
+
+            // Register in Media Library
+            await prisma.media.create({
+                data: {
+                    url: avatarUrl,
+                    filename: filename,
+                    mimeType: avatarFile.type,
+                    size: avatarFile.size,
+                    altText: `${username}'s Avatar`,
+                }
+            }).catch(e => console.error("Failed to add avatar to media library", e));
+
         } catch (error) {
             console.error("Avatar upload error:", error)
         }
@@ -53,9 +70,26 @@ export async function updateProfile(formData: FormData) {
             const ext = path.extname(coverFile.name) || ".png"
             const filename = `cover-${session.userId}-${Date.now()}${ext}`
             const uploadDir = join(process.cwd(), "public", "uploads", "covers")
+
+            // Ensure directory exists
+            const { mkdir } = require("fs/promises");
+            await mkdir(uploadDir, { recursive: true });
+
             const filepath = join(uploadDir, filename)
             await writeFile(filepath, buffer)
             coverUrl = `/uploads/covers/${filename}`
+
+            // Register in Media Library
+            await prisma.media.create({
+                data: {
+                    url: coverUrl,
+                    filename: filename,
+                    mimeType: coverFile.type,
+                    size: coverFile.size,
+                    altText: `${username}'s Cover Image`,
+                }
+            }).catch(e => console.error("Failed to add cover to media library", e));
+
         } catch (error) {
             console.error("Cover upload error:", error)
         }
