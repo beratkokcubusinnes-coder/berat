@@ -588,9 +588,9 @@ export function NewPromptForm({ lang, dict, categories, initialData, initialTran
                                             {ogImage ? <img src={ogImage} className="w-full h-full object-cover" alt="OG Preview" /> : <Sparkles className="w-12 h-12 text-slate-700" />}
                                         </div>
                                         <div className="p-6">
-                                            <div className="text-[8px] font-black uppercase tracking-widest text-primary mb-1">PROMPTDA | COMMUNITY</div>
+                                            <div className="text-[8px] font-black uppercase tracking-widest text-primary mb-1">PROMPTDA | PROMPT</div>
                                             <div className="text-white text-md font-bold mb-1">{ogTitle || "Shareable Title..."}</div>
-                                            <div className="text-slate-400 text-xs line-clamp-2">{ogDescription || "OG description here..."}</div>
+                                            <div className="text-slate-400 text-xs line-clamp-2">{ogDescription || metaDescription || "OG description here..."}</div>
                                         </div>
                                     </div>
                                 </div>
