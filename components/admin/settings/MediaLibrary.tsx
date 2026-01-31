@@ -24,22 +24,24 @@ import { useRef } from "react";
 
 export function MediaLibrary({ initialMedia = [], onSelect }: { initialMedia?: any[], onSelect?: (url: string) => void }) {
     const [media, setMedia] = useState<any[]>(initialMedia);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(initialMedia.length === 0);
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [isUpdating, setIsUpdating] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const initialized = useRef(false);
 
     // ... (rest of simple state init)
 
     useEffect(() => {
-        if (!initialMedia.length) {
-            loadMedia();
-        } else {
-            setLoading(false);
+        if (!initialized.current) {
+            initialized.current = true;
+            if (initialMedia.length === 0) {
+                loadMedia();
+            }
         }
-    }, [initialMedia]);
+    }, []); // Run only once on mount
 
     const loadMedia = async () => {
         setLoading(true);
