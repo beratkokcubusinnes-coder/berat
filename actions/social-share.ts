@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { getSession } from "@/lib/session"
 import { revalidatePath } from "next/cache"
 import { TwitterApi } from 'twitter-api-v2';
+// @ts-ignore
 import { Facebook } from 'fb';
 
 

@@ -1,5 +1,5 @@
 
-import { prisma } from "@/lib/prisma";
+
 
 export async function submitToIndexNow(urls: string[]) {
     // Check if enabled in settings (assuming we add a setting for this)
