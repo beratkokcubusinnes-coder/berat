@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, Globe, Search, Share2, FileText, Settings, Loader2, AlertCircle, CheckCircle2, RefreshCw, Box, Sliders, Languages, LayoutTemplate, Check, Info, Crop, Calendar, HardDrive, Trash2, Edit3, X, Image as ImageIcon } from "lucide-react";
+import { Save, Globe, Search, Share2, FileText, Settings, Loader2, AlertCircle, CheckCircle2, RefreshCw, Box, Sliders, Languages, LayoutTemplate, Check, Info, Crop, Calendar, HardDrive, Trash2, Edit3, X, Image as ImageIcon, Zap, Rocket } from "lucide-react";
 import { MediaLibrary } from "../settings/MediaLibrary";
 import { AnimatePresence } from "framer-motion";
 
@@ -111,6 +111,7 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
         if (activeTab === "social") keysToSave = ["og_image", "twitter_handle", "facebook_app_id"];
         if (activeTab === "sitemap") keysToSave = ["sitemap_include_images", "sitemap_include_tags"];
         if (activeTab === "schema") keysToSave = ["schema_org_type", "schema_phone", "schema_same_as"];
+        if (activeTab === "indexing_api") keysToSave = ["google_indexing_enabled", "google_service_account_json", "indexnow_enabled", "indexnow_key", "indexnow_host"];
         if (activeTab === "advanced") keysToSave = ["canonical_clean_params", "force_trailing_slash"];
         if (activeTab === "redirects") keysToSave = []; // Handled separately
 
@@ -177,6 +178,7 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
         { id: "content", label: "Homepage Content", icon: LayoutTemplate },
         { id: "metadata", label: "Page Metadata", icon: Languages },
         { id: "indexing", label: "Indexing & Robots", icon: Search },
+        { id: "indexing_api", label: "Indexing API (Google/Bing)", icon: Zap },
         { id: "social", label: "Social Media", icon: Share2 },
         { id: "sitemap", label: "Sitemap", icon: FileText },
         { id: "schema", label: "Structured Data", icon: Box },
@@ -777,6 +779,149 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                             onChange={(e) => handleChange("schema_same_as", e.target.value)}
                                         />
                                         <p className="text-xs text-muted-foreground">One URL per line.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Indexing API Settings */}
+                        {activeTab === "indexing_api" && (
+                            <div className="space-y-6 animate-in fade-in duration-300">
+                                <div className="space-y-1 pb-4 border-b border-border/50">
+                                    <h2 className="text-xl font-bold flex items-center gap-2">
+                                        <Zap className="w-5 h-5 text-yellow-500" />
+                                        IndexNow & Google Indexing API
+                                    </h2>
+                                    <p className="text-sm text-muted-foreground">Force immediate indexing of your URLs to Google, Bing, and Yandex.</p>
+                                </div>
+
+                                <div className="space-y-8">
+                                    {/* Google Indexing API Section */}
+                                    <div className="space-y-4 p-5 border border-primary/20 bg-primary/5 rounded-2xl relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 opacity-10">
+                                            <Zap className="w-12 h-12" />
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                                Google Indexing API
+                                            </h3>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="sr-only peer"
+                                                    checked={settings.google_indexing_enabled === "true"}
+                                                    onChange={(e) => handleChange("google_indexing_enabled", e.target.checked ? "true" : "false")}
+                                                />
+                                                <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                            </label>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold text-muted-foreground">Service Account JSON Key</label>
+                                            <textarea
+                                                className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-mono focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[150px]"
+                                                placeholder='{ "type": "service_account", ... }'
+                                                value={settings.google_service_account_json || ""}
+                                                onChange={(e) => handleChange("google_service_account_json", e.target.value)}
+                                            />
+                                            <p className="text-xs text-muted-foreground">
+                                                1. Create a Project on Google Cloud Console.<br />
+                                                2. Enable Indexing API.<br />
+                                                3. Create a Service Account, generate a JSON Key and paste it here.<br />
+                                                4. Add the Service Account email to your Search Console as an Owner.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* IndexNow Section */}
+                                    <div className="space-y-4 p-5 border border-blue-500/20 bg-blue-500/5 rounded-2xl relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 opacity-10">
+                                            <Rocket className="w-12 h-12" />
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-bold text-lg flex items-center gap-2 text-blue-500">
+                                                IndexNow (Bing / Yandex)
+                                            </h3>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="sr-only peer"
+                                                    checked={settings.indexnow_enabled === "true"}
+                                                    onChange={(e) => handleChange("indexnow_enabled", e.target.checked ? "true" : "false")}
+                                                />
+                                                <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                                            </label>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-bold text-muted-foreground">IndexNow Key</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                                                    placeholder="example: 456b8e..."
+                                                    value={settings.indexnow_key || ""}
+                                                    onChange={(e) => handleChange("indexnow_key", e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-bold text-muted-foreground">API Host</label>
+                                                <select
+                                                    className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm"
+                                                    value={settings.indexnow_host || "www.bing.com"}
+                                                    onChange={(e) => handleChange("indexnow_host", e.target.value)}
+                                                >
+                                                    <option value="api.indexnow.org">indexnow.org (Hub)</option>
+                                                    <option value="www.bing.com">Bing (bing.com)</option>
+                                                    <option value="yandex.com">Yandex (yandex.com)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground">
+                                            IndexNow notifies search engines instantly about content changes.
+                                            Make sure key file is accessible at <code>/{settings.indexnow_key || 'your-key'}.txt</code>
+                                        </p>
+                                    </div>
+
+                                    {/* Manual Submission Section */}
+                                    <div className="space-y-4 p-5 border border-purple-500/20 bg-purple-500/5 rounded-2xl">
+                                        <h3 className="font-bold text-lg flex items-center gap-2">
+                                            <Search className="w-5 h-5 text-purple-500" />
+                                            Manual URL Submission
+                                        </h3>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="url"
+                                                id="manual_url"
+                                                className="flex-1 bg-card border border-border rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+                                                placeholder="https://promptda.com/prompts/my-awesome-prompt"
+                                            />
+                                            <button
+                                                onClick={async () => {
+                                                    const input = document.getElementById('manual_url') as HTMLInputElement;
+                                                    const url = input.value;
+                                                    if (!url) return;
+
+                                                    setIsSaving(true);
+                                                    try {
+                                                        const { submitToGoogleIndexing, submitToIndexNow } = await import('@/actions/indexing');
+                                                        const gRes = await submitToGoogleIndexing(url);
+                                                        const iRes = await submitToIndexNow(url);
+
+                                                        const combinedMsg = `Google: ${gRes.success ? 'OK' : (gRes.error || 'Err')}, IndexNow: ${iRes.success ? 'OK' : (iRes.error || 'Err')}`;
+                                                        setMessage({ type: 'success', text: combinedMsg });
+                                                    } catch (e: any) {
+                                                        setMessage({ type: 'error', text: e.message });
+                                                    } finally {
+                                                        setIsSaving(false);
+                                                    }
+                                                }}
+                                                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 rounded-xl font-bold text-sm transition-all shadow-md active:scale-95"
+                                            >
+                                                Ping Now
+                                            </button>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground">Submit any URL to both Google and IndexNow (Bing/Yandex) immediately.</p>
                                     </div>
                                 </div>
                             </div>

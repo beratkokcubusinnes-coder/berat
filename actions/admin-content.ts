@@ -8,6 +8,8 @@ import { redirect } from 'next/navigation'
 import { slugify } from '@/lib/utils'
 import { saveContentTranslation } from '@/lib/translations'
 import { saveContentImage } from '@/lib/upload-utils'
+import { autoNotifyIndexing } from '@/actions/indexing'
+import { getSystemSettings } from '@/lib/settings'
 
 const ContentSchema = z.object({
     title: z.string().min(5, "Title is too short"),
@@ -170,6 +172,17 @@ export async function createAdminContent(prevState: ContentState, formData: Form
 
         revalidatePath(`/[lang]/admin/${type === 'blog' ? 'blog' : type + 's'}`, 'page');
         revalidatePath('/', 'layout');
+
+        // Automatic Indexing Notification
+        if (!commonData.noIndex && createdContent) {
+            getSystemSettings().then(sys => {
+                const baseUrl = sys.app_url || process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+                const path = type === 'blog' ? 'blog' : (type === 'prompt' ? 'prompts' : type + 's');
+                const url = `${baseUrl}/${path}/${createdContent.slug}`;
+                autoNotifyIndexing(url);
+            }).catch(e => console.error("Auto Indexing Error:", e));
+        }
+
         return { success: true };
     } catch (error) {
         console.error("Failed to create content:", error);
@@ -312,6 +325,17 @@ export async function updateAdminContent(id: string, prevState: ContentState, fo
 
         revalidatePath(`/[lang]/admin/${type === 'blog' ? 'blog' : type + 's'}`, 'page');
         revalidatePath('/', 'layout');
+
+        // Automatic Indexing Notification
+        if (data.noIndex !== true) {
+            getSystemSettings().then(sys => {
+                const baseUrl = sys.app_url || process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+                const path = type === 'blog' ? 'blog' : (type === 'prompt' ? 'prompts' : type + 's');
+                const url = `${baseUrl}/${path}/${data.slug || finalSlug}`;
+                autoNotifyIndexing(url);
+            }).catch(e => console.error("Auto Indexing Error:", e));
+        }
+
         return { success: true };
     } catch (error) {
         console.error("Failed to update content:", error);

@@ -13,6 +13,7 @@ interface ContentItem {
     slug: string;
     createdAt: Date;
     type: 'prompt' | 'blog';
+    image?: string;
 }
 
 export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseUrl: string }) {
@@ -81,6 +82,23 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
 
         if (shareUrl) {
             window.open(shareUrl, '_blank', 'width=600,height=500');
+        }
+    };
+
+    const handleSemiAutoShare = (item: ContentItem, platform: 'pinterest' | 'reddit' | 'telegram') => {
+        const url = `${baseUrl}/${item.type === 'prompt' ? 'prompts' : 'blog'}/${item.slug}`;
+        let shareUrl = "";
+
+        if (platform === 'pinterest') {
+            shareUrl = `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(item.image || '')}&description=${encodeURIComponent(item.title)}`;
+        } else if (platform === 'reddit') {
+            shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(item.title)}`;
+        } else if (platform === 'telegram') {
+            shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(item.title)}`;
+        }
+
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=800,height=600');
         }
     };
 
@@ -176,6 +194,25 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
                             >
                                 {processing[`${item.id}-tumblr`] ? <Loader2 className="w-3 h-3 animate-spin" /> : <span className="font-bold mr-1">t</span>}
                                 {sharedStatus[item.id]?.tumblr ? 'Done' : 'Tumblr'}
+                            </Button>
+
+                            <div className="w-px h-6 bg-border mx-2"></div>
+
+                            <span className="text-xs font-semibold text-muted-foreground mr-2">Semi-Auto:</span>
+
+                            {/* Pinterest */}
+                            <Button variant="outline" size="sm" className="h-8 text-xs border-red-500/20 hover:bg-red-500 hover:text-white" onClick={() => handleSemiAutoShare(item, 'pinterest')}>
+                                Pinterest
+                            </Button>
+
+                            {/* Reddit */}
+                            <Button variant="outline" size="sm" className="h-8 text-xs border-orange-500/20 hover:bg-orange-500 hover:text-white" onClick={() => handleSemiAutoShare(item, 'reddit')}>
+                                Reddit
+                            </Button>
+
+                            {/* Telegram */}
+                            <Button variant="outline" size="sm" className="h-8 text-xs border-sky-500/20 hover:bg-sky-500 hover:text-white" onClick={() => handleSemiAutoShare(item, 'telegram')}>
+                                Telegram
                             </Button>
 
                             <div className="w-px h-6 bg-border mx-2"></div>

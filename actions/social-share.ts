@@ -9,7 +9,7 @@ import { Facebook } from 'fb';
 
 
 // Update types
-type SocialPlatform = 'twitter' | 'facebook' | 'medium' | 'linkedin' | 'tumblr';
+type SocialPlatform = 'twitter' | 'facebook' | 'medium' | 'linkedin' | 'tumblr' | 'pinterest' | 'reddit';
 
 interface ShareResult {
     success: boolean;
@@ -83,20 +83,20 @@ export async function getShareableContent(page = 1, limit = 20) {
             take: limit,
             skip: skip,
             orderBy: { createdAt: 'desc' },
-            select: { id: true, title: true, slug: true, createdAt: true }
+            select: { id: true, title: true, slug: true, createdAt: true, image: true, ogImage: true }
         }),
         prisma.blogPost.findMany({
             take: limit,
             skip: skip,
             orderBy: { createdAt: 'desc' },
-            select: { id: true, title: true, slug: true, createdAt: true, published: true }
+            select: { id: true, title: true, slug: true, createdAt: true, published: true, image: true, ogImage: true }
         })
     ]);
 
     // Normalize and sort
     const combined = [
-        ...prompts.map(p => ({ ...p, type: 'prompt' as const })),
-        ...blogs.map(b => ({ ...b, type: 'blog' as const }))
+        ...prompts.map(p => ({ ...p, type: 'prompt' as const, image: p.ogImage || p.image })),
+        ...blogs.map(b => ({ ...b, type: 'blog' as const, image: b.ogImage || b.image }))
     ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, limit);
 
@@ -381,4 +381,23 @@ export async function shareToTumblr(contentId: string, contentType: 'prompt' | '
         console.error('Tumblr Share Error:', error);
         return { success: false, platform: 'tumblr', error: error.message || "Unknown Tumblr Error" };
     }
+}
+
+/**
+ * Share to Pinterest (Intent based for now as API requires complex app approval)
+ */
+export async function shareToPinterest(contentId: string, contentType: 'prompt' | 'blog', title: string, url: string, imageUrl?: string): Promise<ShareResult> {
+    const description = title;
+    const shareUrl = `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(imageUrl || '')}&description=${encodeURIComponent(description)}`;
+
+    return { success: true, platform: 'pinterest', postId: 'intent' };
+}
+
+/**
+ * Share to Reddit
+ */
+export async function shareToReddit(contentId: string, contentType: 'prompt' | 'blog', title: string, url: string): Promise<ShareResult> {
+    const shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+
+    return { success: true, platform: 'reddit', postId: 'intent' };
 }

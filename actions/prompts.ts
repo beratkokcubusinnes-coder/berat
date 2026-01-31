@@ -6,6 +6,8 @@ import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
 import { slugify } from '@/lib/utils'
 import { saveContentTranslation } from '@/lib/translations'
+import { autoNotifyIndexing } from '@/actions/indexing'
+import { getSystemSettings } from '@/lib/settings'
 import { writeFile, mkdir } from "fs/promises"
 import { join } from "path"
 import path from "path"
@@ -215,6 +217,16 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
 
         revalidatePath('/');
         revalidatePath(`/${lang}/admin/prompts`);
+
+        // Automatic Indexing Notification
+        if (!data.noIndex && createdPrompt) {
+            getSystemSettings().then(sys => {
+                const baseUrl = sys.app_url || process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+                const url = `${baseUrl}/prompts/${createdPrompt.slug}`;
+                autoNotifyIndexing(url);
+            }).catch(e => console.error("Auto Indexing Error:", e));
+        }
+
         return { success: true };
     } catch (error) {
         console.error("Failed to create prompt:", error);
@@ -348,6 +360,16 @@ export async function updatePrompt(id: string, prevState: PromptState, formData:
         revalidatePath('/');
         revalidatePath(`/${lang}/prompt/${data.slug || slugify(data.title)}`);
         revalidatePath(`/${lang}/admin/prompts`);
+
+        // Automatic Indexing Notification
+        if (data.noIndex !== true) {
+            getSystemSettings().then(sys => {
+                const baseUrl = sys.app_url || process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+                const url = `${baseUrl}/prompts/${data.slug || slugify(data.title)}`;
+                autoNotifyIndexing(url);
+            }).catch(e => console.error("Auto Indexing Error:", e));
+        }
+
         return { success: true };
     } catch (error) {
         console.error("Failed to update prompt:", error);
