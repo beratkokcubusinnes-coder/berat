@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { shareToTwitter, shareToFacebook, shareToMedium } from '@/actions/social-share';
+import { shareToTwitter, shareToFacebook, shareToMedium, shareToLinkedin } from '@/actions/social-share';
 import { toast } from 'sonner';
-import { Twitter, Facebook, Loader2, ExternalLink, Calendar, CheckCircle2, AlertCircle, BookOpen } from 'lucide-react';
+import { Twitter, Facebook, Loader2, ExternalLink, Calendar, CheckCircle2, AlertCircle, BookOpen, Linkedin, Share2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface ContentItem {
@@ -19,9 +19,9 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
     const [processing, setProcessing] = useState<Record<string, boolean>>({});
 
     // Track shared status simply in local state for this session (could be persisted in DB ideally)
-    const [sharedStatus, setSharedStatus] = useState<Record<string, { twitter?: boolean, facebook?: boolean, medium?: boolean }>>({});
+    const [sharedStatus, setSharedStatus] = useState<Record<string, { twitter?: boolean, facebook?: boolean, medium?: boolean, linkedin?: boolean }>>({});
 
-    const handleShare = async (item: ContentItem, platform: 'twitter' | 'facebook' | 'medium') => {
+    const handleShare = async (item: ContentItem, platform: 'twitter' | 'facebook' | 'medium' | 'linkedin') => {
         const key = `${item.id}-${platform}`;
         setProcessing(p => ({ ...p, [key]: true }));
 
@@ -34,13 +34,13 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
                 result = await shareToTwitter(item.id, item.type, message, url);
             } else if (platform === 'facebook') {
                 result = await shareToFacebook(item.id, item.type, message, url);
-            } else {
-                // Medium usually takes title + content. The action handles fetching content.
-                // We pass title and url.
+            } else if (platform === 'medium') {
                 result = await shareToMedium(item.id, item.type, item.title, url);
+            } else if (platform === 'linkedin') {
+                result = await shareToLinkedin(item.id, item.type, message, url);
             }
 
-            if (result.success) {
+            if (result && result.success) {
                 toast.success(`Shared to ${platform} successfully!`);
                 setSharedStatus(prev => ({
                     ...prev,
@@ -50,12 +50,35 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
                     }
                 }));
             } else {
-                toast.error(`Failed to share: ${result.error}`);
+                toast.error(`Failed to share: ${result?.error}`);
             }
         } catch (e) {
             toast.error('Unexpected error sharing content');
         } finally {
             setProcessing(p => ({ ...p, [key]: false }));
+        }
+    };
+
+    const handleManualShare = (item: ContentItem, platform: 'tumblr' | 'pearltrees') => {
+        const url = `${baseUrl}/${item.type === 'prompt' ? 'prompts' : 'blog'}/${item.slug}`;
+        let shareUrl = "";
+
+        if (platform === 'tumblr') {
+            shareUrl = `https://www.tumblr.com/widgets/share/tool?posttype=link&title=${encodeURIComponent(item.title)}&caption=${encodeURIComponent(item.title)}&content=${encodeURIComponent(url)}&canonicalUrl=${encodeURIComponent(url)}&shareSource=tumblr_share_button`;
+        } else if (platform === 'pearltrees') {
+            // Pearltrees doesn't have a direct "share link" param set official docs, but acting as a bookmarklet usually works via main site or extension.
+            // Using a generic intent-like structure or redirecting to main site.
+            // Actually, best bet is their web clipper.
+            // Let's use a known structure if available, otherwise just copy link toast.
+            // Pearltrees URL scheme is elusive. Let's trying copying link + toast.
+            navigator.clipboard.writeText(url);
+            toast.success("Link copied! Open Pearltrees to add.", { duration: 4000 });
+            window.open('https://www.pearltrees.com', '_blank');
+            return;
+        }
+
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=600,height=500');
         }
     };
 
@@ -68,90 +91,93 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
 
             <div className="grid gap-4">
                 {items.map((item) => (
-                    <div key={item.id} className="bg-card border border-border p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                                <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${item.type === 'prompt' ? 'bg-indigo-500/10 text-indigo-500' : 'bg-orange-500/10 text-orange-500'}`}>
-                                    {item.type}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                    {new Date(item.createdAt).toLocaleDateString()}
-                                </span>
+                    <div key={item.id} className="bg-card border border-border p-4 rounded-xl flex flex-col items-start gap-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${item.type === 'prompt' ? 'bg-indigo-500/10 text-indigo-500' : 'bg-orange-500/10 text-orange-500'}`}>
+                                        {item.type}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                        {new Date(item.createdAt).toLocaleDateString()}
+                                    </span>
+                                </div>
+                                <h3 className="font-medium text-lg leading-tight">{item.title}</h3>
+                                <Link
+                                    href={`/${item.type === 'prompt' ? 'prompts' : 'blog'}/${item.slug}`}
+                                    target="_blank"
+                                    className="inline-flex items-center text-xs text-muted-foreground hover:text-primary transition-colors mt-1"
+                                >
+                                    <ExternalLink className="w-3 h-3 mr-1" />
+                                    View on site
+                                </Link>
                             </div>
-                            <h3 className="font-medium text-lg leading-tight">{item.title}</h3>
-                            <Link
-                                href={`/${item.type === 'prompt' ? 'prompts' : 'blog'}/${item.slug}`}
-                                target="_blank"
-                                className="inline-flex items-center text-xs text-muted-foreground hover:text-primary transition-colors mt-1"
-                            >
-                                <ExternalLink className="w-3 h-3 mr-1" />
-                                View on site
-                            </Link>
                         </div>
 
-                        <div className="flex items-center gap-3 shrink-0">
+                        <div className="flex flex-wrap items-center gap-2 w-full pt-2 border-t border-border/50">
+                            <span className="text-xs font-semibold text-muted-foreground mr-2">Auto-Post:</span>
                             {/* Twitter Button */}
                             <Button
-                                variant={sharedStatus[item.id]?.twitter ? "outline" : "default"}
+                                variant={sharedStatus[item.id]?.twitter ? "outline" : "secondary"}
                                 size="sm"
                                 onClick={() => handleShare(item, 'twitter')}
                                 disabled={processing[`${item.id}-twitter`] || sharedStatus[item.id]?.twitter}
-                                className={sharedStatus[item.id]?.twitter ? "text-green-500 border-green-500/20 bg-green-500/10" : "bg-black hover:bg-black/80 text-white"}
+                                className={sharedStatus[item.id]?.twitter ? "text-green-500 h-8" : "bg-black hover:bg-black/80 text-white h-8 text-xs"}
                             >
-                                {processing[`${item.id}-twitter`] ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : sharedStatus[item.id]?.twitter ? (
-                                    <>
-                                        <CheckCircle2 className="w-4 h-4 mr-1" /> Posted
-                                    </>
-                                ) : (
-                                    <>
-                                        <Twitter className="w-4 h-4 mr-2" /> Share
-                                    </>
-                                )}
+                                {processing[`${item.id}-twitter`] ? <Loader2 className="w-3 h-3 animate-spin" /> : <Twitter className="w-3 h-3 mr-1" />}
+                                {sharedStatus[item.id]?.twitter ? 'Done' : 'Twitter'}
                             </Button>
 
                             {/* Facebook Button */}
                             <Button
-                                variant={sharedStatus[item.id]?.facebook ? "outline" : "default"}
+                                variant={sharedStatus[item.id]?.facebook ? "outline" : "secondary"}
                                 size="sm"
                                 onClick={() => handleShare(item, 'facebook')}
                                 disabled={processing[`${item.id}-facebook`] || sharedStatus[item.id]?.facebook}
-                                className={sharedStatus[item.id]?.facebook ? "text-green-500 border-green-500/20 bg-green-500/10" : "bg-blue-600 hover:bg-blue-700 text-white"}
+                                className={sharedStatus[item.id]?.facebook ? "text-green-500 h-8" : "bg-blue-600 hover:bg-blue-700 text-white h-8 text-xs"}
                             >
-                                {processing[`${item.id}-facebook`] ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : sharedStatus[item.id]?.facebook ? (
-                                    <>
-                                        <CheckCircle2 className="w-4 h-4 mr-1" /> Posted
-                                    </>
-                                ) : (
-                                    <>
-                                        <Facebook className="w-4 h-4 mr-2" /> Share
-                                    </>
-                                )}
+                                {processing[`${item.id}-facebook`] ? <Loader2 className="w-3 h-3 animate-spin" /> : <Facebook className="w-3 h-3 mr-1" />}
+                                {sharedStatus[item.id]?.facebook ? 'Done' : 'Facebook'}
                             </Button>
 
                             {/* Medium Button */}
                             <Button
-                                variant={sharedStatus[item.id]?.medium ? "outline" : "default"}
+                                variant={sharedStatus[item.id]?.medium ? "outline" : "secondary"}
                                 size="sm"
                                 onClick={() => handleShare(item, 'medium')}
                                 disabled={processing[`${item.id}-medium`] || sharedStatus[item.id]?.medium}
-                                className={sharedStatus[item.id]?.medium ? "text-green-500 border-green-500/20 bg-green-500/10" : "bg-zinc-800 hover:bg-zinc-900 text-white"}
+                                className={sharedStatus[item.id]?.medium ? "text-green-500 h-8" : "bg-zinc-800 hover:bg-zinc-900 text-white h-8 text-xs"}
                             >
-                                {processing[`${item.id}-medium`] ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : sharedStatus[item.id]?.medium ? (
-                                    <>
-                                        <CheckCircle2 className="w-4 h-4 mr-1" /> Posted
-                                    </>
-                                ) : (
-                                    <>
-                                        <BookOpen className="w-4 h-4 mr-2" /> Medium
-                                    </>
-                                )}
+                                {processing[`${item.id}-medium`] ? <Loader2 className="w-3 h-3 animate-spin" /> : <BookOpen className="w-3 h-3 mr-1" />}
+                                {sharedStatus[item.id]?.medium ? 'Done' : 'Medium'}
                             </Button>
+
+                            {/* LinkedIn Button */}
+                            <Button
+                                variant={sharedStatus[item.id]?.linkedin ? "outline" : "secondary"}
+                                size="sm"
+                                onClick={() => handleShare(item, 'linkedin')}
+                                disabled={processing[`${item.id}-linkedin`] || sharedStatus[item.id]?.linkedin}
+                                className={sharedStatus[item.id]?.linkedin ? "text-green-500 h-8" : "bg-blue-700 hover:bg-blue-800 text-white h-8 text-xs"}
+                            >
+                                {processing[`${item.id}-linkedin`] ? <Loader2 className="w-3 h-3 animate-spin" /> : <Linkedin className="w-3 h-3 mr-1" />}
+                                {sharedStatus[item.id]?.linkedin ? 'Done' : 'LinkedIn'}
+                            </Button>
+
+                            <div className="w-px h-6 bg-border mx-2"></div>
+
+                            <span className="text-xs font-semibold text-muted-foreground mr-2">Manual:</span>
+
+                            {/* Tumblr Manual */}
+                            <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => handleManualShare(item, 'tumblr')}>
+                                <span className="font-bold mr-1">t</span> Tumblr
+                            </Button>
+
+                            {/* Pearltrees Manual */}
+                            <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => handleManualShare(item, 'pearltrees')}>
+                                <Share2 className="w-3 h-3 mr-1" /> Pearltrees
+                            </Button>
+
                         </div>
                     </div>
                 ))}

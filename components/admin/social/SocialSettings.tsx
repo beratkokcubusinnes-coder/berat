@@ -119,6 +119,34 @@ export function SocialSettings({ initialData }: { initialData: any }) {
                 </div>
             </div>
 
+
+            {/* LinkedIn Section */}
+            <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+                <div className="flex items-center gap-2 border-b border-border pb-4">
+                    <div className="w-5 h-5 bg-blue-700 rounded-sm flex items-center justify-center text-white font-bold text-xs">in</div>
+                    <h3 className="font-bold text-lg">LinkedIn API Settings</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label>Access Token (OAuth2)</Label>
+                        <Input
+                            name="linkedin_access_token"
+                            type="password"
+                            defaultValue={initialData.linkedin_access_token}
+                            placeholder="Get from LinkedIn Developer Portal"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Person URN (ID)</Label>
+                        <Input
+                            name="linkedin_person_urn"
+                            defaultValue={initialData.linkedin_person_urn}
+                            placeholder="e.g. 123456789 (Use /me endpoint to find)"
+                        />
+                    </div>
+                </div>
+            </div>
+
             <Button type="submit" disabled={loading} className="w-full md:w-auto">
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 Save Connections

@@ -8,7 +8,7 @@ import { Facebook } from 'fb';
 
 
 // Update types
-type SocialPlatform = 'twitter' | 'facebook' | 'medium';
+type SocialPlatform = 'twitter' | 'facebook' | 'medium' | 'linkedin' | 'tumblr';
 
 interface ShareResult {
     success: boolean;
@@ -17,9 +17,6 @@ interface ShareResult {
     postId?: string;
 }
 
-/**
- * Save API Credentials
- */
 export async function saveSocialCredentials(formData: FormData) {
     const session = await getSession();
     if (!session || session.role !== 'admin') throw new Error("Unauthorized");
@@ -27,7 +24,9 @@ export async function saveSocialCredentials(formData: FormData) {
     const settings = [
         'twitter_api_key', 'twitter_api_secret', 'twitter_access_token', 'twitter_access_secret',
         'facebook_access_token', 'facebook_page_id',
-        'medium_integration_token'
+        'medium_integration_token',
+        'linkedin_access_token', 'linkedin_person_urn',
+        'tumblr_consumer_key', 'tumblr_consumer_secret', 'tumblr_token', 'tumblr_token_secret', 'tumblr_blog_identifier'
     ];
 
     for (const key of settings) {
@@ -52,7 +51,9 @@ export async function getSocialCredentials() {
     const keys = [
         'twitter_api_key', 'twitter_api_secret', 'twitter_access_token', 'twitter_access_secret',
         'facebook_access_token', 'facebook_page_id',
-        'medium_integration_token'
+        'medium_integration_token',
+        'linkedin_access_token', 'linkedin_person_urn',
+        'tumblr_consumer_key', 'tumblr_consumer_secret', 'tumblr_token', 'tumblr_token_secret', 'tumblr_blog_identifier'
     ];
 
     const data = await prisma.systemSetting.findMany({
@@ -253,4 +254,73 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
         console.error('Medium Share Error:', error.message);
         return { success: false, platform: 'medium', error: error.message || 'Unknown Error' };
     }
+}
+
+/**
+ * Share to LinkedIn
+ */
+export async function shareToLinkedin(contentId: string, contentType: 'prompt' | 'blog', message: string, url: string): Promise<ShareResult> {
+    const creds = await getSocialCredentials();
+    const token = creds.linkedin_access_token;
+    const author = creds.linkedin_person_urn;
+
+    if (!token || !author) {
+        return { success: false, platform: 'linkedin', error: 'Missing LinkedIn Credentials (Token or URN)' };
+    }
+
+    try {
+        const body = {
+            author: `urn:li:person:${author}`,
+            lifecycleState: "PUBLISHED",
+            specificContent: {
+                "com.linkedin.ugc.ShareContent": {
+                    shareCommentary: {
+                        text: message
+                    },
+                    shareMediaCategory: "ARTICLE",
+                    media: [
+                        {
+                            status: "READY",
+                            description: {
+                                text: message.substring(0, 200)
+                            },
+                            originalUrl: url,
+                            title: {
+                                text: message.split(':')[1]?.trim() || "New Content"
+                            }
+                        }
+                    ]
+                }
+            },
+            visibility: {
+                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+            }
+        };
+
+        const res = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'X-Restli-Protocol-Version': '2.0.0'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || JSON.stringify(err) || "LinkedIn API Error");
+        }
+
+        const data = await res.json();
+        return { success: true, platform: 'linkedin', postId: data.id };
+
+    } catch (error: any) {
+        console.error('LinkedIn Share Error:', error.message);
+        return { success: false, platform: 'linkedin', error: error.message || 'Unknown Error' };
+    }
+}
+
+export async function shareToTumblr(contentId: string, contentType: 'prompt' | 'blog', title: string, url: string): Promise<ShareResult> {
+    return { success: false, platform: 'tumblr', error: 'Please use manual share button.' };
 }
