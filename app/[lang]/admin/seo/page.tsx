@@ -2,6 +2,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { SeoSettingsForm } from "@/components/admin/seo/SeoSettingsForm";
 import Link from "next/link";
 import { ArrowLeftRight } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -19,6 +20,12 @@ export default async function SeoPage({
     const { lang } = await params;
     const dict = await getDictionary(lang);
 
+    const settings = await prisma.seoSetting.findMany();
+    const initialSettings = settings.reduce((acc, curr) => {
+        acc[curr.key] = curr.value;
+        return acc;
+    }, {} as Record<string, string>);
+
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header */}
@@ -35,7 +42,7 @@ export default async function SeoPage({
                 </Link>
             </div>
 
-            <SeoSettingsForm />
+            <SeoSettingsForm initialSettings={initialSettings} />
         </div>
     );
 }
