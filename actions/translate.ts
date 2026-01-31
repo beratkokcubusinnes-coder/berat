@@ -33,6 +33,22 @@ export async function autoTranslateContent(
             const translatedTitle = await translateText(original.title, lang);
             const translatedDescription = original.description ? await translateText(original.description, lang) : "";
 
+            // Translate SEO fields if they exist
+            let translatedMetaTitle = translatedTitle;
+            if (original.metaTitle) {
+                translatedMetaTitle = await translateText(original.metaTitle, lang);
+            }
+
+            let translatedMetaDescription = "";
+            if (original.metaDescription) {
+                translatedMetaDescription = await translateText(original.metaDescription, lang);
+            } else if (translatedDescription) {
+                // Fallback: Truncate description to 160 chars for SEO
+                translatedMetaDescription = translatedDescription.length > 160
+                    ? translatedDescription.substring(0, 157) + "..."
+                    : translatedDescription;
+            }
+
             // For content (Rich text or long text), we might want to be careful with HTML tags
             // But for simple fields it works well.
             const translatedContent = original.content ? await translateText(original.content, lang) : "";
@@ -42,8 +58,8 @@ export async function autoTranslateContent(
                 title: translatedTitle,
                 description: translatedDescription || undefined,
                 content: translatedContent || undefined,
-                metaTitle: translatedTitle,
-                metaDescription: translatedDescription || undefined,
+                metaTitle: translatedMetaTitle,
+                metaDescription: translatedMetaDescription || undefined,
             };
 
             // Save to DB
