@@ -63,7 +63,7 @@ export async function constructMetadata({
             index: true,
             follow: true,
             'max-video-preview': -1,
-            'max-image-preview': 'large',
+            'max-image-preview': 'large', // Critical for Google Discover
             'max-snippet': -1,
         },
     };
