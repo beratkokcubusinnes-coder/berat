@@ -74,6 +74,17 @@ export async function updateSystemSettings(formData: FormData) {
             });
         }
 
+        // Handle Site Favicon Update
+        const faviconFile = formData.get("site_favicon_file") as File;
+        if (faviconFile && faviconFile.size > 0) {
+            const faviconUrl = await saveSystemFile(faviconFile, "favicon");
+            await prisma.systemSetting.upsert({
+                where: { key: "site_favicon" },
+                update: { value: faviconUrl },
+                create: { key: "site_favicon", value: faviconUrl, category: "appearance", type: "image" }
+            });
+        }
+
         revalidatePath("/");
         revalidatePath("/", "layout"); // Force layout update for logo
         return { success: true };

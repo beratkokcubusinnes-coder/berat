@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 
-export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
+export function MediaLibrary({ initialMedia = [], onSelect }: { initialMedia?: any[], onSelect?: (url: string) => void }) {
     const [media, setMedia] = useState<any[]>(initialMedia);
     const [loading, setLoading] = useState(true);
     const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -30,6 +30,8 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
     const [isUpdating, setIsUpdating] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // ... (rest of simple state init)
 
     useEffect(() => {
         if (!initialMedia.length) {
@@ -46,6 +48,7 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
         setLoading(false);
     };
 
+    // ... (handleFileUpload implementation)
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -59,6 +62,8 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
             if (res.success) {
                 setMedia([res.data, ...media]);
                 setSelectedItem(res.data);
+                // If in select mode, maybe auto-select? Let's verify with user flow. 
+                // Usually user uploads then clicks select.
             } else {
                 alert(res.error || "Upload failed");
             }
@@ -70,6 +75,7 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
         }
     };
 
+    // ... (handleUpdate, handleDelete)
     const handleUpdate = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         if (!selectedItem) return;
@@ -186,9 +192,21 @@ export function MediaLibrary({ initialMedia = [] }: { initialMedia?: any[] }) {
                                             unoptimized
                                         />
                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <span className="text-[10px] text-white font-bold uppercase tracking-widest px-2 py-1 bg-black/60 rounded-lg">
-                                                Select
-                                            </span>
+                                            {onSelect ? (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onSelect(item.url);
+                                                    }}
+                                                    className="text-[10px] text-white font-bold uppercase tracking-widest px-2 py-1 bg-primary rounded-lg hover:bg-primary/90"
+                                                >
+                                                    Use Image
+                                                </button>
+                                            ) : (
+                                                <span className="text-[10px] text-white font-bold uppercase tracking-widest px-2 py-1 bg-black/60 rounded-lg">
+                                                    Select
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

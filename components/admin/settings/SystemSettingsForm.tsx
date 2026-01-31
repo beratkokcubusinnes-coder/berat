@@ -421,9 +421,21 @@ export default function SystemSettingsForm({ initialSettings, initialMedia }: { 
                                                             <div className="space-y-1.5">
                                                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Favicon (.ico)</label>
                                                                 <div className="flex items-center gap-3">
-                                                                    {faviconPreview && <img src={faviconPreview} className="w-4 h-4" />}
-                                                                    <input name="site_favicon" defaultValue={initialSettings.site_favicon} className="input-premium py-2 text-xs" placeholder="/favicon.ico" />
+                                                                    <div className="relative group w-10 h-10 bg-background rounded-xl border border-border flex items-center justify-center p-2 overflow-hidden shrink-0">
+                                                                        {faviconPreview ? (
+                                                                            <img src={faviconPreview} className="w-full h-full object-contain" />
+                                                                        ) : (
+                                                                            <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                                                                        )}
+                                                                        <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center cursor-pointer text-white">
+                                                                            <Upload className="w-3 h-3" />
+                                                                            <input type="file" name="site_favicon_file" accept=".ico,.png,image/*" className="hidden"
+                                                                                onChange={(e) => e.target.files?.[0] && setFaviconPreview(URL.createObjectURL(e.target.files[0]))} />
+                                                                        </label>
+                                                                    </div>
+                                                                    <input name="site_favicon" defaultValue={initialSettings.site_favicon} className="input-premium py-2 text-xs flex-1" placeholder="/favicon.ico" readOnly />
                                                                 </div>
+                                                                <p className="text-[10px] text-muted-foreground">Upload a 32x32px .ico or .png file.</p>
                                                             </div>
                                                         </div>
                                                     </div>

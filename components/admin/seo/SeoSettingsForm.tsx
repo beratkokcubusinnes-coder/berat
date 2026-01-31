@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, Globe, Search, Share2, FileText, Settings, Loader2, AlertCircle, CheckCircle2, RefreshCw, Box, Sliders, Languages, LayoutTemplate } from "lucide-react";
+import { Save, Globe, Search, Share2, FileText, Settings, Loader2, AlertCircle, CheckCircle2, RefreshCw, Box, Sliders, Languages, LayoutTemplate, Check, Info, Crop, Calendar, HardDrive, Trash2, Edit3, X, Image as ImageIcon } from "lucide-react";
+import { MediaLibrary } from "../settings/MediaLibrary";
 
-export function SeoSettingsForm() {
+export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<string, string> }) {
     const [activeTab, setActiveTab] = useState("global");
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [settings, setSettings] = useState<Record<string, any>>({});
+    const [settings, setSettings] = useState(initialSettings);
+    const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     // Translation Metadata State
@@ -664,8 +666,12 @@ export function SeoSettingsForm() {
                                                 value={settings.og_image || ""}
                                                 onChange={(e) => handleChange("og_image", e.target.value)}
                                             />
-                                            <button className="bg-primary/10 hover:bg-primary/20 text-primary px-4 rounded-xl font-bold text-xs transition-colors">
-                                                Select
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsMediaModalOpen(true)}
+                                                className="bg-primary/10 hover:bg-primary/20 text-primary px-4 rounded-xl font-bold text-xs transition-colors shrink-0"
+                                            >
+                                                Select Image
                                             </button>
                                         </div>
                                         <p className="text-xs text-muted-foreground">Used when the shared page doesn't have a specific image.</p>
