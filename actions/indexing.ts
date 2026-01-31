@@ -82,13 +82,11 @@ export async function submitToGoogleIndexing(url: string, force = false): Promis
             throw new Error("Invalid Google Service Account JSON format.");
         }
 
-        const jwtClient = new google.auth.JWT(
-            keyData.client_email,
-            undefined,
-            keyData.private_key,
-            ["https://www.googleapis.com/auth/indexing"],
-            undefined
-        );
+        const jwtClient = new google.auth.JWT({
+            email: keyData.client_email,
+            key: keyData.private_key,
+            scopes: ["https://www.googleapis.com/auth/indexing"]
+        });
 
         await jwtClient.authorize();
 
