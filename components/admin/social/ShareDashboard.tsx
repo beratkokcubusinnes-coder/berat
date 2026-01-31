@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { shareToTwitter, shareToFacebook, shareToMedium, shareToLinkedin } from '@/actions/social-share';
+import { shareToTwitter, shareToFacebook, shareToMedium, shareToLinkedin, shareToTumblr } from '@/actions/social-share';
 import { toast } from 'sonner';
 import { Twitter, Facebook, Loader2, ExternalLink, Calendar, CheckCircle2, AlertCircle, BookOpen, Linkedin, Share2 } from 'lucide-react';
 import Link from 'next/link';
@@ -19,9 +19,9 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
     const [processing, setProcessing] = useState<Record<string, boolean>>({});
 
     // Track shared status simply in local state for this session (could be persisted in DB ideally)
-    const [sharedStatus, setSharedStatus] = useState<Record<string, { twitter?: boolean, facebook?: boolean, medium?: boolean, linkedin?: boolean }>>({});
+    const [sharedStatus, setSharedStatus] = useState<Record<string, { twitter?: boolean, facebook?: boolean, medium?: boolean, linkedin?: boolean, tumblr?: boolean }>>({});
 
-    const handleShare = async (item: ContentItem, platform: 'twitter' | 'facebook' | 'medium' | 'linkedin') => {
+    const handleShare = async (item: ContentItem, platform: 'twitter' | 'facebook' | 'medium' | 'linkedin' | 'tumblr') => {
         const key = `${item.id}-${platform}`;
         setProcessing(p => ({ ...p, [key]: true }));
 
@@ -38,6 +38,8 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
                 result = await shareToMedium(item.id, item.type, item.title, url);
             } else if (platform === 'linkedin') {
                 result = await shareToLinkedin(item.id, item.type, message, url);
+            } else if (platform === 'tumblr') {
+                result = await shareToTumblr(item.id, item.type, item.title, url);
             }
 
             if (result && result.success) {
@@ -164,14 +166,21 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
                                 {sharedStatus[item.id]?.linkedin ? 'Done' : 'LinkedIn'}
                             </Button>
 
+                            {/* Tumblr Button (Auto) */}
+                            <Button
+                                variant={sharedStatus[item.id]?.tumblr ? "outline" : "secondary"}
+                                size="sm"
+                                onClick={() => handleShare(item, 'tumblr')}
+                                disabled={processing[`${item.id}-tumblr`] || sharedStatus[item.id]?.tumblr}
+                                className={sharedStatus[item.id]?.tumblr ? "text-green-500 h-8" : "bg-[#36465D] hover:bg-[#36465D]/90 text-white h-8 text-xs"}
+                            >
+                                {processing[`${item.id}-tumblr`] ? <Loader2 className="w-3 h-3 animate-spin" /> : <span className="font-bold mr-1">t</span>}
+                                {sharedStatus[item.id]?.tumblr ? 'Done' : 'Tumblr'}
+                            </Button>
+
                             <div className="w-px h-6 bg-border mx-2"></div>
 
                             <span className="text-xs font-semibold text-muted-foreground mr-2">Manual:</span>
-
-                            {/* Tumblr Manual */}
-                            <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => handleManualShare(item, 'tumblr')}>
-                                <span className="font-bold mr-1">t</span> Tumblr
-                            </Button>
 
                             {/* Pearltrees Manual */}
                             <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => handleManualShare(item, 'pearltrees')}>

@@ -103,6 +103,9 @@ export async function getShareableContent(page = 1, limit = 20) {
     return combined;
 }
 
+// @ts-ignore
+import tumblr from 'tumblr.js';
+
 /**
  * Share to Twitter
  */
@@ -122,12 +125,17 @@ export async function shareToTwitter(contentId: string, contentType: 'prompt' | 
             accessSecret: creds.twitter_access_secret,
         });
 
+        // Use Read-Write client if possible, or just default.
+        // v2.tweet is the correct endpoint.
         const tweet = await client.v2.tweet(`${message}\n\n${url}`);
         return { success: true, platform: 'twitter', postId: tweet.data.id };
 
     } catch (error: any) {
-        console.error('Twitter Share Error:', error);
-        return { success: false, platform: 'twitter', error: error.message || 'Unknown Error' };
+        console.error('Twitter Share Error:', JSON.stringify(error, null, 2));
+        // Try to safely extract error message from Twitter's structure
+        const apiErrors = error.data?.errors || error.errors;
+        const mainMsg = apiErrors ? apiErrors.map((e: any) => e.message || e.detail).join(', ') : error.message;
+        return { success: false, platform: 'twitter', error: mainMsg || 'Unknown Twitter Error' };
     }
 }
 
@@ -173,7 +181,7 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
     const token = creds.medium_integration_token;
 
     if (!token) {
-        return { success: false, platform: 'medium', error: 'Missing Medium Integration Token' };
+        return { success: false, platform: 'medium', error: 'Missing Medium Integration Token. Please generate one in Medium Settings > Integration Tokens.' };
     }
 
     try {
@@ -187,7 +195,8 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
 
         if (!meRes.ok) {
             const err = await meRes.json();
-            throw new Error(err.errors?.[0]?.message || "Failed to fetch Medium User");
+            console.error("Medium Me Error:", err);
+            throw new Error(err.errors?.[0]?.message || `Failed to fetch Medium User (${meRes.status})`);
         }
 
         const meData = await meRes.json();
@@ -245,14 +254,15 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
 
         if (!postRes.ok) {
             const err = await postRes.json();
-            throw new Error(err.errors?.[0]?.message || "Failed to publish to Medium");
+            console.error("Medium Post Error:", err);
+            throw new Error(err.errors?.[0]?.message || `Failed to publish to Medium (${postRes.status})`);
         }
 
         const postData = await postRes.json();
         return { success: true, platform: 'medium', postId: postData.data?.id };
 
     } catch (error: any) {
-        console.error('Medium Share Error:', error.message);
+        console.error('Medium Share Error:', error);
         return { success: false, platform: 'medium', error: error.message || 'Unknown Error' };
     }
 }
@@ -276,7 +286,7 @@ export async function shareToLinkedin(contentId: string, contentType: 'prompt' |
             specificContent: {
                 "com.linkedin.ugc.ShareContent": {
                     shareCommentary: {
-                        text: message
+                        text: `${message}\n\n${url}`
                     },
                     shareMediaCategory: "ARTICLE",
                     media: [
@@ -323,5 +333,52 @@ export async function shareToLinkedin(contentId: string, contentType: 'prompt' |
 }
 
 export async function shareToTumblr(contentId: string, contentType: 'prompt' | 'blog', title: string, url: string): Promise<ShareResult> {
-    return { success: false, platform: 'tumblr', error: 'Please use manual share button.' };
+    const creds = await getSocialCredentials();
+
+    if (!creds.tumblr_consumer_key || !creds.tumblr_consumer_secret || !creds.tumblr_token || !creds.tumblr_token_secret || !creds.tumblr_blog_identifier) {
+        return { success: false, platform: 'tumblr', error: 'Missing Tumblr Credentials' };
+    }
+
+    try {
+        const client = new tumblr.Client({
+            consumer_key: creds.tumblr_consumer_key,
+            consumer_secret: creds.tumblr_consumer_secret,
+            token: creds.tumblr_token,
+            token_secret: creds.tumblr_token_secret
+        });
+
+        let description = "";
+        let tags: string[] = [];
+
+        if (contentType === 'prompt') {
+            const prompt = await prisma.prompt.findUnique({ where: { id: contentId } });
+            description = prompt?.description || title;
+            tags = ["ai", "prompt", "chatgpt"];
+        } else {
+            const blog = await prisma.blogPost.findUnique({ where: { id: contentId } });
+            description = blog?.excerpt || title;
+            tags = ["ai", "blog", "tech"];
+        }
+
+        // Promisify the callback-based tumblr.js
+        const postResult = await new Promise((resolve, reject) => {
+            client.createPost(creds.tumblr_blog_identifier, {
+                type: 'link',
+                title: title,
+                url: url,
+                description: description,
+                // @ts-ignore - types might be wrong, but library supports both usually. Let's try array or string.
+                tags: tags.join(',') // API actually takes comma separated string usually, but let's see. If error, try array.
+            }, (err: any, data: any) => {
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
+
+        return { success: true, platform: 'tumblr', postId: (postResult as any).id };
+
+    } catch (error: any) {
+        console.error('Tumblr Share Error:', error);
+        return { success: false, platform: 'tumblr', error: error.message || "Unknown Tumblr Error" };
+    }
 }
