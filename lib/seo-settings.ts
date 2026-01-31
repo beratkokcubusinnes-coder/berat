@@ -1,7 +1,7 @@
 
 import { getDictionary } from "@/lib/dictionary";
 import { prisma } from "@/lib/prisma";
-import { SystemSetting } from "@prisma/client";
+// import { SystemSetting } from "@prisma/client";
 
 export async function getPageSeo(pageName: string, lang: string) {
     // 1. Get Static Defaults
