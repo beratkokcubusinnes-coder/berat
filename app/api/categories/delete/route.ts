@@ -16,6 +16,13 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: "Missing category ID" }, { status: 400 });
         }
 
+        // Unlink related content
+        await prisma.prompt.updateMany({ where: { categoryId: id }, data: { categoryId: null } });
+        await prisma.script.updateMany({ where: { categoryId: id }, data: { categoryId: null } });
+        await prisma.hook.updateMany({ where: { categoryId: id }, data: { categoryId: null } });
+        await prisma.tool.updateMany({ where: { categoryId: id }, data: { categoryId: null } });
+        await prisma.blogPost.updateMany({ where: { categoryId: id }, data: { categoryId: null } });
+
         // Delete the category
         await prisma.category.delete({
             where: { id }
