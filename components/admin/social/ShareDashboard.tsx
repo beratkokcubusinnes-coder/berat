@@ -13,7 +13,7 @@ interface ContentItem {
     slug: string;
     createdAt: Date;
     type: 'prompt' | 'blog';
-    image?: string;
+    image?: string | null;
 }
 
 export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseUrl: string }) {
