@@ -56,8 +56,7 @@ export default function EditProfileForm({ user, lang, dict }: EditProfileFormPro
             if (result.error) {
                 setError(result.error);
             } else {
-                await router.refresh();
-                router.push(`/${lang}/profile/${result.user?.username}`);
+                window.location.href = `/${lang}/profile/${result.user?.username}`;
             }
         } catch (err) {
             setError("Something went wrong. Please try again.");
