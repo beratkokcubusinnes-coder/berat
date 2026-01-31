@@ -80,7 +80,7 @@ export async function updateProfile(formData: FormData) {
         })
 
 
-        revalidatePath("/")
+        revalidatePath("/", "layout")
 
         return { success: true, user: updatedUser }
     } catch (error) {
