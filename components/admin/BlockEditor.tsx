@@ -29,12 +29,15 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
     const [showBlockMenu, setShowBlockMenu] = useState(false);
     const [insertAfterBlockId, setInsertAfterBlockId] = useState<string | null>(null);
     const isFirstRender = useRef(true);
+    const lastBlocksRef = useRef<string>("");
 
     useEffect(() => {
         if (isFirstRender.current) {
             if (value && value.startsWith('[{"id"')) {
                 try {
-                    setBlocks(JSON.parse(value));
+                    const parsed = JSON.parse(value);
+                    setBlocks(parsed);
+                    lastBlocksRef.current = value;
                 } catch (e) {
                     setBlocks([{ id: "initial", type: "paragraph", content: "" }]);
                 }
@@ -49,7 +52,11 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
 
     useEffect(() => {
         if (!isFirstRender.current) {
-            onChange(JSON.stringify(blocks));
+            const currentJson = JSON.stringify(blocks);
+            if (currentJson !== lastBlocksRef.current) {
+                lastBlocksRef.current = currentJson;
+                onChange(currentJson);
+            }
         }
     }, [blocks, onChange]);
 
@@ -379,7 +386,9 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                         </div>
                                         <button
                                             type="button"
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
                                                 const newSteps = [...(block.content.steps || []), { title: "", text: "", blocks: [] }];
                                                 updateBlock(block.id, { ...block.content, steps: newSteps });
                                             }}
@@ -402,6 +411,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                     <button
                                                         type="button"
                                                         onClick={(e) => {
+                                                            e.preventDefault();
                                                             e.stopPropagation();
                                                             const newSteps = [...block.content.steps];
                                                             const hasBlocks = newSteps[i].blocks && newSteps[i].blocks.length > 0;
@@ -420,7 +430,9 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => {
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
                                                             const newSteps = block.content.steps.filter((_: any, idx: number) => idx !== i);
                                                             updateBlock(block.id, { ...block.content, steps: newSteps });
                                                         }}
