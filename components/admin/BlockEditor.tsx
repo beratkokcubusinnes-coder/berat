@@ -450,9 +450,13 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                     <BlockEditor
                                                         value={JSON.stringify(step.blocks)}
                                                         onChange={(newVal) => {
+                                                            // Only update if value actually changed to prevent loops
+                                                            if (newVal === JSON.stringify(step.blocks)) return;
+
                                                             const newSteps = [...block.content.steps];
                                                             try {
-                                                                newSteps[i].blocks = JSON.parse(newVal);
+                                                                const parsed = JSON.parse(newVal);
+                                                                newSteps[i].blocks = parsed;
                                                                 updateBlock(block.id, { ...block.content, steps: newSteps });
                                                             } catch (e) { }
                                                         }}
