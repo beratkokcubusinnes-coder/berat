@@ -276,18 +276,23 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
 
                             {/* Paragraph */}
                             {block.type === "paragraph" && (
-                                <textarea
-                                    className="w-full bg-transparent border-0 focus:ring-0 text-sm font-medium leading-relaxed resize-none min-h-[40px] placeholder:text-muted-foreground/40 focus:outline-none"
-                                    placeholder="Type something... (Press Enter for new block)"
-                                    value={block.content}
-                                    onChange={(e) => updateBlock(block.id, e.target.value)}
-                                    onKeyDown={(e) => handleKeyDown(e, block.id)}
-                                    rows={1}
-                                    onInput={(e: any) => {
-                                        e.target.style.height = 'inherit';
-                                        e.target.style.height = `${e.target.scrollHeight}px`;
-                                    }}
-                                />
+                                <div className="space-y-1">
+                                    <textarea
+                                        className="w-full bg-transparent border-0 focus:ring-0 text-sm font-medium leading-relaxed resize-none min-h-[40px] placeholder:text-muted-foreground/40 focus:outline-none"
+                                        placeholder="Type something... (Press Enter for new block, use [text](url) for links)"
+                                        value={block.content}
+                                        onChange={(e) => updateBlock(block.id, e.target.value)}
+                                        onKeyDown={(e) => handleKeyDown(e, block.id)}
+                                        rows={1}
+                                        onInput={(e: any) => {
+                                            e.target.style.height = 'inherit';
+                                            e.target.style.height = `${e.target.scrollHeight}px`;
+                                        }}
+                                    />
+                                    {block.content?.includes('[') && (
+                                        <div className="text-[10px] text-primary font-bold uppercase tracking-widest opacity-40">Markdown Links supported</div>
+                                    )}
+                                </div>
                             )}
 
                             {/* Headings */}
@@ -363,7 +368,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                 </div>
                             )}
 
-                            {/* How-To - Multi Steps */}
+                            {/* How-To - Multi Steps (Enhanced with Nesting) */}
                             {block.type === "howto" && (
                                 <div className="space-y-4 bg-emerald-500/5 border border-emerald-500/10 p-5 rounded-2xl">
                                     <div className="flex items-center justify-between mb-2">
@@ -374,7 +379,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                const newSteps = [...(block.content.steps || []), { title: "", text: "" }];
+                                                const newSteps = [...(block.content.steps || []), { title: "", text: "", blocks: [] }];
                                                 updateBlock(block.id, { ...block.content, steps: newSteps });
                                             }}
                                             className="text-[10px] font-black uppercase text-emerald-400 hover:text-emerald-300 px-3 py-1 bg-emerald-500/10 rounded-lg hover:bg-emerald-500/20 transition-all"
@@ -389,19 +394,39 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                         onChange={(e) => updateBlock(block.id, { ...block.content, name: e.target.value })}
                                     />
                                     {(block.content.steps || []).map((step: any, i: number) => (
-                                        <div key={i} className="space-y-2 p-4 bg-black/10 rounded-xl border-l-4 border-emerald-500/30 relative group/step">
+                                        <div key={i} className="space-y-4 p-4 bg-black/10 rounded-xl border-l-4 border-emerald-500/30 relative group/step">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-emerald-400">STEP {i + 1}</span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const newSteps = block.content.steps.filter((_: any, idx: number) => idx !== i);
-                                                        updateBlock(block.id, { ...block.content, steps: newSteps });
-                                                    }}
-                                                    className="opacity-0 group-hover/step:opacity-100 text-[10px] text-red-400 hover:text-red-300 transition-all"
-                                                >
-                                                    <Trash2 className="w-3 h-3" />
-                                                </button>
+                                                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Step {i + 1}</span>
+                                                <div className="flex items-center gap-3">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const newSteps = [...block.content.steps];
+                                                            const hasBlocks = newSteps[i].blocks && newSteps[i].blocks.length > 0;
+                                                            if (!hasBlocks) {
+                                                                newSteps[i].blocks = [{ id: Math.random().toString(36).substr(2, 9), type: "paragraph", content: newSteps[i].text || "" }];
+                                                            } else {
+                                                                newSteps[i].text = (newSteps[i].blocks || []).map((b: any) => typeof b.content === 'string' ? b.content : '').join(' ');
+                                                                newSteps[i].blocks = [];
+                                                            }
+                                                            updateBlock(block.id, { ...block.content, steps: newSteps });
+                                                        }}
+                                                        className="text-[9px] font-black uppercase text-emerald-400 opacity-60 hover:opacity-100 transition-opacity flex items-center gap-1"
+                                                    >
+                                                        {step.blocks && step.blocks.length > 0 ? "Switch to Text" : "Rich Content"}
+                                                        <Layout className="w-2.5 h-2.5" />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const newSteps = block.content.steps.filter((_: any, idx: number) => idx !== i);
+                                                            updateBlock(block.id, { ...block.content, steps: newSteps });
+                                                        }}
+                                                        className="opacity-0 group-hover/step:opacity-100 text-[10px] text-red-400 hover:text-red-300 transition-all"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
                                             </div>
                                             <input
                                                 className="w-full bg-transparent border-b border-emerald-500/20 py-2 text-sm font-bold focus:border-emerald-500 outline-none"
@@ -413,17 +438,34 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                     updateBlock(block.id, { ...block.content, steps: newSteps });
                                                 }}
                                             />
-                                            <textarea
-                                                className="w-full bg-transparent py-2 text-xs text-muted-foreground focus:ring-0 resize-none outline-none"
-                                                placeholder="Step instruction..."
-                                                value={step.text}
-                                                onChange={(e) => {
-                                                    const newSteps = [...block.content.steps];
-                                                    newSteps[i].text = e.target.value;
-                                                    updateBlock(block.id, { ...block.content, steps: newSteps });
-                                                }}
-                                                rows={2}
-                                            />
+
+                                            {/* Nesting Logic */}
+                                            {step.blocks && step.blocks.length > 0 ? (
+                                                <div className="p-4 bg-black/20 rounded-2xl border border-dashed border-emerald-500/20">
+                                                    <BlockEditor
+                                                        value={JSON.stringify(step.blocks)}
+                                                        onChange={(newVal) => {
+                                                            const newSteps = [...block.content.steps];
+                                                            try {
+                                                                newSteps[i].blocks = JSON.parse(newVal);
+                                                                updateBlock(block.id, { ...block.content, steps: newSteps });
+                                                            } catch (e) { }
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <textarea
+                                                    className="w-full bg-transparent py-2 text-xs text-muted-foreground focus:ring-0 resize-none outline-none"
+                                                    placeholder="Step instruction..."
+                                                    value={step.text}
+                                                    onChange={(e) => {
+                                                        const newSteps = [...block.content.steps];
+                                                        newSteps[i].text = e.target.value;
+                                                        updateBlock(block.id, { ...block.content, steps: newSteps });
+                                                    }}
+                                                    rows={2}
+                                                />
+                                            )}
                                         </div>
                                     ))}
                                 </div>

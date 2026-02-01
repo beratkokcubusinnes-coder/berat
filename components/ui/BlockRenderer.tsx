@@ -146,9 +146,13 @@ export function BlockRenderer({ content, className }: BlockRendererProps) {
                 switch (block.type) {
                     case "paragraph":
                         return (
-                            <p key={block.id} className="text-sm leading-relaxed text-foreground/90">
-                                {block.content}
-                            </p>
+                            <p
+                                key={block.id}
+                                className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap"
+                                dangerouslySetInnerHTML={{
+                                    __html: (block.content || "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline hover:text-primary/80 transition-colors cursor-pointer" target="_blank" rel="noopener noreferrer">$1</a>')
+                                }}
+                            />
                         );
 
                     case "h1":
@@ -198,12 +202,24 @@ export function BlockRenderer({ content, className }: BlockRendererProps) {
                                     <h3 className="text-xl font-black text-emerald-400 mb-4">{block.content.name}</h3>
                                 )}
                                 {(block.content.steps || []).map((step: any, i: number) => (
-                                    <div key={i} className="bg-emerald-500/5 border-l-4 border-emerald-500/50 rounded-xl p-5 space-y-2">
+                                    <div key={i} className="bg-emerald-500/5 border-l-4 border-emerald-500/50 rounded-xl p-5 space-y-4">
                                         <div className="flex items-center gap-2 mb-2">
                                             <span className="text-[10px] font-black text-emerald-400">STEP {i + 1}</span>
                                         </div>
                                         <p className="text-sm font-bold text-emerald-400">{step.title}</p>
-                                        <p className="text-xs text-muted-foreground leading-relaxed">{step.text}</p>
+
+                                        {/* Render nested blocks if present, otherwise fallback to text */}
+                                        {step.blocks && Array.isArray(step.blocks) && step.blocks.length > 0 ? (
+                                            <div className="space-y-4">
+                                                <BlockRenderer content={JSON.stringify(step.blocks)} className="!space-y-4 shadow-none border-none p-0 bg-transparent" />
+                                            </div>
+                                        ) : (
+                                            <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: (step.text || "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-emerald-400 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>')
+                                                }}
+                                            />
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -350,9 +366,6 @@ export function BlockRenderer({ content, className }: BlockRendererProps) {
                                         <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
                                         <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-                                        {block.content.lang || "Code"}
-                                    </span>
                                 </div>
                                 <pre className="p-6 text-sm font-mono overflow-x-auto text-pink-300 leading-relaxed scrollbar-hide">
                                     <code>{block.content.code}</code>

@@ -147,6 +147,54 @@ export function SocialSettings({ initialData }: { initialData: any }) {
                 </div>
             </div>
 
+            {/* Tumblr Section */}
+            <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+                <div className="flex items-center gap-2 border-b border-border pb-4">
+                    <div className="w-5 h-5 bg-[#36465D] rounded-sm flex items-center justify-center text-white font-bold text-xs font-serif">t</div>
+                    <h3 className="font-bold text-lg">Tumblr API Settings</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label>Consumer Key</Label>
+                        <Input
+                            name="tumblr_consumer_key"
+                            defaultValue={initialData.tumblr_consumer_key}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Consumer Secret</Label>
+                        <Input
+                            name="tumblr_consumer_secret"
+                            type="password"
+                            defaultValue={initialData.tumblr_consumer_secret}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>OAuth Token</Label>
+                        <Input
+                            name="tumblr_token"
+                            defaultValue={initialData.tumblr_token}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>OAuth Token Secret</Label>
+                        <Input
+                            name="tumblr_token_secret"
+                            type="password"
+                            defaultValue={initialData.tumblr_token_secret}
+                        />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                        <Label>Blog Identifier (e.g. promptda.tumblr.com)</Label>
+                        <Input
+                            name="tumblr_blog_identifier"
+                            defaultValue={initialData.tumblr_blog_identifier}
+                            placeholder="yourblog.tumblr.com"
+                        />
+                    </div>
+                </div>
+            </div>
+
             <Button type="submit" disabled={loading} className="w-full md:w-auto">
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 Save Connections

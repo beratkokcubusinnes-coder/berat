@@ -11,14 +11,14 @@ import {
     Menu, GripVertical, Plus, Trash2, Compass,
     Sparkles, FileCode2, Anchor, Users, Wrench,
     MessageCircle, BookOpen, Heart, Search, Bell,
-    Type, Link as LinkIcon, Library
+    Type, Link as LinkIcon, Library, Rss
 } from "lucide-react";
 import { updateSystemSettings } from "@/actions/settings";
 import UserAvatar from "@/components/ui/UserAvatar";
 import { cn } from "@/lib/utils";
 import { MediaLibrary } from "./MediaLibrary";
 
-type Tab = "general" | "limits" | "security" | "moderation" | "seo" | "navigation" | "appearance" | "storage" | "media";
+type Tab = "general" | "limits" | "security" | "moderation" | "seo" | "rss" | "navigation" | "appearance" | "storage" | "media";
 
 const ICON_MAP: Record<string, any> = {
     Compass, Sparkles, FileCode2, Anchor, Users, Wrench,
@@ -81,6 +81,7 @@ export default function SystemSettingsForm({ initialSettings, initialMedia }: { 
         { id: "security", label: "Security", icon: ShieldAlert, color: "text-red-500" },
         { id: "moderation", label: "Moderation", icon: Filter, color: "text-purple-500" },
         { id: "seo", label: "SEO & Scripts", icon: FileCode, color: "text-emerald-500" },
+        { id: "rss", label: "RSS Feed", icon: Rss, color: "text-orange-400" },
         { id: "storage", label: "Storage", icon: HardDrive, color: "text-cyan-500" },
         { id: "media", label: "Media Library", icon: Library, color: "text-indigo-500" },
         { id: "appearance", label: "Visuals", icon: ImageIcon, color: "text-pink-500" },
@@ -321,6 +322,41 @@ export default function SystemSettingsForm({ initialSettings, initialMedia }: { 
                                         <SettingField label="Footer Code Injection" description="Safe area for chat widgets or external library scripts.">
                                             <textarea name="custom_footer_script" defaultValue={initialSettings.custom_footer_script} rows={3} className="input-premium py-3 resize-none font-mono text-xs" placeholder="<!-- Widget scripts -->" />
                                         </SettingField>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* TAB: RSS FEED */}
+                            {activeTab === "rss" && (
+                                <div className="space-y-8">
+                                    <SectionHeader title="RSS Syndication" description="Configure how your site distributes content to external aggregators and readers." />
+                                    <div className="space-y-6">
+                                        <SettingField label="Feed Title" description="The title of your RSS feed as it appears in readers.">
+                                            <input name="rss_feed_title" defaultValue={initialSettings.rss_feed_title} className="input-premium" placeholder="Promptda RSS Feed" />
+                                        </SettingField>
+                                        <SettingField label="Feed Description" description="A brief summary of what's included in the feed.">
+                                            <textarea name="rss_feed_description" defaultValue={initialSettings.rss_feed_description} rows={3} className="input-premium py-3 resize-none font-medium text-xs" />
+                                        </SettingField>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <SettingField label="Global Limit" description="Maximum number of total items (Prompts, Blog, etc.) in the feed.">
+                                                <input name="rss_feed_limit" type="number" defaultValue={initialSettings.rss_feed_limit} className="input-premium" />
+                                            </SettingField>
+                                            <SettingField label="Feed Language" description="RFC-1766 language tag (e.g., en-us, tr-tr).">
+                                                <input name="rss_feed_language" defaultValue={initialSettings.rss_feed_language} className="input-premium" placeholder="en-us" />
+                                            </SettingField>
+                                        </div>
+                                        <div className="p-6 rounded-3xl bg-orange-500/5 border border-orange-500/10 flex items-start gap-4">
+                                            <div className="p-3 rounded-2xl bg-orange-500/20 text-orange-500">
+                                                <Info className="w-5 h-5" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <p className="text-sm font-bold text-orange-500 uppercase tracking-widest">Feed Location</p>
+                                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                                    Your primary RSS feed is located at:
+                                                    <a href="/rss.xml" target="_blank" className="ml-2 font-mono text-primary hover:underline underline-offset-4">/rss.xml</a>
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}

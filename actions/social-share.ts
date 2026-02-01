@@ -6,10 +6,11 @@ import { revalidatePath } from "next/cache"
 import { TwitterApi } from 'twitter-api-v2';
 // @ts-ignore
 import { Facebook } from 'fb';
-
+import { blocksToHtml } from "@/lib/block-to-html";
 
 // Update types
 type SocialPlatform = 'twitter' | 'facebook' | 'medium' | 'linkedin' | 'tumblr' | 'pinterest' | 'reddit';
+type ContentType = 'prompt' | 'blog' | 'script' | 'hook' | 'tool';
 
 interface ShareResult {
     success: boolean;
@@ -109,7 +110,7 @@ import tumblr from 'tumblr.js';
 /**
  * Share to Twitter
  */
-export async function shareToTwitter(contentId: string, contentType: 'prompt' | 'blog', message: string, url: string): Promise<ShareResult> {
+export async function shareToTwitter(contentId: string, contentType: ContentType, message: string, url: string): Promise<ShareResult> {
     const creds = await getSocialCredentials();
 
     // Check credentials
@@ -142,7 +143,7 @@ export async function shareToTwitter(contentId: string, contentType: 'prompt' | 
 /**
  * Share to Facebook
  */
-export async function shareToFacebook(contentId: string, contentType: 'prompt' | 'blog', message: string, url: string): Promise<ShareResult> {
+export async function shareToFacebook(contentId: string, contentType: ContentType, message: string, url: string): Promise<ShareResult> {
     const creds = await getSocialCredentials();
 
     if (!creds.facebook_access_token || !creds.facebook_page_id) {
@@ -176,12 +177,12 @@ export async function shareToFacebook(contentId: string, contentType: 'prompt' |
 /**
  * Share to Medium
  */
-export async function shareToMedium(contentId: string, contentType: 'prompt' | 'blog', title: string, url: string): Promise<ShareResult> {
+export async function shareToMedium(contentId: string, contentType: ContentType, title: string, url: string): Promise<ShareResult> {
     const creds = await getSocialCredentials();
     const token = creds.medium_integration_token;
 
     if (!token) {
-        return { success: false, platform: 'medium', error: 'Missing Medium Integration Token. Please generate one in Medium Settings > Integration Tokens.' };
+        return { success: false, platform: 'medium', error: 'Missing Medium Integration Token.' };
     }
 
     try {
@@ -195,7 +196,6 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
 
         if (!meRes.ok) {
             const err = await meRes.json();
-            console.error("Medium Me Error:", err);
             throw new Error(err.errors?.[0]?.message || `Failed to fetch Medium User (${meRes.status})`);
         }
 
@@ -208,31 +208,47 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
         let contentHtml = "";
         let tags: string[] = [];
 
-        if (contentType === 'prompt') {
-            const prompt = await prisma.prompt.findUnique({ where: { id: contentId } });
-            if (!prompt) throw new Error("Prompt not found");
-
-            contentHtml = `
-                <h1>${prompt.title}</h1>
-                <p><strong>Description:</strong> ${prompt.description}</p>
-                <hr>
-                <h2>Prompt:</h2>
-                <pre>${prompt.content}</pre>
-                <hr>
-                <p>View the full prompt here: <a href="${url}">${url}</a></p>
-            `;
-            tags = ["ai", "prompt-engineering", "chatgpt"];
-        } else {
+        if (contentType === 'blog') {
             const blog = await prisma.blogPost.findUnique({ where: { id: contentId } });
             if (!blog) throw new Error("Blog post not found");
 
-            contentHtml = `
-                <h1>${blog.title}</h1>
-                ${blog.content}
-                <hr>
-                <p>Originally published at: <a href="${url}">${url}</a></p>
-            `;
+            let blogContent = blog.content;
+            if (blogContent && (blogContent.startsWith('[{"') || blogContent.startsWith('[ { "'))) {
+                try {
+                    const blocks = JSON.parse(blogContent);
+                    blogContent = blocksToHtml(blocks);
+                } catch (e) { }
+            }
+
+            contentHtml = `<h1>${blog.title}</h1>${blogContent}<hr><p>Originally published at: <a href="${url}">${url}</a></p>`;
             tags = ["ai", "tech", "blog"];
+        } else {
+            // Treat prompt, script, hook, tool similarly
+            let item: any = null;
+            if (contentType === 'prompt') item = await prisma.prompt.findUnique({ where: { id: contentId } });
+            else if (contentType === 'script') item = await (prisma as any).script.findUnique({ where: { id: contentId } });
+            else if (contentType === 'hook') item = await (prisma as any).hook.findUnique({ where: { id: contentId } });
+            else if (contentType === 'tool') item = await (prisma as any).tool.findUnique({ where: { id: contentId } });
+
+            if (!item) throw new Error(`${contentType} not found`);
+
+            let descHtml = item.description;
+            if (descHtml && (descHtml.startsWith('[{"') || descHtml.startsWith('[ { "'))) {
+                try {
+                    const blocks = JSON.parse(descHtml);
+                    descHtml = blocksToHtml(blocks);
+                } catch (e) { }
+            }
+
+            contentHtml = `
+                <h1>${item.title}</h1>
+                <div>${descHtml}</div>
+                <hr>
+                ${item.content ? `<h2>${contentType} Content:</h2><pre style="background: #f4f4f4; padding: 20px; border-radius: 10px; font-family: monospace;">${item.content}</pre>` : ''}
+                <hr>
+                <p>View the full ${contentType} here: <a href="${url}">${url}</a></p>
+            `;
+            tags = ["ai", contentType, "promptda"];
         }
 
         // 3. Post to Medium
@@ -247,7 +263,7 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
                 contentFormat: "html",
                 content: contentHtml,
                 tags: tags,
-                publishStatus: "draft", // Publish as draft first for safety
+                publishStatus: "public", // Set to public for auto-post
                 canonicalUrl: url
             })
         });
@@ -270,7 +286,7 @@ export async function shareToMedium(contentId: string, contentType: 'prompt' | '
 /**
  * Share to LinkedIn
  */
-export async function shareToLinkedin(contentId: string, contentType: 'prompt' | 'blog', message: string, url: string): Promise<ShareResult> {
+export async function shareToLinkedin(contentId: string, contentType: ContentType, message: string, url: string, imageUrl?: string): Promise<ShareResult> {
     const creds = await getSocialCredentials();
     const token = creds.linkedin_access_token;
     const author = creds.linkedin_person_urn;
@@ -282,37 +298,31 @@ export async function shareToLinkedin(contentId: string, contentType: 'prompt' |
     try {
         const body = {
             author: `urn:li:person:${author}`,
-            lifecycleState: "PUBLISHED",
-            specificContent: {
-                "com.linkedin.ugc.ShareContent": {
-                    shareCommentary: {
-                        text: `${message}\n\n${url}`
-                    },
-                    shareMediaCategory: "ARTICLE",
-                    media: [
-                        {
-                            status: "READY",
-                            description: {
-                                text: message.substring(0, 200)
-                            },
-                            originalUrl: url,
-                            title: {
-                                text: message.split(':')[1]?.trim() || "New Content"
-                            }
-                        }
-                    ]
+            commentary: `${message}\n\n${url}`,
+            visibility: "PUBLIC",
+            distribution: {
+                feedDistribution: "MAIN_FEED",
+                targetEntities: [],
+                thirdPartyDistributionChannels: []
+            },
+            content: {
+                article: {
+                    source: url,
+                    thumbnail: imageUrl || "",
+                    title: message.split(':')[1]?.trim() || "New Content",
+                    description: message.substring(0, 200)
                 }
             },
-            visibility: {
-                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-            }
+            lifecycleState: "PUBLISHED",
+            isReshareDisabledByAuthor: false
         };
 
-        const res = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+        const res = await fetch('https://api.linkedin.com/rest/posts', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
+                'LinkedIn-Version': '202306', // Use a recent version
                 'X-Restli-Protocol-Version': '2.0.0'
             },
             body: JSON.stringify(body)
@@ -324,7 +334,8 @@ export async function shareToLinkedin(contentId: string, contentType: 'prompt' |
         }
 
         const data = await res.json();
-        return { success: true, platform: 'linkedin', postId: data.id };
+        const postId = res.headers.get('x-linkedin-id') || data.id;
+        return { success: true, platform: 'linkedin', postId: postId };
 
     } catch (error: any) {
         console.error('LinkedIn Share Error:', error.message);
@@ -332,7 +343,7 @@ export async function shareToLinkedin(contentId: string, contentType: 'prompt' |
     }
 }
 
-export async function shareToTumblr(contentId: string, contentType: 'prompt' | 'blog', title: string, url: string): Promise<ShareResult> {
+export async function shareToTumblr(contentId: string, contentType: ContentType, title: string, url: string): Promise<ShareResult> {
     const creds = await getSocialCredentials();
 
     if (!creds.tumblr_consumer_key || !creds.tumblr_consumer_secret || !creds.tumblr_token || !creds.tumblr_token_secret || !creds.tumblr_blog_identifier) {
@@ -340,35 +351,53 @@ export async function shareToTumblr(contentId: string, contentType: 'prompt' | '
     }
 
     try {
-        const client = new tumblr.Client({
+        const client = tumblr.createClient({
             consumer_key: creds.tumblr_consumer_key,
             consumer_secret: creds.tumblr_consumer_secret,
             token: creds.tumblr_token,
             token_secret: creds.tumblr_token_secret
         });
 
-        let description = "";
+        let contentBody = "";
         let tags: string[] = [];
 
         if (contentType === 'prompt') {
             const prompt = await prisma.prompt.findUnique({ where: { id: contentId } });
-            description = prompt?.description || title;
-            tags = ["ai", "prompt", "chatgpt"];
+            if (!prompt) throw new Error("Prompt not found");
+
+            let descriptionHtml = prompt.description;
+            if (descriptionHtml && (descriptionHtml.startsWith('[{"') || descriptionHtml.startsWith('[ { "'))) {
+                try {
+                    const blocks = JSON.parse(descriptionHtml);
+                    descriptionHtml = blocksToHtml(blocks);
+                } catch (e) { }
+            }
+            contentBody = `<h2>${prompt.title}</h2>${descriptionHtml}<br/><br/><strong>Prompt:</strong><br/><pre>${prompt.content}</pre><br/><br/>Source: <a href="${url}">${url}</a>`;
+            tags = ["ai", "prompt", "chatgpt", "midjourney"];
         } else {
             const blog = await prisma.blogPost.findUnique({ where: { id: contentId } });
-            description = blog?.excerpt || title;
-            tags = ["ai", "blog", "tech"];
+            if (!blog) throw new Error("Blog not found");
+
+            let blogContent = blog.content;
+            if (blogContent && (blogContent.startsWith('[{"') || blogContent.startsWith('[ { "'))) {
+                try {
+                    const blocks = JSON.parse(blogContent);
+                    blogContent = blocksToHtml(blocks);
+                } catch (e) { }
+            }
+            contentBody = `<h2>${blog.title}</h2>${blogContent}<br/><br/>Originally from: <a href="${url}">${url}</a>`;
+            tags = ["ai", "blog", "tech", "web"];
         }
 
         // Promisify the callback-based tumblr.js
         const postResult = await new Promise((resolve, reject) => {
             client.createPost(creds.tumblr_blog_identifier, {
-                type: 'link',
+                // @ts-ignore
+                type: 'text',
                 title: title,
-                url: url,
-                description: description,
-                // @ts-ignore - types might be wrong, but library supports both usually. Let's try array or string.
-                tags: tags.join(',') // API actually takes comma separated string usually, but let's see. If error, try array.
+                body: contentBody,
+                tags: tags,
+                format: 'html'
             }, (err: any, data: any) => {
                 if (err) reject(err);
                 else resolve(data);
@@ -400,4 +429,46 @@ export async function shareToReddit(contentId: string, contentType: 'prompt' | '
     const shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
 
     return { success: true, platform: 'reddit', postId: 'intent' };
+}
+
+/**
+ * Automatically share content to all configured platforms
+ */
+export async function autoShareToAllPlatforms(contentId: string, contentType: ContentType, title: string, slug: string, imageUrl?: string) {
+    const creds = await getSocialCredentials();
+    const settings = await prisma.systemSetting.findFirst({
+        where: { key: 'app_url' }
+    });
+    const baseUrl = settings?.value || process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+    const url = `${baseUrl}/${contentType === 'prompt' ? 'prompts' : 'blog'}/${slug}`;
+    const message = `Check out our new ${contentType}: ${title}`;
+
+    const results: ShareResult[] = [];
+
+    // 1. Twitter
+    if (creds.twitter_api_key && creds.twitter_api_secret && creds.twitter_access_token && creds.twitter_access_secret) {
+        try { results.push(await shareToTwitter(contentId, contentType, message, url)); } catch (e) { }
+    }
+
+    // 2. Facebook
+    if (creds.facebook_access_token && creds.facebook_page_id) {
+        try { results.push(await shareToFacebook(contentId, contentType, message, url)); } catch (e) { }
+    }
+
+    // 3. Medium
+    if (creds.medium_integration_token) {
+        try { results.push(await shareToMedium(contentId, contentType, title, url)); } catch (e) { }
+    }
+
+    // 4. LinkedIn
+    if (creds.linkedin_access_token && creds.linkedin_person_urn) {
+        try { results.push(await shareToLinkedin(contentId, contentType, message, url, imageUrl)); } catch (e) { }
+    }
+
+    // 5. Tumblr
+    if (creds.tumblr_consumer_key && creds.tumblr_blog_identifier) {
+        try { results.push(await shareToTumblr(contentId, contentType, title, url)); } catch (e) { }
+    }
+
+    return results;
 }

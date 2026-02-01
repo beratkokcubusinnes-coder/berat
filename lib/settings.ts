@@ -56,7 +56,13 @@ export const DEFAULTS = {
         { id: "upload", name: "Upload", type: "button", href: "/upload", isDefault: true },
         { id: "notif", name: "Notifications", type: "notifications", isDefault: true },
         { id: "user", name: "User Menu", type: "user", isDefault: true }
-    ])
+    ]),
+
+    // RSS Feed Settings
+    rss_feed_title: "Promptda - Premium AI Prompts & Resources",
+    rss_feed_description: "Latest AI prompts, scripts, community discussions and blog posts from Promptda.",
+    rss_feed_limit: "50",
+    rss_feed_language: "en-us"
 };
 
 // Removed unstable_cache to fetch data directly from DB

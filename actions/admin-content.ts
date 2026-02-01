@@ -10,6 +10,7 @@ import { saveContentTranslation } from '@/lib/translations'
 import { saveContentImage } from '@/lib/upload-utils'
 import { autoNotifyIndexing } from '@/actions/indexing'
 import { getSystemSettings } from '@/lib/settings'
+import { autoShareToAllPlatforms } from '@/actions/social-share'
 
 const ContentSchema = z.object({
     title: z.string().min(5, "Title is too short"),
@@ -180,6 +181,13 @@ export async function createAdminContent(prevState: ContentState, formData: Form
                 const path = type === 'blog' ? 'blog' : (type === 'prompt' ? 'prompts' : type + 's');
                 const url = `${baseUrl}/${path}/${createdContent.slug}`;
                 autoNotifyIndexing(url);
+                // Automatic Social Auto-Post for scripts, blogs, hooks
+                if (type === 'script' || type === 'blog' || type === 'hook') {
+                    // Map type because autoShareToAllPlatforms expects ContentType
+                    const shareType = type === 'blog' ? 'blog' : (type === 'script' ? 'script' : 'hook');
+                    autoShareToAllPlatforms(createdContent.id, shareType, createdContent.title, createdContent.slug, createdContent.ogImage || createdContent.image || undefined)
+                        .catch(e => console.error("Auto Social Post Error:", e));
+                }
             }).catch(e => console.error("Auto Indexing Error:", e));
         }
 

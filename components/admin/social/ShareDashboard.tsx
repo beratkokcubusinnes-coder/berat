@@ -38,7 +38,7 @@ export function ShareDashboard({ items, baseUrl }: { items: ContentItem[], baseU
             } else if (platform === 'medium') {
                 result = await shareToMedium(item.id, item.type, item.title, url);
             } else if (platform === 'linkedin') {
-                result = await shareToLinkedin(item.id, item.type, message, url);
+                result = await shareToLinkedin(item.id, item.type, message, url, item.image || undefined);
             } else if (platform === 'tumblr') {
                 result = await shareToTumblr(item.id, item.type, item.title, url);
             }

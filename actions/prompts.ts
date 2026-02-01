@@ -8,6 +8,7 @@ import { slugify } from '@/lib/utils'
 import { saveContentTranslation } from '@/lib/translations'
 import { autoNotifyIndexing } from '@/actions/indexing'
 import { getSystemSettings } from '@/lib/settings'
+import { autoShareToAllPlatforms } from '@/actions/social-share'
 import { writeFile, mkdir } from "fs/promises"
 import { join } from "path"
 import path from "path"
@@ -225,6 +226,10 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
                 const url = `${baseUrl}/prompts/${createdPrompt.slug}`;
                 autoNotifyIndexing(url);
             }).catch(e => console.error("Auto Indexing Error:", e));
+
+            // Automatic Social Auto-Post
+            autoShareToAllPlatforms(createdPrompt.id, 'prompt', createdPrompt.title, createdPrompt.slug, (createdPrompt.ogImage as string | undefined) || (createdPrompt.image as string | undefined))
+                .catch(e => console.error("Auto Social Post Error:", e));
         }
 
         return { success: true };
