@@ -13,16 +13,13 @@ export async function POST(request: Request) {
         const { type, path, tag } = await request.json();
 
         if (type === 'path' && path) {
-            revalidatePath(path, 'layout');
-        } else if (type === 'tag' && tag) {
-            revalidateTag(tag);
+            revalidatePath(path, 'page');
         } else if (type === 'all') {
+            // Revalidate everything
             revalidatePath('/', 'layout');
-            revalidateTag('seo-settings');
         } else {
-            // Default: clear main content
+            // Default: clear homepage and main layout
             revalidatePath('/', 'layout');
-            revalidateTag('seo-settings');
         }
 
         return NextResponse.json({ success: true, message: "Cache cleared successfully" });
