@@ -1,40 +1,100 @@
 
+import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    // This RSS feel is optimized for SEO Discovery, not just reading.
-    // It includes full content to help Google index faster.
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+  const lang = 'en'; // Default language for RSS links
 
-    // In a real app, you fetch posts from DB.
-    // const posts = await prisma.post.findMany(...)
+  try {
+    // Fetch latest items from all core entities
+    const [prompts, posts, scripts, threads] = await Promise.all([
+      prisma.prompt.findMany({
+        where: { status: 'APPROVED' },
+        take: 15,
+        orderBy: { createdAt: 'desc' },
+        include: { categoryData: true }
+      }),
+      prisma.blogPost.findMany({
+        where: { status: 'APPROVED' },
+        take: 15,
+        orderBy: { createdAt: 'desc' }
+      }),
+      prisma.script.findMany({
+        where: { status: 'APPROVED' },
+        take: 15,
+        orderBy: { createdAt: 'desc' },
+        include: { categoryData: true }
+      }),
+      prisma.thread.findMany({
+        take: 15,
+        orderBy: { createdAt: 'desc' }
+      })
+    ]);
 
-    // Placeholder XML
+    // Combine and sort all items by date
+    const allItems = [
+      ...prompts.map(p => ({
+        title: p.title,
+        link: `${baseUrl}/${lang}/prompt/${p.categoryData?.slug || 'general'}/${p.slug}`,
+        description: p.description || p.metaDescription || `Professional AI prompt for ${p.model}`,
+        pubDate: p.createdAt,
+        image: p.image || p.images?.split(',')[0]
+      })),
+      ...posts.map(p => ({
+        title: p.title,
+        link: `${baseUrl}/${lang}/blog/${p.slug}`,
+        description: p.excerpt || p.metaDescription || 'Latest AI news and guides',
+        pubDate: p.createdAt,
+        image: p.image
+      })),
+      ...scripts.map(s => ({
+        title: s.title,
+        link: `${baseUrl}/${lang}/scripts/${s.categoryData?.slug || 'general'}/${s.slug}`,
+        description: s.description || s.metaDescription || `Free AI script for ${s.language}`,
+        pubDate: s.createdAt,
+        image: s.image
+      })),
+      ...threads.map(t => ({
+        title: t.title,
+        link: `${baseUrl}/${lang}/community/${t.slug}`,
+        description: t.content.substring(0, 160) + '...',
+        pubDate: t.createdAt,
+        image: t.mediaUrls?.split(',')[0]
+      }))
+    ].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
+
+    const itemsXml = allItems.map(item => `
+    <item>
+      <title><![CDATA[${item.title}]]></title>
+      <link>${item.link}</link>
+      <guid isPermaLink="true">${item.link}</guid>
+      <pubDate>${item.pubDate.toUTCString()}</pubDate>
+      <description><![CDATA[${item.description}]]></description>
+      ${item.image ? `<media:content url="${item.image.startsWith('http') ? item.image : baseUrl + item.image}" medium="image" />` : ''}
+    </item>`).join('');
+
     const xml = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
-<channel>
-  <title>Promptda - Premium AI Prompts & Scripts</title>
-  <link>https://promptda.com</link>
-  <description>Latest AI prompts, scripts and engineering guides.</description>
-  <language>en-us</language>
-  <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-  <atom:link href="https://promptda.com/rss.xml" rel="self" type="application/rss+xml" />
-  
-  <item>
-    <title>Example AI Prompt Guide</title>
-    <link>https://promptda.com/blog/example-post</link>
-    <guid>https://promptda.com/blog/example-post</guid>
-    <pubDate>${new Date().toUTCString()}</pubDate>
-    <description><![CDATA[Learn how to craft efficient AI prompts...]]></description>
-    <content:encoded><![CDATA[<p>Full article content goes here for better SEO discovery...</p>]]></content:encoded>
-    <media:content url="https://promptda.com/og-image.jpg" medium="image" />
-  </item>
-</channel>
+  <channel>
+    <title>Promptda - Premium AI Prompts &amp; Resources</title>
+    <link>${baseUrl}</link>
+    <description>Latest AI prompts, scripts, community discussions and blog posts from Promptda.</description>
+    <language>en-us</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
+    ${itemsXml}
+  </channel>
 </rss>`;
 
     return new NextResponse(xml, {
-        headers: {
-            'Content-Type': 'application/xml',
-            'Cache-Control': 's-maxage=3600, stale-while-revalidate',
-        },
+      headers: {
+        'Content-Type': 'application/xml',
+        'Cache-Control': 's-maxage=3600, stale-while-revalidate',
+      },
     });
+  } catch (error) {
+    console.error('RSS Feed Error:', error);
+    return new NextResponse('Error generating RSS feed', { status: 500 });
+  }
 }
