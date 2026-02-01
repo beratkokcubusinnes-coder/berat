@@ -47,7 +47,7 @@ export async function constructMetadata({
     const sysMap: Record<string, string> = {};
     systemSettings.forEach(s => sysMap[s.key] = s.value);
 
-    const fav = sysMap.site_favicon || "/favicon.ico";
+    const fav = "/favicon.ico";
 
     const siteTitle = settings.site_title || "Promptda";
     const separator = settings.title_separator || "|";
