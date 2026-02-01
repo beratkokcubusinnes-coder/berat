@@ -163,7 +163,8 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
     const BlockTypeButton = ({ type, icon: Icon, label, color }: { type: BlockType, icon: any, label: string, color: string }) => (
         <button
             type="button"
-            onClick={() => {
+            onClick={(e) => {
+                e.stopPropagation();
                 addBlock(type, insertAfterBlockId || undefined);
                 setShowBlockMenu(false);
             }}
@@ -222,7 +223,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                         <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                                 type="button"
-                                onClick={() => moveBlock(block.id, 'up')}
+                                onClick={(e) => { e.stopPropagation(); moveBlock(block.id, 'up'); }}
                                 disabled={index === 0}
                                 className="p-1.5 text-muted-foreground/50 hover:text-foreground hover:bg-muted rounded-lg disabled:opacity-20 transition-all"
                             >
@@ -233,7 +234,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                             </button>
                             <button
                                 type="button"
-                                onClick={() => moveBlock(block.id, 'down')}
+                                onClick={(e) => { e.stopPropagation(); moveBlock(block.id, 'down'); }}
                                 disabled={index === blocks.length - 1}
                                 className="p-1.5 text-muted-foreground/50 hover:text-foreground hover:bg-muted rounded-lg disabled:opacity-20 transition-all"
                             >
@@ -242,7 +243,7 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                             <div className="h-px bg-border/50 my-1" />
                             <button
                                 type="button"
-                                onClick={() => deleteBlock(block.id)}
+                                onClick={(e) => { e.stopPropagation(); deleteBlock(block.id); }}
                                 className="p-1.5 text-muted-foreground/50 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
                             >
                                 <Trash2 className="w-4 h-4" />
@@ -400,7 +401,8 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
                                                 <div className="flex items-center gap-3">
                                                     <button
                                                         type="button"
-                                                        onClick={() => {
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
                                                             const newSteps = [...block.content.steps];
                                                             const hasBlocks = newSteps[i].blocks && newSteps[i].blocks.length > 0;
                                                             if (!hasBlocks) {
@@ -441,7 +443,10 @@ export default function BlockEditor({ value, onChange, placeholder }: BlockEdito
 
                                             {/* Nesting Logic */}
                                             {step.blocks && step.blocks.length > 0 ? (
-                                                <div className="p-4 bg-black/20 rounded-2xl border border-dashed border-emerald-500/20">
+                                                <div
+                                                    className="p-4 bg-black/20 rounded-2xl border border-dashed border-emerald-500/20"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
                                                     <BlockEditor
                                                         value={JSON.stringify(step.blocks)}
                                                         onChange={(newVal) => {
