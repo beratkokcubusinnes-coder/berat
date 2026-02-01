@@ -3,6 +3,7 @@
 import { Users, Sparkles, Eye, TrendingUp, MoreHorizontal, ArrowUpRight, ArrowDownRight, CheckCircle2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import UserAvatar from "@/components/ui/UserAvatar";
 
 interface AdminDashboardProps {
     stats: any;
@@ -190,9 +191,11 @@ export default function AdminDashboard({ stats, lang, dict }: AdminDashboardProp
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-extrabold text-primary">
-                                                {prompt.author.name.charAt(0)}
-                                            </div>
+                                            <UserAvatar
+                                                src={prompt.author.avatar}
+                                                alt={prompt.author.name}
+                                                size={24}
+                                            />
                                             <span className="text-sm text-foreground/80 font-medium">{prompt.author.name}</span>
                                         </div>
                                     </td>

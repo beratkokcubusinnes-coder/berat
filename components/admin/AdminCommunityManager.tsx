@@ -6,6 +6,7 @@ import { deleteAdminContent } from "@/actions/admin-content";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import UserAvatar from "@/components/ui/UserAvatar";
 
 interface AdminCommunityManagerProps {
     threads: any[];
@@ -108,13 +109,11 @@ export function AdminCommunityManager({ threads, comments, lang, dict }: AdminCo
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-extrabold text-primary border border-primary/10">
-                                                    {thread.author?.avatar ? (
-                                                        <img src={thread.author.avatar} className="w-full h-full rounded-full object-cover" />
-                                                    ) : (
-                                                        thread.author?.name?.charAt(0) || "U"
-                                                    )}
-                                                </div>
+                                                <UserAvatar
+                                                    src={thread.author?.avatar}
+                                                    alt={thread.author?.name}
+                                                    size={32}
+                                                />
                                                 <span className="text-xs font-bold text-foreground/80">{thread.author?.name || "Guest"}</span>
                                             </div>
                                         </td>
@@ -178,13 +177,11 @@ export function AdminCommunityManager({ threads, comments, lang, dict }: AdminCo
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-extrabold text-primary border border-primary/10">
-                                                    {comment.author?.avatar ? (
-                                                        <img src={comment.author.avatar} className="w-full h-full rounded-full object-cover" />
-                                                    ) : (
-                                                        comment.author?.name?.charAt(0) || "U"
-                                                    )}
-                                                </div>
+                                                <UserAvatar
+                                                    src={comment.author?.avatar}
+                                                    alt={comment.author?.name}
+                                                    size={32}
+                                                />
                                                 <span className="text-xs font-bold text-foreground/80">{comment.author?.name || "Guest"}</span>
                                             </div>
                                         </td>

@@ -8,6 +8,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import UserAvatar from "@/components/ui/UserAvatar";
+
 interface PromptsListProps {
     prompts: any[];
     lang: string;
@@ -91,9 +93,12 @@ export function PromptsList({ prompts, lang }: PromptsListProps) {
                                 </td>
                                 <td className="px-8 py-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-extrabold text-primary border border-primary/20">
-                                            {prompt.author.name?.charAt(0) || 'U'}
-                                        </div>
+                                        <UserAvatar
+                                            src={prompt.author.avatar}
+                                            alt={prompt.author.name}
+                                            size={32}
+                                            className="border border-primary/20"
+                                        />
                                         <div className="space-y-0.5">
                                             <span className="text-sm font-semibold text-foreground">{prompt.author.name}</span>
                                             <span className="text-[10px] text-muted-foreground font-medium block">@{prompt.author.username}</span>

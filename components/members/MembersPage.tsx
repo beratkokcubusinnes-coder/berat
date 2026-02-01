@@ -6,6 +6,8 @@ import { User } from '@/lib/types';
 import Link from "next/link";
 import { User as UserIcon, Calendar, MapPin, ExternalLink } from "lucide-react";
 
+import UserAvatar from "@/components/ui/UserAvatar";
+
 interface MembersPageProps {
     users: User[];
     currentUser: any;
@@ -37,8 +39,13 @@ export default function MembersPage({ users, currentUser, lang, dict }: MembersP
                             <Link href={`/${lang}/profile/${user.username || user.id}`} key={user.id} className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/5 flex flex-col">
                                 <div className="h-24 bg-gradient-to-r from-primary/20 to-purple-500/10 group-hover:from-primary/30 group-hover:to-purple-500/20 transition-colors" />
                                 <div className="px-6 -mt-10 flex items-end justify-between">
-                                    <div className="w-20 h-20 rounded-full border-4 border-card bg-muted flex items-center justify-center text-foreground font-bold text-2xl shadow-lg">
-                                        {user.name.charAt(0).toUpperCase()}
+                                    <div className="relative">
+                                        <UserAvatar
+                                            src={user.avatar}
+                                            alt={user.name}
+                                            size={80}
+                                            className="ring-4 ring-card shadow-xl group-hover:scale-105 transition-transform"
+                                        />
                                     </div>
                                     <button className="bg-primary/10 hover:bg-primary/20 text-primary text-xs font-semibold px-4 py-1.5 rounded-full transition-colors mb-2">
                                         Follow

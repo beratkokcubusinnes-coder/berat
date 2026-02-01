@@ -2,6 +2,7 @@
 
 import { Star } from "lucide-react";
 import { generateReviewSchema, generateAggregateRatingSchema } from "@/lib/block-schemas";
+import UserAvatar from "@/components/ui/UserAvatar";
 
 interface Review {
     author: string;
@@ -57,8 +58,8 @@ export function ReviewBlock({
                                 <Star
                                     key={star}
                                     className={`w-5 h-5 ${star <= Math.round(avgRating)
-                                            ? 'fill-primary text-primary'
-                                            : 'text-muted-foreground'
+                                        ? 'fill-primary text-primary'
+                                        : 'text-muted-foreground'
                                         }`}
                                 />
                             ))}
@@ -95,17 +96,12 @@ export function ReviewBlock({
 
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    {review.avatar ? (
-                                        <img
-                                            src={review.avatar}
-                                            alt={review.author}
-                                            className="w-10 h-10 rounded-full"
-                                        />
-                                    ) : (
-                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
-                                            {review.author.charAt(0).toUpperCase()}
-                                        </div>
-                                    )}
+                                    <UserAvatar
+                                        src={review.avatar}
+                                        alt={review.author}
+                                        size={40}
+                                        className="shadow-sm"
+                                    />
                                     <div>
                                         <div className="font-bold">{review.author}</div>
                                         <div className="text-xs text-muted-foreground">
@@ -118,8 +114,8 @@ export function ReviewBlock({
                                         <Star
                                             key={star}
                                             className={`w-4 h-4 ${star <= review.rating
-                                                    ? 'fill-primary text-primary'
-                                                    : 'text-muted-foreground'
+                                                ? 'fill-primary text-primary'
+                                                : 'text-muted-foreground'
                                                 }`}
                                         />
                                     ))}
