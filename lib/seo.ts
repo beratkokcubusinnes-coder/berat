@@ -78,20 +78,30 @@ export async function constructMetadata({
         robots.googleBot.follow = false;
     }
 
+    // Help ensure image is absolute
+    const ensureAbsoluteUrl = (url: string) => {
+        if (!url) return undefined;
+        if (url.startsWith('http')) return url;
+        const base = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
+        return `${base}${url.startsWith('/') ? '' : '/'}${url}`;
+    };
+
+    const finalImage = ensureAbsoluteUrl(image || defaultImage);
+
     return {
         title: title ? `${title} ${separator} ${siteTitle}` : siteTitle,
         description: description || defaultDescription,
         openGraph: {
             title: title ? `${title} ${separator} ${siteTitle}` : siteTitle,
             description: description || defaultDescription,
-            images: [
+            images: finalImage ? [
                 {
-                    url: image || defaultImage,
+                    url: finalImage,
                     width: 1200,
                     height: 630,
                     alt: title || siteTitle,
                 },
-            ],
+            ] : [],
             type: "website",
             siteName: siteTitle,
         },
@@ -99,7 +109,7 @@ export async function constructMetadata({
             card: "summary_large_image",
             title: title ? `${title} ${separator} ${siteTitle}` : siteTitle,
             description: description || defaultDescription,
-            images: [image || defaultImage],
+            images: finalImage ? [finalImage] : [],
             creator: twitterHandle,
         },
         icons: {
