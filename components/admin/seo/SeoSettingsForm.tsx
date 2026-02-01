@@ -19,6 +19,7 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
     const [isMetadataLoading, setIsMetadataLoading] = useState(false);
     const [mediaField, setMediaField] = useState<{ section: string | 'settings', field: string } | null>(null);
     const [isTranslating, setIsTranslating] = useState<string | null>(null);
+    const [isRevalidating, setIsRevalidating] = useState(false);
 
     const handleAutoTranslate = async (section: string) => {
         if (selectedLang === 'en') {
@@ -147,7 +148,27 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
         }));
     };
 
-    const handleSave = async (group: string) => {
+    const handleClearCache = async () => {
+        setIsRevalidating(true);
+        try {
+            const res = await fetch("/api/admin/revalidate", {
+                method: "POST",
+                body: JSON.stringify({ type: 'all' })
+            });
+            if (res.ok) {
+                setMessage({ type: 'success', text: "All caches have been cleared and meta tags refreshed!" });
+                setTimeout(() => setMessage(null), 5000);
+            } else {
+                throw new Error("Failed to clear cache");
+            }
+        } catch (error) {
+            setMessage({ type: 'error', text: "An error occurred while clearing cache." });
+        } finally {
+            setIsRevalidating(false);
+        }
+    };
+
+    const handleSave = async (tab: string) => {
         setIsSaving(true);
         setMessage(null);
 
@@ -1091,6 +1112,33 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                         />
                                         <span className="text-sm">Force Trailing Slash (Recommended for most Next.js setups)</span>
                                     </label>
+
+                                    <div className="pt-6 border-t border-border/50">
+                                        <div className="p-6 rounded-2xl bg-rose-500/5 border border-rose-500/10 space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <div className="space-y-1">
+                                                    <h3 className="font-bold text-rose-500 flex items-center gap-2">
+                                                        <Trash2 className="w-4 h-4" />
+                                                        Danger Zone: Cache Management
+                                                    </h3>
+                                                    <p className="text-xs text-muted-foreground">Force-refresh all SEO settings and page metadata globally.</p>
+                                                </div>
+                                                <button
+                                                    onClick={handleClearCache}
+                                                    disabled={isRevalidating}
+                                                    className="px-6 py-2.5 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold text-xs transition-all shadow-lg shadow-rose-500/20 disabled:opacity-50 flex items-center gap-2"
+                                                >
+                                                    {isRevalidating ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                                    Flush All Caches
+                                                </button>
+                                            </div>
+                                            <div className="p-3 bg-white/5 rounded-lg">
+                                                <p className="text-[10px] text-muted-foreground leading-relaxed italic">
+                                                    Use this if you've updated metadata or images but they aren't appearing correctly in sharing previews or on the site. This will revalidate all Next.js cache tags related to SEO.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
