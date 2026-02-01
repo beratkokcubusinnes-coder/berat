@@ -17,17 +17,17 @@ import { getSession } from "@/lib/session";
 import { getPrompts, getScripts, getHooks, getTools, getThreads, getBlogPosts, getUsers } from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { getPageSeo } from "@/lib/seo-settings";
+import { constructMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   const seo = await getPageSeo("Home", lang);
-
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
-  const path = ''; // Home page path is empty
 
-  return {
-    title: seo.title,
+  return constructMetadata({
+    title: seo.rawTitle === 'Home' ? undefined : seo.rawTitle,
     description: seo.description,
+    image: seo.image,
     alternates: {
       canonical: lang === 'en' ? `${baseUrl}/` : `${baseUrl}/${lang}`,
       languages: {
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         'x-default': `${baseUrl}/`
       }
     }
-  };
+  });
 }
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {

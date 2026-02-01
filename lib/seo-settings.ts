@@ -26,10 +26,14 @@ export async function getPageSeo(pageName: string, lang: string) {
 
     const dbTitle = getSetting('metaTitle');
     const dbDesc = getSetting('metaDescription');
+    const dbImage = getSetting('metaImage');
 
     return {
         title: dbTitle || defaultMeta.metaTitle || `${pageName} - Promptda`,
-        description: dbDesc || defaultMeta.metaDescription || `Explore ${pageName} on Promptda`
+        description: dbDesc || defaultMeta.metaDescription || `Explore ${pageName} on Promptda`,
+        image: dbImage || defaultMeta.metaImage || undefined,
+        rawTitle: dbTitle || defaultMeta.metaTitle || pageName,
+        rawDescription: dbDesc || defaultMeta.metaDescription
     };
 }
 

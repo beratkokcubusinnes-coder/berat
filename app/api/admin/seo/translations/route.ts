@@ -45,6 +45,7 @@ export async function GET(request: Request) {
             Home: {
                 metaTitle: getVal('Home', 'metaTitle', json.Home?.metaTitle),
                 metaDescription: getVal('Home', 'metaDescription', json.Home?.metaDescription),
+                metaImage: getVal('Home', 'metaImage', json.Home?.metaImage),
                 // Hero Content
                 verifiedLibrary: getVal('Home', 'verifiedLibrary', json.Home?.verifiedLibrary),
                 heroTitlePart1: getVal('Home', 'heroTitlePart1', json.Home?.heroTitlePart1),
@@ -63,35 +64,43 @@ export async function GET(request: Request) {
             },
             Prompts: {
                 metaTitle: getVal('Prompts', 'metaTitle', json.Prompts?.metaTitle),
-                metaDescription: getVal('Prompts', 'metaDescription', json.Prompts?.metaDescription)
+                metaDescription: getVal('Prompts', 'metaDescription', json.Prompts?.metaDescription),
+                metaImage: getVal('Prompts', 'metaImage', json.Prompts?.metaImage)
             },
             Scripts: {
                 metaTitle: getVal('Scripts', 'metaTitle', json.Scripts?.metaTitle),
-                metaDescription: getVal('Scripts', 'metaDescription', json.Scripts?.metaDescription)
+                metaDescription: getVal('Scripts', 'metaDescription', json.Scripts?.metaDescription),
+                metaImage: getVal('Scripts', 'metaImage', json.Scripts?.metaImage)
             },
             Hooks: {
                 metaTitle: getVal('Hooks', 'metaTitle', json.Hooks?.metaTitle),
-                metaDescription: getVal('Hooks', 'metaDescription', json.Hooks?.metaDescription)
+                metaDescription: getVal('Hooks', 'metaDescription', json.Hooks?.metaDescription),
+                metaImage: getVal('Hooks', 'metaImage', json.Hooks?.metaImage)
             },
             Blog: {
                 metaTitle: getVal('Blog', 'metaTitle', json.Blog?.metaTitle),
-                metaDescription: getVal('Blog', 'metaDescription', json.Blog?.metaDescription)
+                metaDescription: getVal('Blog', 'metaDescription', json.Blog?.metaDescription),
+                metaImage: getVal('Blog', 'metaImage', json.Blog?.metaImage)
             },
             Tools: {
                 metaTitle: getVal('Tools', 'metaTitle', json.Tools?.metaTitle),
-                metaDescription: getVal('Tools', 'metaDescription', json.Tools?.metaDescription)
+                metaDescription: getVal('Tools', 'metaDescription', json.Tools?.metaDescription),
+                metaImage: getVal('Tools', 'metaImage', json.Tools?.metaImage)
             },
             Community: {
                 metaTitle: getVal('Community', 'metaTitle', json.Community?.metaTitle),
-                metaDescription: getVal('Community', 'metaDescription', json.Community?.metaDescription)
+                metaDescription: getVal('Community', 'metaDescription', json.Community?.metaDescription),
+                metaImage: getVal('Community', 'metaImage', json.Community?.metaImage)
             },
             Members: {
                 metaTitle: getVal('Members', 'metaTitle', json.Members?.metaTitle),
-                metaDescription: getVal('Members', 'metaDescription', json.Members?.metaDescription)
+                metaDescription: getVal('Members', 'metaDescription', json.Members?.metaDescription),
+                metaImage: getVal('Members', 'metaImage', json.Members?.metaImage)
             },
             Favorites: {
                 metaTitle: getVal('Favorites', 'metaTitle', json.Favorites?.metaTitle),
-                metaDescription: getVal('Favorites', 'metaDescription', json.Favorites?.metaDescription)
+                metaDescription: getVal('Favorites', 'metaDescription', json.Favorites?.metaDescription),
+                metaImage: getVal('Favorites', 'metaImage', json.Favorites?.metaImage)
             },
         };
 

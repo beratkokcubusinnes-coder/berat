@@ -13,20 +13,23 @@ import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemLis
 import { getSitemapAlternates, getCanonicalUrl } from "@/lib/sitemap-utils";
 import { getPageSeo } from "@/lib/seo-settings";
 
+import { constructMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const seo = await getPageSeo("Blog", lang);
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/blog';
 
-    return {
-        title: seo.title,
+    return constructMetadata({
+        title: seo.rawTitle,
         description: seo.description,
+        image: seo.image,
         alternates: {
             canonical: getCanonicalUrl(path, lang, baseUrl),
             languages: getSitemapAlternates(path, baseUrl)
         }
-    };
+    });
 }
 
 export default async function BlogPage({

@@ -17,6 +17,59 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
     const [selectedLang, setSelectedLang] = useState("en");
     const [metadata, setMetadata] = useState<Record<string, any>>({});
     const [isMetadataLoading, setIsMetadataLoading] = useState(false);
+    const [mediaField, setMediaField] = useState<{ section: string | 'settings', field: string } | null>(null);
+    const [isTranslating, setIsTranslating] = useState<string | null>(null);
+
+    const handleAutoTranslate = async (section: string) => {
+        if (selectedLang === 'en') {
+            alert("Already in English. Switch language to translate.");
+            return;
+        }
+        setIsTranslating(section);
+
+        try {
+            // 1. Get English values from API
+            const enRes = await fetch(`/api/admin/seo/translations?lang=en`);
+            const enData = await enRes.json();
+            const source = enData[section];
+
+            if (!source) throw new Error("No source found for " + section);
+
+            const fields = Object.keys(source).filter(k =>
+                typeof source[k] === 'string' &&
+                source[k].length > 0 &&
+                !k.toLowerCase().includes('image') &&
+                !k.toLowerCase().includes('icon')
+            );
+
+            const updatedSection = { ...metadata[section] };
+
+            for (const field of fields) {
+                const res = await fetch("/api/admin/seo/translate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        text: source[field],
+                        targetLang: selectedLang
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    updatedSection[field] = data.translatedText;
+                }
+            }
+
+            setMetadata(prev => ({ ...prev, [section]: updatedSection }));
+            setMessage({ type: 'success', text: `${section} translated successfully!` });
+        } catch (error) {
+            console.error("Translation failed:", error);
+            setMessage({ type: 'error', text: "Translation failed." });
+        } finally {
+            setIsTranslating(null);
+            setTimeout(() => setMessage(null), 3000);
+        }
+    };
 
     useEffect(() => {
         fetchSettings();
@@ -299,16 +352,28 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                         </h2>
                                         <p className="text-sm text-muted-foreground">Manage the text content of the homepage hero section.</p>
                                     </div>
-                                    <select
-                                        value={selectedLang}
-                                        onChange={(e) => setSelectedLang(e.target.value)}
-                                        className="bg-card border border-border rounded-lg px-3 py-1.5 text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
-                                    >
-                                        <option value="en">English (en)</option>
-                                        <option value="de">German (de)</option>
-                                        <option value="es">Spanish (es)</option>
-                                        <option value="tr">Turkish (tr)</option>
-                                    </select>
+                                    <div className="flex items-center gap-3">
+                                        {selectedLang !== 'en' && (
+                                            <button
+                                                onClick={() => handleAutoTranslate('Home')}
+                                                disabled={isTranslating === 'Home'}
+                                                className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-4 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-50"
+                                            >
+                                                {isTranslating === 'Home' ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                                Translate from English
+                                            </button>
+                                        )}
+                                        <select
+                                            value={selectedLang}
+                                            onChange={(e) => setSelectedLang(e.target.value)}
+                                            className="bg-card border border-border rounded-lg px-3 py-1.5 text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                        >
+                                            <option value="en">English (en)</option>
+                                            <option value="de">German (de)</option>
+                                            <option value="es">Spanish (es)</option>
+                                            <option value="tr">Turkish (tr)</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {isMetadataLoading ? (
@@ -330,6 +395,24 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                                         onChange={(e) => handleMetadataChange("Home", "verifiedLibrary", e.target.value)}
                                                         placeholder="Verified AI Prompt Library"
                                                     />
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Share Image (Featured Image)</label>
+                                                    <div className="flex gap-2">
+                                                        <input
+                                                            type="text"
+                                                            className="flex-1 bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm"
+                                                            value={metadata.Home?.metaImage || ""}
+                                                            onChange={(e) => handleMetadataChange("Home", "metaImage", e.target.value)}
+                                                        />
+                                                        <button
+                                                            onClick={() => { setMediaField({ section: 'Home', field: 'metaImage' }); setIsMediaModalOpen(true); }}
+                                                            className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-bold text-xs"
+                                                        >
+                                                            Select
+                                                        </button>
+                                                    </div>
                                                 </div>
 
                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -512,16 +595,18 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                         </h2>
                                         <p className="text-sm text-muted-foreground">Manage SEO titles and descriptions for core pages across languages.</p>
                                     </div>
-                                    <select
-                                        value={selectedLang}
-                                        onChange={(e) => setSelectedLang(e.target.value)}
-                                        className="bg-card border border-border rounded-lg px-3 py-1.5 text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
-                                    >
-                                        <option value="en">English (en)</option>
-                                        <option value="de">German (de)</option>
-                                        <option value="es">Spanish (es)</option>
-                                        <option value="tr">Turkish (tr)</option>
-                                    </select>
+                                    <div className="flex items-center gap-3">
+                                        <select
+                                            value={selectedLang}
+                                            onChange={(e) => setSelectedLang(e.target.value)}
+                                            className="bg-card border border-border rounded-lg px-3 py-1.5 text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                        >
+                                            <option value="en">English (en)</option>
+                                            <option value="de">German (de)</option>
+                                            <option value="es">Spanish (es)</option>
+                                            <option value="tr">Turkish (tr)</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {isMetadataLoading ? (
@@ -529,34 +614,80 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                         <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
                                     </div>
                                 ) : (
-                                    <div className="space-y-8">
-                                        {Object.entries(metadata).map(([section, data]: [string, any]) => (
-                                            <div key={section} className="space-y-4 p-4 border border-border/50 rounded-xl bg-muted/10">
-                                                <h3 className="font-bold text-lg flex items-center gap-2">
-                                                    <span className="w-2 h-8 rounded-full bg-primary/50 block"></span>
-                                                    {section} Page
-                                                </h3>
-                                                <div className="grid grid-cols-1 gap-4">
-                                                    <div className="space-y-2">
-                                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Meta Title</label>
-                                                        <input
-                                                            type="text"
-                                                            className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                                                            value={data.metaTitle || ""}
-                                                            onChange={(e) => handleMetadataChange(section, "metaTitle", e.target.value)}
-                                                        />
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Meta Description</label>
-                                                        <textarea
-                                                            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[80px] resize-y"
-                                                            value={data.metaDescription || ""}
-                                                            onChange={(e) => handleMetadataChange(section, "metaDescription", e.target.value)}
-                                                        />
+                                    <div className="space-y-6">
+                                        {Object.entries(metadata).map(([section, data]: [string, any]) => {
+                                            if (section === 'Home') return null; // Handled in Content tab
+                                            return (
+                                                <div key={section} className="p-6 border border-border/50 rounded-xl bg-card relative">
+                                                    <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                                                        <span className="w-2 h-8 rounded-full bg-primary/50 block"></span>
+                                                        {section} Page
+                                                    </h3>
+                                                    {selectedLang !== 'en' && (
+                                                        <button
+                                                            onClick={() => handleAutoTranslate(section)}
+                                                            disabled={isTranslating === section}
+                                                            className="absolute top-4 right-4 flex items-center gap-2 text-primary hover:underline text-xs font-bold"
+                                                        >
+                                                            {isTranslating === section ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                                                            Auto-Translate
+                                                        </button>
+                                                    )}
+                                                    <div className="grid grid-cols-1 gap-4 pt-2">
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Share Image (Featured Image)</label>
+                                                            <div className="flex gap-2">
+                                                                <input
+                                                                    type="text"
+                                                                    className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm"
+                                                                    value={data.metaImage || ""}
+                                                                    onChange={(e) => handleMetadataChange(section, "metaImage", e.target.value)}
+                                                                />
+                                                                <button
+                                                                    onClick={() => { setMediaField({ section, field: 'metaImage' }); setIsMediaModalOpen(true); }}
+                                                                    className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-bold text-xs"
+                                                                >
+                                                                    Pick
+                                                                </button>
+                                                            </div>
+                                                            {data.metaImage && (
+                                                                <div className="mt-2 w-32 h-20 rounded-lg overflow-hidden border border-border">
+                                                                    <img src={data.metaImage} className="w-full h-full object-cover" />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Meta Title</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-card border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                                                value={data.metaTitle || ""}
+                                                                onChange={(e) => handleMetadataChange(section, "metaTitle", e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Meta Description</label>
+                                                            <textarea
+                                                                className="w-full bg-card border border-border rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all min-h-[80px]"
+                                                                value={data.metaDescription || ""}
+                                                                onChange={(e) => handleMetadataChange(section, "metaDescription", e.target.value)}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
+
+                                        <div className="pt-4 border-t border-border/50">
+                                            <button
+                                                onClick={handleSaveMetadata}
+                                                disabled={isSaving}
+                                                className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold shadow-lg hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                                            >
+                                                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                                Save All Translations ({selectedLang})
+                                            </button>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -1062,8 +1193,17 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                             <div className="flex-1 overflow-hidden p-6 bg-card">
                                 <MediaLibrary
                                     onSelect={(url) => {
-                                        handleChange("og_image", url);
+                                        if (mediaField) {
+                                            if (mediaField.section === 'settings') {
+                                                handleChange(mediaField.field, url);
+                                            } else {
+                                                handleMetadataChange(mediaField.section, mediaField.field, url);
+                                            }
+                                        } else {
+                                            handleChange("og_image", url);
+                                        }
                                         setIsMediaModalOpen(false);
+                                        setMediaField(null);
                                     }}
                                 />
                             </div>

@@ -12,21 +12,23 @@ import Link from "next/link";
 import { getSitemapAlternates } from "@/lib/sitemap-utils";
 import { getPageSeo } from "@/lib/seo-settings";
 
+import { constructMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const seo = await getPageSeo("Hooks", lang);
-
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
     const path = '/hooks';
 
-    return {
-        title: seo.title,
+    return constructMetadata({
+        title: seo.rawTitle,
         description: seo.description,
+        image: seo.image,
         alternates: {
             canonical: `${baseUrl}/${lang}${path}`,
             languages: getSitemapAlternates(path, baseUrl)
         }
-    };
+    });
 }
 
 export default async function HooksPage({
