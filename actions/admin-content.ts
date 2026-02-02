@@ -51,6 +51,7 @@ export async function createAdminContent(prevState: ContentState, formData: Form
     const session = await getSession();
     if (!session || !session.userId) return { message: "Unauthorized" };
 
+    const lang = formData.get('lang') as string || 'en';
     const type = formData.get('type') as string;
     const title = formData.get('title') as string || 'content';
 
@@ -156,7 +157,7 @@ export async function createAdminContent(prevState: ContentState, formData: Form
                 const translations = JSON.parse(translationsJson);
                 await Promise.all(
                     Object.entries(translations)
-                        .filter(([langCode]) => langCode !== 'en')
+                        .filter(([langCode]) => langCode !== lang)
                         .map(([langCode, transData]: [string, any]) =>
                             saveContentTranslation(
                                 type as any,
@@ -202,6 +203,7 @@ export async function updateAdminContent(id: string, prevState: ContentState, fo
     const session = await getSession();
     if (!session || !session.userId) return { message: "Unauthorized" };
 
+    const lang = formData.get('lang') as string || 'en';
     const type = formData.get('type') as string;
     const title = formData.get('title') as string || 'content';
 
@@ -316,7 +318,7 @@ export async function updateAdminContent(id: string, prevState: ContentState, fo
                 const translations = JSON.parse(translationsJson);
                 await Promise.all(
                     Object.entries(translations)
-                        .filter(([langCode]) => langCode !== 'en')
+                        .filter(([langCode]) => langCode !== lang)
                         .map(([langCode, transData]: [string, any]) =>
                             saveContentTranslation(
                                 type as any,

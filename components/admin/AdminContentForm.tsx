@@ -102,6 +102,7 @@ export function AdminContentForm({ type, lang, dict, categories, initialData, in
             ) : (
                 <input type="hidden" name="description" value={description} />
             )}
+            <input type="hidden" name="lang" value={lang} />
             <input type="hidden" name="translations" value={JSON.stringify(translations)} />
 
             {/* WordPress Style Top Header */}
@@ -639,6 +640,14 @@ export function AdminContentForm({ type, lang, dict, categories, initialData, in
                                             { label: 'Meta Description', name: 'metaDescription', type: 'textarea', rows: 2 },
                                         ]}
                                         values={translations}
+                                        sourceValues={{
+                                            title,
+                                            description: isBlog ? undefined : description,
+                                            content: isBlog ? description : undefined,
+                                            metaTitle,
+                                            metaDescription
+                                        }}
+                                        sourceLanguageCode={lang}
                                         onChange={(lang, field, value) => {
                                             setTranslations(prev => ({
                                                 ...prev,

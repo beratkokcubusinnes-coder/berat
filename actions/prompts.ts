@@ -201,7 +201,7 @@ export async function createPrompt(prevState: PromptState, formData: FormData): 
                 const translations = JSON.parse(translationsJson);
                 await Promise.all(
                     Object.entries(translations)
-                        .filter(([langCode]) => langCode !== 'en')
+                        .filter(([langCode]) => langCode !== lang)
                         .map(([langCode, transData]: [string, any]) =>
                             saveContentTranslation(
                                 'prompt',
@@ -347,7 +347,7 @@ export async function updatePrompt(id: string, prevState: PromptState, formData:
                 const translations = JSON.parse(translationsJson);
                 await Promise.all(
                     Object.entries(translations)
-                        .filter(([langCode]) => langCode !== 'en')
+                        .filter(([langCode]) => langCode !== lang)
                         .map(([langCode, transData]: [string, any]) =>
                             saveContentTranslation(
                                 'prompt',
