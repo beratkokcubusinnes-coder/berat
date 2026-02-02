@@ -39,8 +39,8 @@ export function validateTranslation(
     }
 
     // 2. Variable Preservation Check ({name}, {count}, etc.)
-    const sourceVars = sourceText.match(/\{[^}]+\}/g) || [];
-    const targetVars = targetText.match(/\{[^}]+\}/g) || [];
+    const sourceVars: string[] = sourceText.match(/\{[^}]+\}/g) || [];
+    const targetVars: string[] = targetText.match(/\{[^}]+\}/g) || [];
 
     const missingVars = sourceVars.filter(v => !targetVars.includes(v));
     if (missingVars.length > 0) {
