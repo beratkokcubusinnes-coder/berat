@@ -88,11 +88,21 @@ export async function constructMetadata({
 
     const finalImage = ensureAbsoluteUrl(image || defaultImage);
 
+    // Prevent double labeling (e.g., "Promptda | Promptda")
+    let finalTitle = "";
+    if (!title) {
+        finalTitle = siteTitle;
+    } else if (title.toLowerCase().includes(siteTitle.toLowerCase())) {
+        finalTitle = title;
+    } else {
+        finalTitle = `${title} ${separator} ${siteTitle}`;
+    }
+
     return {
-        title: title ? `${title} ${separator} ${siteTitle}` : siteTitle,
+        title: finalTitle,
         description: description || defaultDescription,
         openGraph: {
-            title: title ? `${title} ${separator} ${siteTitle}` : siteTitle,
+            title: finalTitle,
             description: description || defaultDescription,
             images: finalImage ? [
                 {
@@ -107,7 +117,7 @@ export async function constructMetadata({
         },
         twitter: {
             card: "summary_large_image",
-            title: title ? `${title} ${separator} ${siteTitle}` : siteTitle,
+            title: finalTitle,
             description: description || defaultDescription,
             images: finalImage ? [finalImage] : [],
             creator: twitterHandle,
