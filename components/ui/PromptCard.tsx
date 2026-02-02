@@ -87,7 +87,7 @@ export function PromptCard({ prompt, lang, dict, priority }: PromptCardProps) {
     const likes = (prompt as any).likes || (prompt as any).metrics?.likes || 0;
 
     return (
-        <motion.div
+        <motion.article
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
@@ -180,7 +180,7 @@ export function PromptCard({ prompt, lang, dict, priority }: PromptCardProps) {
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </motion.article>
     );
 }
 

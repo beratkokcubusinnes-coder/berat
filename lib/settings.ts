@@ -65,50 +65,55 @@ export const DEFAULTS = {
     rss_feed_language: "en-us"
 };
 
-// Removed unstable_cache to fetch data directly from DB
-export async function getSystemSettings() {
-    try {
-        const settings = await prisma.systemSetting.findMany();
-        const map: Record<string, any> = {};
-        settings.forEach(s => map[s.key] = s.value);
+import { unstable_cache } from "next/cache";
 
-        const finalSettings = { ...DEFAULTS, ...map };
-
-        // Fetch metadata for system assets
-        const assetUrls = [
-            finalSettings.site_logo,
-            finalSettings.site_icon,
-            finalSettings.default_avatar
-        ].filter(url => url && !url.startsWith('http'));
-
-        // Metadata fetching wrapped in try-catch to be safe
+export const getSystemSettings = unstable_cache(
+    async () => {
         try {
-            const mediaItems = await prisma.media.findMany({
-                where: { url: { in: assetUrls } }
-            });
+            const settings = await prisma.systemSetting.findMany();
+            const map: Record<string, any> = {};
+            settings.forEach(s => map[s.key] = s.value);
 
-            // Add metadata fields
-            mediaItems.forEach(item => {
-                if (item.url === finalSettings.site_logo) {
-                    finalSettings.site_logo_alt = item.altText || finalSettings.site_logo_alt;
-                }
-                if (item.url === finalSettings.site_icon) {
-                    finalSettings.site_icon_alt = item.altText || finalSettings.site_icon_alt;
-                }
-                if (item.url === finalSettings.default_avatar) {
-                    finalSettings.default_avatar_alt = item.altText || finalSettings.default_avatar_alt;
-                }
-            });
-        } catch (mediaError) {
-            console.warn("Failed to fetch media metadata", mediaError);
+            const finalSettings = { ...DEFAULTS, ...map };
+
+            // Fetch metadata for system assets
+            const assetUrls = [
+                finalSettings.site_logo,
+                finalSettings.site_icon,
+                finalSettings.default_avatar
+            ].filter(url => url && !url.startsWith('http'));
+
+            // Metadata fetching wrapped in try-catch to be safe
+            try {
+                const mediaItems = await prisma.media.findMany({
+                    where: { url: { in: assetUrls } }
+                });
+
+                // Add metadata fields
+                mediaItems.forEach(item => {
+                    if (item.url === finalSettings.site_logo) {
+                        finalSettings.site_logo_alt = item.altText || finalSettings.site_logo_alt;
+                    }
+                    if (item.url === finalSettings.site_icon) {
+                        finalSettings.site_icon_alt = item.altText || finalSettings.site_icon_alt;
+                    }
+                    if (item.url === finalSettings.default_avatar) {
+                        finalSettings.default_avatar_alt = item.altText || finalSettings.default_avatar_alt;
+                    }
+                });
+            } catch (mediaError) {
+                console.warn("Failed to fetch media metadata", mediaError);
+            }
+
+            return finalSettings;
+        } catch (e) {
+            console.error("Failed to fetch settings", e);
+            return DEFAULTS;
         }
-
-        return finalSettings;
-    } catch (e) {
-        console.error("Failed to fetch settings", e);
-        return DEFAULTS;
-    }
-}
+    },
+    ["system-settings"],
+    { revalidate: 60, tags: ["system-settings"] }
+);
 
 export async function getSystemSetting(key: keyof typeof DEFAULTS) {
     try {

@@ -19,7 +19,7 @@ export function BlogCard({ post, lang, dict }: { post: any; lang: string; dict?:
     });
 
     return (
-        <motion.div
+        <motion.article
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -72,6 +72,6 @@ export function BlogCard({ post, lang, dict }: { post: any; lang: string; dict?:
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </motion.article>
     );
 }

@@ -156,12 +156,35 @@ export async function getAdminStats() {
     }
 }
 
-export async function getPrompts() {
+export async function getPrompts(take?: number, skip?: number, category?: string, model?: string) {
+    const where: any = { status: 'APPROVED' };
+    if (category && category !== 'all') where.category = category;
+    if (model && model !== 'all') where.model = model;
+
     return await prisma.prompt.findMany({
-        where: { status: 'APPROVED' },
+        where,
         orderBy: { createdAt: 'desc' },
-        include: { author: true, categoryData: true }
+        include: { author: true, categoryData: true },
+        take,
+        skip
     });
+}
+
+export async function getPromptsCount(category?: string, model?: string) {
+    const where: any = { status: 'APPROVED' };
+    if (category && category !== 'all') where.category = category;
+    if (model && model !== 'all') where.model = model;
+
+    return await prisma.prompt.count({ where });
+}
+
+export async function getPromptModels() {
+    const prompts = await prisma.prompt.findMany({
+        where: { status: 'APPROVED' },
+        select: { model: true },
+        distinct: ['model']
+    });
+    return prompts.map(p => p.model);
 }
 
 export async function getPromptById(id: string) {

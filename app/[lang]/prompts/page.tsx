@@ -1,10 +1,11 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopNavbar } from "@/components/layout/TopNavbar";
-import { getPrompts } from "@/lib/db";
+import { getPrompts, getPromptsCount, getPromptModels, getCategoriesByType } from "@/lib/db";
 import { getDictionary } from "@/lib/dictionary";
 import { getSession } from "@/lib/session";
 import { PromptCard } from "@/components/ui/PromptCard";
 import { FilterBar } from "@/components/ui/FilterBar";
+import { Pagination } from "@/components/ui/Pagination";
 import { Sparkles } from "lucide-react";
 import { Metadata } from "next";
 import { generateBreadcrumbSchema, generateCollectionPageSchema, generateItemListSchema } from "@/lib/seo";
@@ -40,17 +41,28 @@ export default async function PromptsPage({
     searchParams
 }: {
     params: Promise<{ lang: string }>;
-    searchParams: Promise<{ category?: string; model?: string; sort?: string }>;
+    searchParams: Promise<{ category?: string; model?: string; sort?: string; page?: string }>;
 }) {
     const { lang } = await params;
     const dict = await getDictionary(lang) as any;
     const session = await getSession();
-    const { category, model, sort } = await searchParams;
+    const { category, model, sort, page } = await searchParams;
 
-    // Fetch prompts from database
-    const allPromptsRawData = await getPrompts();
-    let allPrompts = await Promise.all(
-        allPromptsRawData.map(async (p: any) => {
+    const currentPage = Number(page) || 1;
+    const limit = 20;
+    const skip = (currentPage - 1) * limit;
+
+    // Fetch prompts, total count, models and categories in parallel
+    const [promptsRawData, totalPrompts, availableModels, availableCategories] = await Promise.all([
+        getPrompts(limit, skip, category, model),
+        getPromptsCount(category, model),
+        getPromptModels(),
+        getCategoriesByType('prompt')
+    ]);
+
+    // Handle translations for the paginated set
+    let activePrompts = await Promise.all(
+        promptsRawData.map(async (p: any) => {
             const translated = await getContentWithTranslation(p, 'prompt', p.id, lang as any);
             return {
                 ...translated,
@@ -59,27 +71,9 @@ export default async function PromptsPage({
         })
     );
 
-    // Apply filters
-    if (category && category !== "all") {
-        allPrompts = allPrompts.filter((p: any) => p.category === category);
-    }
-    if (model && model !== "all") {
-        allPrompts = allPrompts.filter((p: any) => p.model === model);
-    }
-
-    // Apply sorting (Default: Newest)
-    if (sort === "popular") {
-        allPrompts = allPrompts.sort((a: any, b: any) => (b.likes || 0) - (a.likes || 0));
-    } else {
-        // Newest is default
-        allPrompts = allPrompts.sort((a: any, b: any) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-    }
-
-    // Get unique categories and models for filters
-    const categories = ["all", ...new Set(allPrompts.map((p: any) => p.category))];
-    const models = ["all", ...new Set(allPrompts.map((p: any) => p.model))];
+    // Filter Logic for Sidebar/FilterBar
+    const categoriesList = ["all", ...availableCategories.map(c => (c as any).slug || c.name)];
+    const modelsList = ["all", ...availableModels];
 
     // SEO Data
     const collectionSchema = generateCollectionPageSchema(
@@ -98,6 +92,8 @@ export default async function PromptsPage({
     const topBlocks = await getPageBlocks('prompts', 'top');
     const bottomBlocks = await getPageBlocks('prompts', 'bottom');
 
+    const totalPages = Math.ceil(totalPrompts / limit);
+
     return (
         <div className="min-h-screen bg-background text-foreground">
             <script
@@ -113,7 +109,7 @@ export default async function PromptsPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(generateItemListSchema(
-                        allPrompts.map((p: any) => {
+                        activePrompts.map((p: any) => {
                             const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://promptda.com";
                             return {
                                 name: p.title,
@@ -148,7 +144,7 @@ export default async function PromptsPage({
 
                         <div className="flex items-center gap-3">
                             <div className="text-sm text-muted-foreground">
-                                <span className="font-black text-foreground">{allPrompts.length}</span> {dict.Prompts.promptsAvailable}
+                                <span className="font-black text-foreground">{totalPrompts}</span> {dict.Prompts.promptsAvailable}
                             </div>
                         </div>
                     </div>
@@ -159,8 +155,8 @@ export default async function PromptsPage({
                     {/* Filters */}
                     <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
                         <FilterBar
-                            categories={categories as string[]}
-                            models={models as string[]}
+                            categories={categoriesList}
+                            models={modelsList as string[]}
                             currentCategory={category}
                             currentModel={model}
                             currentSort={sort}
@@ -171,9 +167,9 @@ export default async function PromptsPage({
 
                     {/* Prompts Grid */}
                     <div className="animate-in fade-in slide-in-from-bottom-8 duration-900">
-                        {allPrompts.length > 0 ? (
+                        {activePrompts.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                                {allPrompts.map((prompt: any) => (
+                                {activePrompts.map((prompt: any) => (
                                     <PromptCard key={prompt.id} prompt={prompt} lang={lang} dict={dict} />
                                 ))}
                             </div>
@@ -187,6 +183,9 @@ export default async function PromptsPage({
                             </div>
                         )}
                     </div>
+
+                    {/* Pagination */}
+                    <Pagination totalPages={totalPages} currentPage={currentPage} />
 
                     {/* Bottom Blocks */}
                     <BlockRenderer blocks={bottomBlocks} />
