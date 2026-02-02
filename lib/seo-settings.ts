@@ -28,10 +28,19 @@ export async function getPageSeo(pageName: string, lang: string) {
     const dbDesc = getSetting('metaDescription');
     const dbImage = getSetting('metaImage');
 
+    // Fallback to global og_image if page-specific image not set
+    let finalImage = dbImage || defaultMeta.metaImage;
+    if (!finalImage) {
+        const globalSettings = await prisma.seoSetting.findUnique({
+            where: { key: 'og_image' }
+        });
+        finalImage = globalSettings?.value;
+    }
+
     return {
         title: dbTitle || defaultMeta.metaTitle || `${pageName} - Promptda`,
         description: dbDesc || defaultMeta.metaDescription || `Explore ${pageName} on Promptda`,
-        image: dbImage || defaultMeta.metaImage || undefined,
+        image: finalImage,
         rawTitle: dbTitle || defaultMeta.metaTitle || pageName,
         rawDescription: dbDesc || defaultMeta.metaDescription
     };

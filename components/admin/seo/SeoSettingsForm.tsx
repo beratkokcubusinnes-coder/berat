@@ -180,7 +180,7 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
 
         // Let's create a subset of settings based on activeTab
         let keysToSave: string[] = [];
-        if (activeTab === "global") keysToSave = ["site_title", "title_separator", "site_description", "site_keywords", "favicon"];
+        if (activeTab === "global") keysToSave = ["site_title", "title_separator", "site_description", "site_keywords", "og_image", "favicon"];
         if (activeTab === "indexing") keysToSave = ["robots_txt", "meta_robots_default", "noindex_categories", "noindex_tags"];
         if (activeTab === "social") keysToSave = ["og_image", "twitter_handle", "facebook_app_id"];
         if (activeTab === "sitemap") keysToSave = ["sitemap_include_images", "sitemap_include_tags"];
@@ -358,6 +358,36 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                                             onChange={(e) => handleChange("site_keywords", e.target.value)}
                                         />
                                     </div>
+
+                                    <div className="space-y-2 pt-4 border-t border-border/50">
+                                        <label className="text-sm font-bold text-muted-foreground flex items-center gap-2">
+                                            <ImageIcon className="w-4 h-4" />
+                                            Default OG Image (Social Share Image)
+                                        </label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                className="flex-1 bg-muted/50 border border-border rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                                placeholder="https://yoursite.com/og-image.jpg"
+                                                value={settings.og_image || ""}
+                                                onChange={(e) => handleChange("og_image", e.target.value)}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => { setMediaField({ section: 'settings', field: 'og_image' }); setIsMediaModalOpen(true); }}
+                                                className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-bold text-xs hover:bg-primary/20 transition-all"
+                                            >
+                                                Select
+                                            </button>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground">This image will be used when sharing pages on social media (Facebook, Twitter, LinkedIn) if no page-specific image is set.</p>
+                                        {settings.og_image && (
+                                            <div className="mt-2 w-48 h-32 rounded-lg overflow-hidden border border-border">
+                                                <img src={settings.og_image} alt="OG Image Preview" className="w-full h-full object-cover" />
+                                            </div>
+                                        )}
+                                    </div>
+
                                 </div>
                             </div>
                         )}
