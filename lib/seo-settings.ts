@@ -37,13 +37,42 @@ export async function getPageSeo(pageName: string, lang: string) {
         finalImage = globalSettings?.value;
     }
 
-    return {
+    const result = {
         title: dbTitle || defaultMeta.metaTitle || `${pageName} - Promptda`,
         description: dbDesc || defaultMeta.metaDescription || `Explore ${pageName} on Promptda`,
         image: finalImage,
         rawTitle: dbTitle || defaultMeta.metaTitle || pageName,
-        rawDescription: dbDesc || defaultMeta.metaDescription
+        rawDescription: dbDesc || defaultMeta.metaDescription,
+        shouldIndex: true // Default
     };
+
+    // Analyze content quality for indexing strategy
+    if (lang !== 'en') {
+        const { analyzeContentQuality } = await import('./content-quality');
+
+        // Fetch English content for parity check
+        const enDict = await getDictionary('en') as any;
+        const enDefaultMeta = enDict[pageName] || {};
+        const enSettings = await prisma.systemSetting.findMany({
+            where: { key: { startsWith: `seo_${pageName}_`, endsWith: '_en' } }
+        });
+        const getEnSetting = (field: string) => enSettings.find(s => s.key === `seo_${pageName}_${field}_en`)?.value;
+
+        const enContent = {
+            title: getEnSetting('metaTitle') || enDefaultMeta.metaTitle,
+            description: getEnSetting('metaDescription') || enDefaultMeta.metaDescription
+        };
+
+        const quality = await analyzeContentQuality(result, lang, enContent);
+        result.shouldIndex = quality.shouldIndex;
+    } else {
+        // Even for English, check for placeholders/length
+        const { analyzeContentQuality } = await import('./content-quality');
+        const quality = await analyzeContentQuality(result, lang);
+        result.shouldIndex = quality.shouldIndex;
+    }
+
+    return result;
 }
 
 export async function savePageSeo(pageName: string, lang: string, data: { metaTitle?: string; metaDescription?: string }) {

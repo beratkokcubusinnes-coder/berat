@@ -51,7 +51,8 @@ export function SeoSettingsForm({ initialSettings }: { initialSettings: Record<s
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         text: source[field],
-                        targetLang: selectedLang
+                        targetLang: selectedLang,
+                        sourceLang: 'en'
                     })
                 });
 

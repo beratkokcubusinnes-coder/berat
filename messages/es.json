@@ -37,14 +37,42 @@
         "heroTitlePart3": "ChatGPT & Prompts de IA",
         "metaTitle": "Promptda - Biblioteca Premium de Prompts de IA & ChatGPT",
         "metaDescription": "Descubre los mejores prompts para ChatGPT, Midjourney y Claude. Aumenta tu productividad con nuestra biblioteca verificada de prompts de IA.",
+        "quickAnswerQuestion": "¿Qué es Promptda?",
+        "quickAnswer": "Promptda es una biblioteca curada de prompts de IA con más de 10,000 prompts probados para ChatGPT, Midjourney, Claude y otros modelos de IA. Obtén prompts de nivel profesional para marketing, ventas, programación, diseño y tareas creativas. Todos los prompts están verificados, probados y se actualizan semanalmente para resultados óptimos.",
         "heroSubtitle": "Descubre miles de prompts de IA probados para uso real. Aumenta tu productividad con ingeniería profesional.",
         "explorePrompts": "Explorar Prompts",
         "submitPrompt": "Enviar un Prompt",
         "featuredPrompts": "Prompts en Tendencia",
         "contentH2": "Descubre miles de prompts de IA probados para el mundo real",
-        "contentText1": "Bienvenido a la biblioteca de prompts de IA más avanzada del mundo. Nuestra misión es proporcionar prompts de alta calidad.",
-        "contentText2": "Nuestra biblioteca se actualiza regularmente, ofreciéndote los últimos avances en ingeniería de prompts para 2026.",
+        "contentText1": "Bienvenido a la biblioteca de prompts de IA más avanzada del mundo. Nuestra misión es proporcionar a desarrolladores, especialistas en marketing y creadores prompts de ChatGPT y de IA generadores de imágenes de alta calidad que realmente ofrezcan resultados. Cada interacción en nuestra base de datos es un prompt probado, lo que garantiza que no pierdas tiempo con alucinaciones o resultados de baja calidad.",
+        "contentText2": "Nuestra biblioteca se actualiza regularmente, ofreciéndote los últimos avances en ingeniería de prompts para 2026. Ya sea que estés escalando un negocio, optimizando el SEO o generando contenido viral en redes sociales, nuestros prompts de IA están diseñados para cerrar la brecha entre la creatividad humana y la inteligencia de la máquina. Desde flujos de trabajo de marketing hasta guiones de ventas estratégicos, proporcionamos los elementos fundamentales para una interacción de IA de élite.",
         "popularCategories": "Categorías Populares de Prompts de IA",
+        "popularCategoriesList": [
+            {
+                "title": "Prompts de ChatGPT para Marketing",
+                "iconName": "Sparkles"
+            },
+            {
+                "title": "Prompts de ChatGPT para Ventas",
+                "iconName": "Wrench"
+            },
+            {
+                "title": "Prompts para Reclutadores",
+                "iconName": "Users"
+            },
+            {
+                "title": "Prompts de Arte e Imagen de IA",
+                "iconName": "ImageIcon"
+            },
+            {
+                "title": "Prompts de SEO y Redacción",
+                "iconName": "FileCode2"
+            },
+            {
+                "title": "Prompts de Negocios y Estrategia",
+                "iconName": "Anchor"
+            }
+        ],
         "popularSub": "Haz clic en cualquier categoría para explorar conjuntos especializados.",
         "whyProfessionals": "Por qué los profesionales usan nuestra biblioteca",
         "reasons": {
@@ -67,6 +95,16 @@
             "step3Desc": "Pega en tu IA favorita y mira la magia."
         },
         "latestScripts": "Últimos Scripts de IA",
+        "exploreByUseCaseLinks": [
+            "Prompts de ChatGPT para marketing",
+            "Prompts de ChatGPT para ventas",
+            "Prompts de IA para creación de video",
+            "Prompts de IA para generación de imágenes",
+            "Prompts de Estrategia de Negocios",
+            "Herramientas de IA para Escritura Académica",
+            "Guiones de Soporte al Cliente",
+            "Hooks para Asistentes de Código"
+        ],
         "exploreByUseCase": "Explorar por caso de uso",
         "faqTitle": "Preguntas frecuentes sobre prompts de IA",
         "faqs": [
@@ -167,10 +205,10 @@
         "metaTitle": "Biblioteca de Prompts de IA - ChatGPT, Midjourney & Stable Diffusion",
         "metaDescription": "Explora nuestra colección curada de prompts de IA de alta calidad para Midjourney, DALL-E, GPT-4 y más. Encuentra el prompt perfecto para tus proyectos creativos.",
         "browseLibrary": "Explora la biblioteca",
-        "libraryDesc": "Encuentra el prompt perfecto.",
+        "libraryDesc": "Explora nuestra colección curada de prompts de IA de alta calidad para Midjourney, DALL-E, GPT-4 y más. Encuentra el prompt perfecto para tus proyectos creativos.",
         "promptsAvailable": "prompts disponibles",
         "noPromptsFound": "No se encontraron prompts",
-        "noPromptsDesc": "Intenta ajustar los filtros.",
+        "noPromptsDesc": "Intenta ajustar tus filtros o vuelve a comprobar más tarde para ver contenido nuevo.",
         "breadcrumbHome": "Inicio",
         "breadcrumbPrompts": "Prompts"
     },
@@ -190,7 +228,7 @@
         "language": "Idioma",
         "theme": "Tema",
         "deleteAccount": "Borrar cuenta",
-        "deleteWarning": "Esto no se puede deshacer.",
+        "deleteWarning": "Esta acción no se puede deshacer. Por favor, asegúrate de que realmente quieres eliminar tu cuenta permanentemente.",
         "section": {
             "profile": "Perfil",
             "security": "Seguridad",

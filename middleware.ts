@@ -26,7 +26,19 @@ export default function middleware(request: NextRequest) {
         );
     }
 
-    return intlMiddleware(request);
+    const response = intlMiddleware(request);
+
+    // Extract locale from pathname
+    const pathname = request.nextUrl.pathname;
+    const pathSegments = pathname.split('/').filter(Boolean);
+    const possibleLocale = pathSegments[0];
+
+    // Set Content-Language header for SEO
+    const validLocales = ['en', 'de', 'es', 'tr'];
+    const locale = validLocales.includes(possibleLocale) ? possibleLocale : 'en';
+    response.headers.set('Content-Language', locale);
+
+    return response;
 }
 
 export const config = {

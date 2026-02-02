@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     try {
-        const { text, targetLang } = await request.json();
+        const { text, targetLang, sourceLang = 'auto' } = await request.json();
 
         if (!text) {
             return NextResponse.json({ error: "Text is required" }, { status: 400 });
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Target language is required" }, { status: 400 });
         }
 
-        const translatedText = await translateText(text, targetLang);
+        const translatedText = await translateText(text, targetLang, sourceLang);
 
         return NextResponse.json({ translatedText });
     } catch (error) {

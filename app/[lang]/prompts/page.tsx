@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         title: seo.rawTitle,
         description: seo.description,
         image: seo.image,
+        noIndex: !seo.shouldIndex,
         alternates: {
             canonical: lang === 'en' ? `${baseUrl}${path}` : `${baseUrl}/${lang}${path}`,
             languages: getSitemapAlternates(path, baseUrl)

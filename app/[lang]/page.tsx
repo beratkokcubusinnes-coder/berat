@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     title: seo.title !== 'Home - Promptda' ? seo.rawTitle : undefined,
     description: seo.description,
     image: seo.image,
+    noIndex: !seo.shouldIndex,
     alternates: {
       canonical: lang === 'en' ? `${baseUrl}/` : `${baseUrl}/${lang}`,
       languages: {
@@ -108,6 +109,26 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <TopNavbar lang={lang} dict={dict} user={session} />
 
         <main className="p-6 md:p-8 space-y-24 max-w-[1920px] mx-auto pb-24">
+
+          {/* QUICK ANSWER - AI Overview Optimization */}
+          <section
+            itemScope
+            itemType="https://schema.org/Question"
+            className="bg-gradient-to-br from-primary/5 via-background to-background border border-primary/10 rounded-3xl p-8 md:p-12"
+          >
+            <h2
+              itemProp="name"
+              className="text-2xl md:text-3xl font-black text-foreground mb-4 flex items-center gap-3"
+            >
+              <Sparkles className="w-6 h-6 text-primary" />
+              {dict.Home.quickAnswerQuestion}
+            </h2>
+            <div itemProp="acceptedAnswer" itemScope itemType="https://schema.org/Answer">
+              <p itemProp="text" className="text-lg text-muted-foreground leading-relaxed max-w-4xl">
+                {dict.Home.quickAnswer}
+              </p>
+            </div>
+          </section>
 
           {/* 1. TRENDING NOW */}
           <HomeSection title={dict.Home.trending} icon={Sparkles} href={getHref('/prompts', lang)} color="text-primary" dict={dict}>

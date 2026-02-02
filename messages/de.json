@@ -37,14 +37,42 @@
         "heroTitlePart3": "ChatGPT & KI-Prompts",
         "metaTitle": "Promptda - Premium KI-Prompt-Bibliothek & ChatGPT Prompts",
         "metaDescription": "Entdecken Sie die besten ChatGPT, Midjourney und Claude Prompts. Steigern Sie Ihre Produktivität mit unserer verifizierten KI-Prompt-Bibliothek.",
+        "quickAnswerQuestion": "Was ist Promptda?",
+        "quickAnswer": "Promptda ist eine kuratierte KI-Prompt-Bibliothek mit über 10.000 getesteten Prompts für ChatGPT, Midjourney, Claude und andere KI-Modelle. Erhalten Sie professionelle Prompts für Marketing, Vertrieb, Programmierung, Design und kreative Aufgaben. Alle Prompts sind verifiziert, getestet und werden wöchentlich aktualisiert.",
         "heroSubtitle": "Entdecken Sie tausende bewährte KI-Prompts für den Praxiseinsatz. Steigern Sie Ihre Produktivität mit professionellem Engineering für ChatGPT, Midjourney und mehr.",
         "explorePrompts": "Prompts erkunden",
         "submitPrompt": "Prompt einreichen",
         "featuredPrompts": "Angesagte Trend-Prompts",
         "contentH2": "Entdecken Sie tausende bewährte KI-Prompts für den Praxiseinsatz",
         "contentText1": "Willkommen in der weltweit fortschrittlichsten KI-Prompt-Bibliothek. Unsere Mission ist es, Entwickler, Vermarkter und Kreative mit hochwertigen ChatGPT-Prompts und KI-Bild-Prompts zu unterstützen, die tatsächlich Ergebnisse liefern. Jede Interaktion in unserer Datenbank ist ein getesteter Prompt.",
-        "contentText2": "Unsere Bibliothek wird regelmäßig aktualisiert und bringt Ihnen die neuesten Fortschritte im Prompt-Engineering für 2026. Von Marketing-Workflows bis hin zu strategischen Verkaufsskripten bieten wir die Grundlagen für erstklassige KI-Interaktion.",
+        "contentText2": "Unsere Bibliothek wird regelmäßig aktualisiert und bringt Ihnen die neuesten Fortschritte im Prompt-Engineering für 2026. Ob Sie ein Unternehmen skalieren, SEO optimieren oder virale Social-Media-Inhalte erstellen, unsere KI-Prompts sind so konzipiert, dass sie die Lücke zwischen menschlicher Kreativität und maschineller Intelligenz schließen. Von Marketing-Workflows bis hin zu strategischen Verkaufsskripten bieten wir die grundlegenden Elemente für eine erstklassige KI-Interaktion.",
         "popularCategories": "Beliebte ChatGPT & KI-Prompt-Kategorien",
+        "popularCategoriesList": [
+            {
+                "title": "ChatGPT Prompts für Marketing",
+                "iconName": "Sparkles"
+            },
+            {
+                "title": "ChatGPT Prompts für Vertrieb",
+                "iconName": "Wrench"
+            },
+            {
+                "title": "ChatGPT Prompts für Personalvermittler",
+                "iconName": "Users"
+            },
+            {
+                "title": "KI-Bild & Kunst Prompts",
+                "iconName": "ImageIcon"
+            },
+            {
+                "title": "SEO & Content-Erstellung Prompts",
+                "iconName": "FileCode2"
+            },
+            {
+                "title": "Business & Strategie Prompts",
+                "iconName": "Anchor"
+            }
+        ],
         "popularSub": "Klicken Sie auf eine Kategorie, um spezialisierte Prompt-Engineering-Sets für Ihre Nische zu erkunden.",
         "whyProfessionals": "Warum Profis unsere KI-Prompt-Bibliothek nutzen",
         "reasons": {
@@ -67,6 +95,16 @@
             "step3Desc": "In die KI Ihrer Wahl einfügen und die Magie erleben."
         },
         "latestScripts": "Neueste KI-Skripte",
+        "exploreByUseCaseLinks": [
+            "ChatGPT Prompts für Marketing",
+            "ChatGPT Prompts für Vertrieb",
+            "KI-Prompts für Videoerstellung",
+            "KI-Prompts für Bilderzeugung",
+            "Geschäftsstrategie Prompts",
+            "Akademisches Schreiben KI-Tools",
+            "Kundensupport Skripte",
+            "Coding Assistant Hooks"
+        ],
         "exploreByUseCase": "KI-Prompts nach Anwendungsfall erkunden",
         "faqTitle": "Häufig gestellte Fragen zu KI-Prompts",
         "faqs": [
@@ -175,7 +213,7 @@
         "metaTitle": "KI-Prompt-Bibliothek - ChatGPT, Midjourney & Stable Diffusion Prompts",
         "metaDescription": "Entdecken Sie unsere kuratierte Sammlung hochwertiger KI-Prompts für Midjourney, DALL-E, GPT-4 und mehr. Finden Sie den perfekten Prompt für Ihre kreativen Projekte.",
         "browseLibrary": "Premium KI-Prompt-Bibliothek durchsuchen",
-        "libraryDesc": "Entdecken Sie unsere kuratierte Sammlung hochwertiger KI-Prompts.",
+        "libraryDesc": "Entdecken Sie unsere kuratierte Sammlung hochwertiger KI-Prompts für Midjourney, DALL-E, GPT-4 und mehr. Finden Sie den perfekten Prompt für Ihre kreativen Projekte und professionellen Anforderungen.",
         "promptsAvailable": "Prompts verfügbar",
         "noPromptsFound": "Keine Prompts gefunden",
         "noPromptsDesc": "Versuchen Sie es mit anderen Filtern.",

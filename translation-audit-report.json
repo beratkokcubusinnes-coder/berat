@@ -1,0 +1,37 @@
+{
+  "en": {
+    "exists": true,
+    "keyCount": 189,
+    "missingKeys": [],
+    "contentParity": [],
+    "completeness": 100
+  },
+  "tr": {
+    "exists": true,
+    "keyCount": 189,
+    "missingKeys": [],
+    "contentParity": [],
+    "completeness": 100
+  },
+  "de": {
+    "exists": true,
+    "keyCount": 189,
+    "missingKeys": [],
+    "contentParity": [
+      {
+        "key": "Home.heroTitlePart1",
+        "ratio": "33",
+        "baseWords": 3,
+        "langWords": 1
+      }
+    ],
+    "completeness": 100
+  },
+  "es": {
+    "exists": true,
+    "keyCount": 189,
+    "missingKeys": [],
+    "contentParity": [],
+    "completeness": 100
+  }
+}
