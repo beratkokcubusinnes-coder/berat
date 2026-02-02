@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://promptda.com';
 
   return constructMetadata({
-    title: seo.title !== 'Home - Promptda' ? seo.rawTitle : undefined,
+    exactTitle: seo.rawTitle,
     description: seo.description,
     image: seo.image,
     noIndex: !seo.shouldIndex,

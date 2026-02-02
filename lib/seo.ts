@@ -24,6 +24,7 @@ export const getSeoSettings = unstable_cache(
 
 interface MetadataProps {
     title?: string;
+    exactTitle?: string;
     description?: string;
     image?: string;
     noIndex?: boolean;
@@ -36,6 +37,7 @@ interface MetadataProps {
 
 export async function constructMetadata({
     title,
+    exactTitle,
     description,
     image,
     noIndex = false,
@@ -90,7 +92,9 @@ export async function constructMetadata({
 
     // Prevent double labeling (e.g., "Promptda | Promptda")
     let finalTitle = "";
-    if (!title) {
+    if (exactTitle) {
+        finalTitle = exactTitle;
+    } else if (!title) {
         finalTitle = siteTitle;
     } else if (title.toLowerCase().includes(siteTitle.toLowerCase())) {
         finalTitle = title;
